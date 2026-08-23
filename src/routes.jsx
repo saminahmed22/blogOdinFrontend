@@ -13,7 +13,7 @@ export const routes = [
     children: [
       { index: true, element: <Feed /> },
       { path: "posts/:postId", element: <Post /> },
-      { path: "profile", element: <Profile /> },
+      { path: "profile/:profileId", element: <Profile /> },
     ],
   },
 ];
