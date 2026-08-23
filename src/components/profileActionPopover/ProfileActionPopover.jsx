@@ -12,7 +12,6 @@ export default function ProfileActionPopover() {
         className={`${styles.profileActBtn}`}
         popoverTarget="ProfileActionPopover"
         popoverTargetAction="toggle"
-        onClick={() => console.log("clicked")}
       >
         <img src={tempProfilePicture} alt="Profile picture" />
       </button>
