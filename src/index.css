@@ -1,0 +1,18 @@
+@font-face {
+  font-family: Quick-sand;
+  src: url(./assets/fonts/Quicksand-VariableFont_wght.ttf);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Quick-sand;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+}
