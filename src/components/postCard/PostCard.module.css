@@ -1,0 +1,64 @@
+.postCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+
+  border: 1px solid black;
+  border-radius: 10px;
+
+  color: black;
+
+  padding: 10px;
+}
+
+.postDetails {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
+
+.postDates {
+  display: flex;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.postCardDate {
+  font-size: 0.7rem;
+}
+
+.authorName a,
+.postCardTitle a {
+  text-decoration: none;
+  color: black;
+}
+
+.postCardTitle {
+  font-size: 1.8rem;
+}
+
+.authorDetails {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.authorName {
+  font-size: 0.8rem;
+}
+
+.authorImage {
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  object-fit: cover;
+}
