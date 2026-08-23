@@ -1,0 +1,44 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px;
+
+  background-color: rgb(40, 40, 40);
+}
+
+.homeRedirectLink {
+  text-decoration: none;
+  color: white;
+
+  transition: color 0.3s ease;
+}
+
+.homeRedirectLink:hover {
+  color: wheat;
+}
+
+.homeRedirectLink:active {
+  color: rgb(248, 189, 78);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 30px;
+}
+
+.navPrimaryBtn {
+  height: 35px;
+  width: 130px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border-radius: 12px;
+}
