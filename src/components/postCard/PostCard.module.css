@@ -1,48 +1,96 @@
+:root {
+  --skeleton-bg-color: linear-gradient(
+    to right,
+    rgb(214, 214, 210),
+    rgb(152, 149, 149),
+    rgb(214, 214, 210)
+  );
+}
+
 .postCard {
+  width: 90%;
+  max-width: 900px;
+
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  gap: 5px;
+  gap: 10px;
 
-  border: 1px solid black;
+  border: 1px solid rgba(0, 0, 0, 0.3);
   border-radius: 10px;
 
   color: black;
 
   padding: 10px;
+
+  cursor: pointer;
+
+  transition: background 0.2s ease;
 }
 
-.postDetails {
+.postCard:last-child {
+  margin-bottom: 40px;
+}
+
+.postCard a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.postCardHeader {
   width: 100%;
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
+}
+
+.authorImageLoading,
+.authorNameLoading,
+.postCardTitleLoading,
+.postCardPreviewLoading {
+  background: var(--skeleton-bg-color);
+  background-size: 200%;
+  animation: gradiantAnimation 2s ease infinite alternate;
+
+  border-radius: 10px;
+}
+
+@keyframes gradiantAnimation {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+.postCardArticle {
+  display: flex;
+  flex-direction: column;
+
   gap: 20px;
-}
-
-.postDates {
-  display: flex;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-}
-
-.postCardDate {
-  font-size: 0.7rem;
-}
-
-.authorName a,
-.postCardTitle a {
-  text-decoration: none;
-  color: black;
 }
 
 .postCardTitle {
   font-size: 1.8rem;
+}
+
+.postCardTitleLoading {
+  height: 1rem;
+  width: 30rem;
+}
+
+.skeletonPreviewContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.postCardPreviewLoading {
+  height: 1rem;
+  width: 50rem;
 }
 
 .authorDetails {
@@ -54,6 +102,11 @@
 
 .authorName {
   font-size: 0.8rem;
+  font-weight: 400;
+}
+.authorNameLoading {
+  height: 1rem;
+  width: 10rem;
 }
 
 .authorImage {
@@ -61,4 +114,11 @@
   width: 30px;
   border-radius: 50%;
   object-fit: cover;
+}
+
+.authorImageLoading {
+  height: 30px;
+  width: 30px;
+
+  border-radius: 50%;
 }
