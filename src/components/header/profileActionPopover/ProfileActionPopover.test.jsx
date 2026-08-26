@@ -15,5 +15,13 @@ describe("ProfileActionPopover component", async () => {
     expect(screen.getByRole("dialog", { hidden: true })).toBeInTheDocument();
   });
 
-  // JSDom doesn't support popover api as of Aug 24, 2026
+  it("Popover menu is not visible when button has not clicked", () => {
+    render(
+      <MemoryRouter>
+        <ProfileActionPopover />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByTestId("dialog")).not.toBeVisible();
+  });
 });

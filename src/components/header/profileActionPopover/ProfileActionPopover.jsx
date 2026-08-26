@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import tempProfilePicture from "../../assets/images/image.png";
+import tempProfilePicture from "../../../assets/images/image.png";
 
 import styles from "./ProfileActionPopover.module.css";
 
@@ -12,6 +12,7 @@ export default function ProfileActionPopover() {
         className={`${styles.profileActBtn}`}
         popoverTarget="ProfileActionPopover"
         popoverTargetAction="toggle"
+        data-testid="profileActBtn"
       >
         <img src={tempProfilePicture} alt="Profile picture" />
       </button>
@@ -20,6 +21,7 @@ export default function ProfileActionPopover() {
         id="ProfileActionPopover"
         className={styles.ProfileActionPopover}
         popover="auto"
+        data-testid="dialog"
       >
         <Link to="/profile/1">Profile</Link>
         <Link to="/auth/logout">Logout</Link>
