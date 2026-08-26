@@ -1,14 +1,16 @@
 .feed {
+  max-width: 100%;
+
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  flex: 1 0 auto;
+  flex: 1 0 0;
   gap: 20px;
 
   padding-top: 30px;
-  margin-bottom: 50px;
 
-  overflow: hidden auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   scroll-behavior: smooth;
 }
