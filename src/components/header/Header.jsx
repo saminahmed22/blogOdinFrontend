@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useState } from "react";
 
 import styles from "./Header.module.css";
 
@@ -7,19 +8,22 @@ import addIcon from "../../assets/icons/add.svg";
 import loginIcon from "../../assets/icons/login.svg";
 
 // Components
-import ProfileActionPopover from "../profileActionPopover/ProfileActionPopover";
+import ProfileActionPopover from "./profileActionPopover/ProfileActionPopover";
 
-export default function Header({ authStatus = true }) {
+export default function Header() {
+  const [authStatus, setAuthStatus] = useState(localStorage.getItem("jwt"));
+
   const getNavElements = () => {
     if (authStatus) {
       return (
         <>
           <button
-            className={`${styles.navPrimaryBtn} createPostBtn`}
+            className={`${styles.navPrimaryBtn} postBtn`}
             title="Create a post"
+            data-testid="postBtn"
           >
             <img src={addIcon} alt="Add icon" />
-            Create a post
+            <span>Create a post</span>
           </button>
 
           <ProfileActionPopover />
@@ -30,9 +34,14 @@ export default function Header({ authStatus = true }) {
         <button
           className={`${styles.navPrimaryBtn} loginBtn`}
           title="Login or Sign up"
+          data-testid="loginBtn"
+          onClick={() => {
+            setAuthStatus((prev) => !prev);
+          }}
         >
           <img src={loginIcon} alt="Login icon" />
-          Login/Sign up
+
+          <span>Login/Sign up</span>
         </button>
       );
     }
