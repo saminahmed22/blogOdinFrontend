@@ -1,16 +1,14 @@
-/* .postCardActBtn {
-  position: absolute;
-
-} */
+.postCardActBtn {
+  background-color: transparent;
+  align-self: flex-end;
+}
 
 .postCardActBtn,
 .postCardActBtn img {
   height: 30px;
   width: 30px;
 
-  border-radius: 50%;
-
-  background-color: transparent;
+  /* background-color: transparent; */
 
   anchor-name: --postCardActPopoverToggleBtn;
 }
