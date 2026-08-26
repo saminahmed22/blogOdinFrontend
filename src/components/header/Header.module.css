@@ -42,3 +42,15 @@
 
   border-radius: 12px;
 }
+
+@media (max-width: 480px) {
+  .navPrimaryBtn {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+  }
+
+  .navPrimaryBtn span {
+    display: none;
+  }
+}
