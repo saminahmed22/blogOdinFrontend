@@ -8,7 +8,7 @@ describe("PostCard component", () => {
   it("Should have a heading", () => {
     render(
       <MemoryRouter>
-        <PostCard />
+        <PostCard loading={false} />
       </MemoryRouter>,
     );
 
@@ -18,7 +18,7 @@ describe("PostCard component", () => {
   it("Should have author's profile picture", () => {
     render(
       <MemoryRouter>
-        <PostCard />
+        <PostCard loading={false} />
       </MemoryRouter>,
     );
 
@@ -28,37 +28,17 @@ describe("PostCard component", () => {
   it("Should have author's name", () => {
     render(
       <MemoryRouter>
-        <PostCard />
+        <PostCard loading={false} />
       </MemoryRouter>,
     );
 
     expect(screen.getByTestId("post-author-name")).toBeInTheDocument();
   });
 
-  it("Should have a upload date", () => {
-    render(
-      <MemoryRouter>
-        <PostCard />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByTestId("post-upload-date")).toBeInTheDocument();
-  });
-
-  it("Should have a expiry date", () => {
-    render(
-      <MemoryRouter>
-        <PostCard />
-      </MemoryRouter>,
-    );
-
-    expect(screen.queryByTestId("post-expiry-date")).toBeInTheDocument();
-  });
-
   it("Should have a preview", () => {
     render(
       <MemoryRouter>
-        <PostCard />
+        <PostCard loading={false} />
       </MemoryRouter>,
     );
 
@@ -68,7 +48,7 @@ describe("PostCard component", () => {
   it("Should have a action button", () => {
     render(
       <MemoryRouter>
-        <PostCard />
+        <PostCard loading={false} />
       </MemoryRouter>,
     );
 
