@@ -18,6 +18,7 @@ export default function PostCardActionPopver() {
         id="postCardActPopover"
         className={styles.postCardActPopover}
         popover="auto"
+        data-testid="dialog"
       >
         <button className={styles.editBtn}>Edit</button>
         <button className={styles.deleteBtn}>Delete</button>
