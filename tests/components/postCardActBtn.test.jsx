@@ -1,9 +1,8 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 
-import PostCardActBtn from "./PostCardActBtn.jsx";
+import PostCardActBtn from "../../src/components/postCardActBtn/PostCardActBtn.jsx";
 
-describe("ProfileActionPopover component", async () => {
+describe("PostCardActBtn", async () => {
   it("Renders post card actions popover", () => {
     render(<PostCardActBtn />);
 

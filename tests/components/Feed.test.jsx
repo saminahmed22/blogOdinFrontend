@@ -1,9 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
 import { render, screen, act } from "@testing-library/react";
 
 import { MemoryRouter } from "react-router";
 
-import Feed from "./Feed";
+import Feed from "../../src/components/feed/Feed";
 
 const posts = [
   {
@@ -45,7 +44,7 @@ const responseNotOk = {
   json: () => Promise.resolve([]),
 };
 
-describe("Feed component", async () => {
+describe("Feed", async () => {
   it("Call feed api once to fetch posts", async () => {
     window.fetch = vi.fn(() => {
       return response;
@@ -54,6 +53,7 @@ describe("Feed component", async () => {
     await act(async () => {
       render(
         <MemoryRouter>
+          outlet
           <Feed />
         </MemoryRouter>,
       );

@@ -1,11 +1,10 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
-import PostCard from "./PostCard";
+import PostCard from "../../src/components/postCard/PostCard";
 
-describe("PostCard component", () => {
-  it("Should have a heading", () => {
+describe("PostCard", () => {
+  it("should have a heading", () => {
     render(
       <MemoryRouter>
         <PostCard loading={false} />

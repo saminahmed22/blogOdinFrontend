@@ -1,10 +1,9 @@
-import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
-import ProfileActionPopover from "./ProfileActionPopover";
+import ProfileActionPopover from "../../src/components/ProfileActBtn/ProfileActBtn";
 
-describe("ProfileActionPopover component", async () => {
+describe("ProfileActBtn", async () => {
   it("Renders profile actions popover", () => {
     render(
       <MemoryRouter>
