@@ -26,10 +26,12 @@ body {
   height: 100%;
   width: 100%;
 
-  display: flex;
+  display: grid;
+  grid-template-columns: 20% 80%;
   flex-direction: column;
 }
 
+/* Button defaults */
 button {
   border: none;
   cursor: pointer;
@@ -73,4 +75,16 @@ button {
   right: 30px;
 
   align-self: flex-end;
+
+  display: none;
+}
+
+/* Icon color stylings */
+.invertImg {
+  filter: invert();
+}
+
+/* a tag default styling */
+a {
+  text-decoration: none;
 }
