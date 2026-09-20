@@ -1,0 +1,89 @@
+.navbar {
+  flex: 1 0 auto;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 30px;
+}
+
+.navAccSection {
+  height: 60px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #000;
+}
+
+.navBtn {
+  height: 35px;
+  width: 130px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  color: white;
+  background-color: transparent;
+
+  transition: background-color 0.3s ease;
+}
+.navBtn:hover {
+  background-color: #333333;
+}
+
+.loginBtnLink {
+  height: 100%;
+  flex-grow: 1;
+}
+
+.loginBtn {
+  height: 100%;
+  width: 100%;
+
+  padding-left: 20px;
+}
+
+.profileBtn {
+  height: 100%;
+
+  width: 100%;
+
+  padding: 0 0 0 20px;
+}
+
+.profilePicture {
+  height: 32px;
+  width: 32px;
+
+  border-radius: 100%;
+
+  object-fit: cover;
+}
+
+.logoutBtn {
+  height: 100%;
+  width: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .profileBtn {
+    flex-direction: column;
+  }
+
+  .navPrimaryBtn span {
+    display: none;
+  }
+}
