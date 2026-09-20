@@ -4,6 +4,7 @@ import styles from "./Feed.module.css";
 
 // Componenets
 import PostCard from "../postCard/PostCard";
+import FeedHeader from "../FeedHeader/FeedHeader";
 
 // API
 import { fetchFeedContent } from "../../api/fetchFeedContent";
@@ -31,17 +32,33 @@ export default function Feed() {
         </>
       );
     } else if (feedContent.status === 200) {
-      return feedContent.posts.map((post) => (
-        <PostCard key={post.id} loading={false} />
-      ));
+      // return feedContent.posts.map((post) => (
+      //   <PostCard key={post.id} loading={false} />
+      // ));
+
+      return <></>;
     } else {
       return (
-        <div className={styles.feedErrorMessage} data-testid="feedErrorMessage">
-          An error occured. Please try again later.
+        <div className={styles.postList}>
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
         </div>
       );
+
+      // return (
+      //   <div className={styles.feedErrorMessage} data-testid="feedErrorMessage">
+      //     An error occured. Please try again later.
+      //   </div>
+      // );
     }
   };
 
-  return <div className={styles.feed}>{getFeedContent()}</div>;
+  return (
+    <div className={styles.feed}>
+      <FeedHeader />
+      {getFeedContent()}
+    </div>
+  );
 }
