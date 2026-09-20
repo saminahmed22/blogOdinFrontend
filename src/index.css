@@ -27,8 +27,7 @@ body {
   width: 100%;
 
   display: grid;
-  grid-template-columns: 20% 80%;
-  flex-direction: column;
+  grid-template-columns: minmax(200px, 320px) 1fr;
 }
 
 /* Button defaults */
