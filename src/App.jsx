@@ -4,6 +4,7 @@ import { Outlet } from "react-router";
 
 // Components
 import Header from "./components/header/Header";
+import Aside from "./components/Aside/Aside";
 
 export default function App() {
   const storedJWT = localStorage.getItem("jwt");
@@ -31,7 +32,10 @@ export default function App() {
   return (
     <>
       <Header userData={userData} />
-      <Outlet context={[userData, setUserData]} />
+      <div className="contentBody">
+        <Aside />
+        <Outlet context={[userData, setUserData]} />
+      </div>
     </>
   );
 }
