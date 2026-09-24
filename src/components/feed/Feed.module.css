@@ -1,4 +1,5 @@
 .feed {
+  height: 100%;
   max-width: 100%;
 
   display: flex;
@@ -6,19 +7,26 @@
   align-items: center;
   justify-content: flex-start;
   flex: 1 0 0;
-  gap: 50px;
+  gap: 40px;
+
+  overflow: hidden;
+}
+
+.postList {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
 
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
-}
 
-.postList {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 20px;
+  padding-bottom: 100px;
 }
 
 .feedErrorMessage {
@@ -26,6 +34,8 @@
   width: 100%;
 
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+
+  padding-top: 250px;
 }
