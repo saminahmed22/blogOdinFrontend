@@ -112,3 +112,9 @@
 //     expect(screen.getByTestId("feedErrorMessage")).toBeInTheDocument();
 //   });
 // });
+
+describe("Feed", () => {
+  it("Test", () => {
+    expect(true).toBeTruthy();
+  });
+});

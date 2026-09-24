@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 
-import Navbar from "../../components/navbar/Navbar";
+import Navbar from "./Aside";
 
 import { userContext } from "../../../context";
 
