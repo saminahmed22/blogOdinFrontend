@@ -8,12 +8,10 @@ import logoutIcon from "../../assets/icons/logout.svg";
 // Image
 import profilePicture from "../../assets/images/image.png";
 
-import styles from "./Navbar.module.css";
+import styles from "./Aside.module.css";
 
-export default function Navbar({ userData = null }) {
+export default function Aside({ userData = null }) {
   const authStatus = userData?.auth;
-
-  console.log(authStatus);
 
   const getNavAccElements = () => {
     if (authStatus) {
@@ -48,13 +46,15 @@ export default function Navbar({ userData = null }) {
   };
 
   return (
-    <nav className={styles.navbar}>
-      <button className={`${styles.navBtn}`}>
-        <img className={styles.navBtnIcon} src={addIcon} alt="Add icon" />
-        Create a post
-      </button>
+    <aside className={`${styles.aside} aside`}>
+      <nav className={styles.navbar}>
+        <button className={`${styles.navBtn}`}>
+          <img className={styles.navBtnIcon} src={addIcon} alt="Add icon" />
+          Create a post
+        </button>
+      </nav>
 
       {getNavAccElements()}
-    </nav>
+    </aside>
   );
 }
