@@ -1,12 +1,13 @@
-export async function fetchFeedContent(quantity) {
+export async function fetchFeedContent(quantity, category) {
+  const url = `http://localhost:3000/api/posts/feed/${quantity}`;
+
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/posts/feed/${quantity}`,
-    );
+    const response = await fetch(url);
 
     const posts = await response.json();
-    return { status: response.status, posts };
+
+    return { status: true, posts };
   } catch (error) {
-    return { status: 0, error };
+    return { status: false, posts: [] };
   }
 }

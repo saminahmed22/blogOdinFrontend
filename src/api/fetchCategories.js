@@ -4,14 +4,10 @@ export async function fetchCategories() {
   try {
     const response = await fetch(url);
 
-    if (!response.ok) {
-      throw new Error(`Response status: ${response.status}`);
-    }
+    const categories = await response.json();
 
-    const categoriesArr = await response.json();
-
-    return categoriesArr;
+    return { status: true, categories };
   } catch (error) {
-    console.error(error.message);
+    return { status: false, categories: [] };
   }
 }
