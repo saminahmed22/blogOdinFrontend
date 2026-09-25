@@ -16,9 +16,16 @@ export default function Feed() {
   });
 
   useEffect(() => {
-    fetchFeedContent(10).then((response) => {
-      setFeedContent({ status: response.status, posts: response.posts });
-    });
+    const fetchFunc = async () => {
+      const fetchedPosts = await fetchFeedContent(10);
+
+      setFeedContent({
+        status: fetchedPosts.status,
+        posts: [...fetchedPosts.posts],
+      });
+    };
+
+    fetchFunc();
   }, []);
 
   const getFeedContent = () => {
@@ -31,7 +38,7 @@ export default function Feed() {
           <PostCard />
         </>
       );
-    } else if (feedContent.status === 200) {
+    } else if (feedContent.status) {
       return (
         <div className={styles.postList}>
           {feedContent.posts.map((post) => (
@@ -49,7 +56,7 @@ export default function Feed() {
   };
 
   return (
-    <div className={styles.feed}>
+    <div className={styles.feed} role={"main"}>
       <CategoryBar />
       {getFeedContent()}
     </div>
