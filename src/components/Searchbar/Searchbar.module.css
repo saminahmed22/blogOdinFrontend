@@ -47,6 +47,93 @@
     hue-rotate(342deg) brightness(101%) contrast(101%);
 }
 
+.searchPreview {
+  min-height: 50px;
+  height: fit-content;
+
+  width: 25vw;
+
+  min-width: 350px;
+
+  display: none;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  background-color: rgba(40, 40, 40, 0.635);
+
+  backdrop-filter: blur(10px);
+
+  border-radius: 12px;
+
+  position: absolute;
+  position-anchor: search-box;
+  position-area: bottom center;
+  top: 50px;
+  z-index: 10;
+
+  overflow: hidden;
+}
+
+.previewListContainer {
+  max-height: 300px;
+  width: 100%;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.searchPreviewCard {
+  height: 50px;
+  width: 98%;
+
+  border-bottom: 1px solid #000;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+
+  padding-left: 10px;
+
+  text-decoration: none;
+  color: white;
+
+  transition: background-color 0.3s ease;
+}
+
+.searchPreviewCard:last-child {
+  border-bottom: none;
+}
+
+.searchPreviewTitle {
+  max-width: 95%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.searchPreviewDesc {
+  max-width: 90%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  padding-left: 8px;
+  font-size: 0.8rem;
+}
+
+.searchPreviewCard:hover {
+  background-color: #00000068;
+}
+
 @media (max-width: 800px) {
   .searchbar {
     grid-row-start: 2;
@@ -62,5 +149,9 @@
     min-width: 100px;
     width: 300px;
     max-width: 300px;
+  }
+
+  .searchPreview {
+    top: 110px;
   }
 }

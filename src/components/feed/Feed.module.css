@@ -10,6 +10,8 @@
   gap: 40px;
 
   overflow: hidden;
+
+  background: rgba(255, 193, 100, 0.097);
 }
 
 .postList {
