@@ -12,16 +12,27 @@ import scrollIcon from "../../assets/icons/rightArrow.svg";
 import { fetchCategories } from "../../api/fetchCategories";
 
 export default function CategoryBar() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState({
+    status: "fetching",
+    categoriesArr: [],
+  });
 
   useEffect(() => {
-    fetchCategories().then((response) => {
-      setCategories(response);
-    });
+    const fetchFunc = async () => {
+      const fetchedCategories = await fetchCategories();
+
+      setCategories({
+        status: fetchedCategories.status,
+        categoriesArr: [...fetchedCategories?.categories],
+      });
+    };
+
+    fetchFunc();
   }, []);
 
   const scrollCategoryList = (direction) => {
     const categoryList = document.querySelector(".categoryList");
+
     if (!categoryList) return;
 
     const rightScrollBtn = document.querySelector(".categoryScrollRight");
@@ -36,32 +47,38 @@ export default function CategoryBar() {
 
     rightScrollBtn.disabled = categoryList.scrollLeft <= 0;
     leftScrollBtn.disabled = categoryList.scrollLeft + 1 >= maxScrollLeft;
-
-    //FeedHeader.jsx:28 4558.181640625
-    console.clear();
-    console.log(`maxScrollLeft: ${maxScrollLeft}`);
-    console.log(`categoryList.scrollLeft: ${categoryList.scrollLeft}`);
-    console.log(`categoryList.scrollWidth: ${categoryList.scrollWidth}`);
-    console.log(`categoryList.clientWidth: ${categoryList.clientWidth}`);
-
-    console.log(`rightScrollBtn.disabled: ${rightScrollBtn.disabled}`);
-    console.log(`leftScrollBtn.disabled ${leftScrollBtn.disabled}`);
   };
 
   const renderCategories = () => {
-    return (
+    if (categories.status === "fetching") {
       <div className={`${styles.categoryList} categoryList`}>
-        {categories.map((category) => (
-          <Link
-            key={category.id}
-            className={styles.categoryBtn}
-            to={`/feed/category/${category.id}`}
-          >
-            {category.name}
-          </Link>
-        ))}
-      </div>
-    );
+        <div
+          className={`${styles.categoryBtn} ${styles.categoryBtnPreview}`}
+        ></div>
+      </div>;
+    } else if (categories.status) {
+      return (
+        <div className={`${styles.categoryList} categoryList`}>
+          {categories.categoriesArr.map((category) => (
+            <Link
+              key={category.id}
+              className={styles.categoryBtn}
+              to={`/feed/category/${category.id}`}
+            >
+              {category.name}
+            </Link>
+          ))}
+        </div>
+      );
+    } else {
+      return (
+        <div
+          className={`${styles.categoryList} ${styles.categoryListFailed} categoryList`}
+        >
+          Failed to fetch categories
+        </div>
+      );
+    }
   };
 
   return (
