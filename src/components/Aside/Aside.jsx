@@ -6,41 +6,55 @@ import loginIcon from "../../assets/icons/login.svg";
 import logoutIcon from "../../assets/icons/logout.svg";
 
 // Image
-import profilePicture from "../../assets/images/image.png";
+// import profilePicture from "../../assets/images/image.png";
 
 import styles from "./Aside.module.css";
 
-export default function Aside({ userData = null }) {
-  const authStatus = userData?.auth;
+export default function Aside({ userData, setUserData }) {
+  const authStatus = !!userData.jwt;
+
+  const handleLogoutButtonClick = () => {
+    localStorage.clear();
+
+    setUserData({});
+  };
 
   const getNavAccElements = () => {
     if (authStatus) {
       return (
         <div className={styles.navAccSection}>
-          <Link to={"/profile/1"} className={styles.loginBtnLink}>
+          <Link
+            to={`/profile/${userData.personalData.id}`}
+            className={styles.loginBtnLink}
+          >
             <button className={`${styles.navBtn}  ${styles.profileBtn}`}>
               <img
-                src={profilePicture}
+                src={userData.personalData.profilePictureLink}
                 className={styles.profilePicture}
                 alt=""
               />
-              Samin Ahmed
+              {`${userData.personalData.firstName} ${userData.personalData.lastName}`}
             </button>
           </Link>
 
-          <button className={` ${styles.navBtn} ${styles.logoutBtn}`}>
+          <button
+            className={` ${styles.navBtn} ${styles.logoutBtn}`}
+            onClick={handleLogoutButtonClick}
+          >
             <img src={logoutIcon} alt="logout icon" />
           </button>
         </div>
       );
     } else {
       return (
-        <div className={styles.navAccSection}>
-          <button className={` ${styles.navBtn} ${styles.loginBtn}`}>
-            <img src={loginIcon} alt="Add icon" className="invertImg" />
-            <span>Login or Sign up</span>
-          </button>
-        </div>
+        <Link to={"/auth/login"}>
+          <div className={styles.navAccSection}>
+            <button className={` ${styles.navBtn} ${styles.loginBtn}`}>
+              <img src={loginIcon} alt="Add icon" className="invertImg" />
+              <span>Login or Sign up</span>
+            </button>
+          </div>
+        </Link>
       );
     }
   };
