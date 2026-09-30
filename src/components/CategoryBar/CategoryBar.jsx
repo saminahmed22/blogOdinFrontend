@@ -3,7 +3,7 @@ import styles from "./CategoryBar.module.css";
 // Hooks
 import { useEffect, useState } from "react";
 
-import { Link } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 // Icons
 import scrollIcon from "../../assets/icons/rightArrow.svg";
@@ -12,6 +12,10 @@ import scrollIcon from "../../assets/icons/rightArrow.svg";
 import { fetchCategories } from "../../api/fetchCategories";
 
 export default function CategoryBar() {
+  const navigate = useNavigate();
+
+  const { category: categoryParam } = useParams();
+
   const [categories, setCategories] = useState({
     status: "fetching",
     categoriesArr: [],
@@ -23,7 +27,7 @@ export default function CategoryBar() {
 
       setCategories({
         status: fetchedCategories.status,
-        categoriesArr: [...fetchedCategories?.categories],
+        categoriesArr: [...fetchedCategories.categories],
       });
     };
 
@@ -49,6 +53,10 @@ export default function CategoryBar() {
     leftScrollBtn.disabled = categoryList.scrollLeft + 1 >= maxScrollLeft;
   };
 
+  const handleCategoryBtnClick = (id) => {
+    navigate(id === Number(categoryParam) ? "/feed" : `/feed/${id}`);
+  };
+
   const renderCategories = () => {
     if (categories.status === "fetching") {
       <div className={`${styles.categoryList} categoryList`}>
@@ -60,13 +68,15 @@ export default function CategoryBar() {
       return (
         <div className={`${styles.categoryList} categoryList`}>
           {categories.categoriesArr.map((category) => (
-            <Link
+            <button
               key={category.id}
-              className={styles.categoryBtn}
-              to={`/feed/category/${category.id}`}
+              className={`${styles.categoryBtn} ${Number(categoryParam) === category.id ? styles.categoryBtnSelected : ""}`}
+              onClick={() => {
+                handleCategoryBtnClick(category.id);
+              }}
             >
               {category.name}
-            </Link>
+            </button>
           ))}
         </div>
       );
