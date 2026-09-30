@@ -1,7 +1,7 @@
 import styles from "./CategoryBar.module.css";
 
 // Hooks
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 import { useNavigate, useParams } from "react-router";
 
@@ -33,6 +33,16 @@ export default function CategoryBar() {
 
     fetchFunc();
   }, []);
+
+  const buttonRef = useRef(null);
+  useEffect(() => {
+    if (!buttonRef.current) return;
+
+    buttonRef.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "center",
+    });
+  });
 
   const scrollCategoryList = (direction) => {
     const categoryList = document.querySelector(".categoryList");
@@ -67,17 +77,21 @@ export default function CategoryBar() {
     } else if (categories.status) {
       return (
         <div className={`${styles.categoryList} categoryList`}>
-          {categories.categoriesArr.map((category) => (
-            <button
-              key={category.id}
-              className={`${styles.categoryBtn} ${Number(categoryParam) === category.id ? styles.categoryBtnSelected : ""}`}
-              onClick={() => {
-                handleCategoryBtnClick(category.id);
-              }}
-            >
-              {category.name}
-            </button>
-          ))}
+          {categories.categoriesArr.map((category) => {
+            return (
+              <button
+                key={category.id}
+                id={`category_${category.id}`}
+                className={`${styles.categoryBtn} ${Number(categoryParam) === category.id ? styles.categoryBtnSelected : ""}`}
+                onClick={() => {
+                  handleCategoryBtnClick(category.id);
+                }}
+                ref={Number(categoryParam) === category.id ? buttonRef : null}
+              >
+                {category.name}
+              </button>
+            );
+          })}
         </div>
       );
     } else {
