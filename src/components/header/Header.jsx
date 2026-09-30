@@ -8,7 +8,7 @@ import menuIcon from "../../assets/icons/menu.svg";
 // Components
 import Searchbar from "../Searchbar/Searchbar";
 
-export default function Header() {
+export default function Header({ context }) {
   const handleMenuBtnClick = () => {
     const menu = document.querySelector(".aside");
 
@@ -25,12 +25,12 @@ export default function Header() {
 
   return (
     <header className={styles.header}>
-      <Link className={styles.homeRedirectLink} to={"/"}>
+      <Link className={styles.homeRedirectLink} to={"/feed"}>
         <h1 className={styles.heading} title="Return to the homepage">
           <span style={{ color: "orangered" }}>Q</span>uoteFork
         </h1>
       </Link>
-      <Searchbar />
+      <Searchbar context={context} />
       <button className={styles.menuBtn} onClick={handleMenuBtnClick}>
         <img src={menuIcon} alt="Menu icon" title="Open or close menu" />
       </button>
