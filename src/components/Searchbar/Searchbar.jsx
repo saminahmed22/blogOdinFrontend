@@ -1,3 +1,6 @@
+import { useEffect, useRef } from "react";
+import { Link } from "react-router";
+
 import styles from "./Searchbar.module.css";
 
 // Icons
@@ -5,14 +8,9 @@ import searchIcon from "../../assets/icons/search.svg";
 
 // API
 import { fetchSearchPreview } from "../../api/feathSearchPreview.js";
-import { useEffect, useState, useRef } from "react";
-import { Link } from "react-router";
 
-export default function Searchbar() {
-  let [searchPreviewItems, setSearchPreviewItems] = useState({
-    status: "fetching",
-    posts: [],
-  });
+export default function Searchbar({ context }) {
+  let [searchPosts, setSearchPosts] = context;
 
   const initialRun = useRef(true);
   useEffect(() => {
@@ -25,9 +23,9 @@ export default function Searchbar() {
     const fetchFunc = async (searchQuery) => {
       const searchPreviews = await fetchSearchPreview(searchQuery);
 
-      setSearchPreviewItems({
+      setSearchPosts({
         status: searchPreviews.status,
-        previewItems: searchPreviews.previewItems,
+        posts: [...searchPreviews.previewItems],
       });
     };
 
@@ -45,31 +43,77 @@ export default function Searchbar() {
     if (searchBox) {
       searchBox.addEventListener("input", handleInput);
     }
+  }, [setSearchPosts]);
+
+  const previewDiv = useRef({ mouseover: false, visible: false });
+  useEffect(() => {
+    const searchBox = document.querySelector(".searchBox");
+    const searchPreview = document.querySelector(".searchPreview");
+
+    const togglePreview = (mode) => {
+      searchPreview.style.display = mode;
+    };
+
+    searchPreview.addEventListener("mouseover", () => {
+      if (!previewDiv.current.mouseover) {
+        previewDiv.current.mouseover = true;
+
+        console.log("Mouse Over");
+      }
+    });
+
+    searchPreview.addEventListener("mouseleave", () => {
+      if (previewDiv.current.mouseover) {
+        previewDiv.current.mouseover = false;
+
+        console.log("Mouse Leave");
+      }
+    });
+
+    searchPreview.addEventListener("click", () => {
+      togglePreview("none");
+    });
+
+    searchBox.addEventListener("focusin", (e) => {
+      if (!previewDiv.current.visible && e.target.value) {
+        togglePreview("flex");
+
+        previewDiv.current.visible = true;
+      }
+    });
+
+    searchBox.addEventListener("focusout", () => {
+      if (previewDiv.current.visible && !previewDiv.current.mouseover) {
+        togglePreview("none");
+
+        previewDiv.current.visible = false;
+      }
+    });
+
+    searchBox.addEventListener("input", (e) => {
+      if (e.target.value.length < 1) {
+        togglePreview("none");
+
+        previewDiv.current.mouseover = false;
+        previewDiv.current.focus = false;
+        previewDiv.current.visible = false;
+      } else {
+        if (!previewDiv.current.visible) {
+          togglePreview("flex");
+
+          previewDiv.current.visible = true;
+        }
+      }
+    });
   }, []);
 
-  const togglePreview = (e, force) => {
-    const previewDiv = document.querySelector(".searchPreview");
-
-    if (!previewDiv) return;
-
-    if (force === "hide") {
-      previewDiv.style.display = "none";
-
-      return;
-    }
-
-    const hasValue = e.target.value.length >= 1;
-
-    previewDiv.style.display = hasValue ? "flex" : "none";
-  };
-
   const getPreviewCards = () => {
-    if (searchPreviewItems.status === "fetching") {
+    if (searchPosts.status === "fetching") {
       return <p className={styles.searchPreviewCard}>Loading suggestions...</p>;
-    } else if (searchPreviewItems.status === "error") {
+    } else if (searchPosts.status === "error") {
       return <p className={styles.searchPreviewCard}>Failed to fetch</p>;
     } else {
-      const postArr = searchPreviewItems?.previewItems;
+      const postArr = searchPosts?.posts;
 
       if (postArr.length < 1) {
         return (
@@ -97,24 +141,12 @@ export default function Searchbar() {
   };
 
   return (
-    <div
-      className={styles.searchbar}
-      // onBlur={(e) => {
-      //   togglePreview(e, "hide");
-      // }}
-    >
+    <div className={styles.searchbar}>
       <input
         className={`${styles.searchBox} searchBox`}
         type="search"
         placeholder="Search by title or author name"
         name="searchQuery"
-        autoComplete={"off"}
-        onChange={(e) => {
-          togglePreview(e);
-        }}
-        onFocus={(e) => {
-          togglePreview(e, "show");
-        }}
       />
       <button
         className={styles.searchButton}
