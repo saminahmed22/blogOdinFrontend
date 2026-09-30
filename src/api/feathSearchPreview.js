@@ -10,6 +10,6 @@ export async function fetchSearchPreview(queryString) {
 
     return { status: true, previewItems: [...previewItems.posts] };
   } catch (error) {
-    return { status: false, previewItems: [] };
+    return { status: false, error, previewItems: [] };
   }
 }

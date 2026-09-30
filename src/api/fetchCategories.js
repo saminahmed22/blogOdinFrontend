@@ -8,6 +8,6 @@ export async function fetchCategories() {
 
     return { status: true, categories };
   } catch (error) {
-    return { status: false, categories: [] };
+    return { status: false, error, categories: [] };
   }
 }

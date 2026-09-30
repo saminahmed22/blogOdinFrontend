@@ -1,5 +1,9 @@
-export async function fetchFeedContent(quantity, category) {
-  const url = `http://localhost:3000/api/posts/feed/${quantity}`;
+export async function fetchFeedContent(category, quantity = 10) {
+  let url = `http://localhost:3000/api/posts/feed`;
+
+  url += category ? `/${category}` : "/0";
+
+  url += `/${quantity}`;
 
   try {
     const response = await fetch(url);
@@ -8,6 +12,6 @@ export async function fetchFeedContent(quantity, category) {
 
     return { status: true, posts };
   } catch (error) {
-    return { status: false, posts: [] };
+    return { status: false, error, posts: [] };
   }
 }
