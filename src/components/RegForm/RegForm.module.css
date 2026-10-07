@@ -1,0 +1,231 @@
+.form {
+  width: 350px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+
+  background: #fc970022;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+
+  padding: 10px;
+
+  .formHeading {
+    font-size: 1.5rem;
+    align-self: center;
+  }
+
+  .submitBtn {
+    height: 35px;
+    width: 100px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 4px;
+
+    align-self: flex-end;
+
+    background-color: white;
+
+    transition: background-color 0.3s ease;
+  }
+
+  .submitBtn:hover {
+    background-color: rgba(255, 68, 0, 0.362);
+  }
+
+  .submitBtn:active {
+    background-color: rgba(255, 68, 0, 0.185);
+  }
+}
+
+.fromInputContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  input {
+    height: 20px;
+    width: 200px;
+
+    border: none;
+    border-radius: 4px;
+
+    padding-left: 5px;
+  }
+}
+
+.regForm {
+  label {
+    font-size: 1.2rem;
+  }
+
+  input {
+    height: 30px;
+    width: 90%;
+
+    align-self: center;
+  }
+}
+
+.passwordInputContainer {
+  width: 90%;
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+
+  align-self: center;
+
+  input {
+    width: auto;
+
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  button {
+    height: 100%;
+    width: 40px;
+
+    background-color: white;
+    display: grid;
+    place-items: center;
+
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+  }
+}
+
+.passwordStrengthContainer {
+  align-self: center;
+
+  width: 90%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.strengthMeterContainer {
+  height: 10px;
+  width: 100%;
+
+  display: grid;
+  place-items: center;
+  grid-template-columns: 1fr;
+
+  margin-top: 2px;
+
+  border: none;
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.strengthMeter {
+  height: 100%;
+  width: 0%;
+
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+  justify-self: start;
+
+  border: none;
+  border-radius: 20px;
+
+  transition: width 0.4s ease-in-out;
+}
+
+.strengthMeterBG {
+  height: 100%;
+  width: 100%;
+
+  grid-column: 1 / 2;
+  grid-row: 1 / 2;
+
+  background-color: white;
+}
+
+.passwordStrengthContainer P {
+  font-size: 0.8rem;
+
+  span {
+    font-weight: 500;
+  }
+}
+
+.errorMessageContainer {
+  width: 90%;
+
+  align-self: center;
+
+  color: crimson;
+
+  font-size: 0.9rem;
+
+  overflow: hidden;
+}
+
+.errorMessage {
+  transform: translateY(0);
+
+  transition: transform 0.3s ease;
+
+  transition-delay: 0.05s;
+
+  @starting-style {
+    transform: translateY(-100%);
+  }
+}
+
+.mainErrorMessageContainer {
+  width: 90%;
+
+  align-self: center;
+
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  background-color: rgba(220, 20, 60, 0.583);
+
+  outline: 2px solid crimson;
+  border-radius: 8px;
+
+  transition: height 0.5s ease;
+
+  @starting-style {
+    height: 0;
+  }
+}
+
+.mainErrorMessage {
+  opacity: 1;
+
+  transition: opacity 0.5s ease;
+
+  @starting-style {
+    opacity: 0;
+  }
+}
+
+.loadingIcon {
+  height: 24px;
+}
+
+.registrationRedirectLink {
+  font-size: 0.9rem;
+}
