@@ -49,18 +49,10 @@ export default function CategoryBar() {
 
     if (!categoryList) return;
 
-    const rightScrollBtn = document.querySelector(".categoryScrollRight");
-    const leftScrollBtn = document.querySelector(".categoryScrollLeft");
-
     categoryList.scrollLeft =
       direction === "right"
         ? categoryList.scrollLeft - 100
         : categoryList.scrollLeft + 100;
-
-    const maxScrollLeft = categoryList.scrollWidth - categoryList.clientWidth;
-
-    rightScrollBtn.disabled = categoryList.scrollLeft <= 0;
-    leftScrollBtn.disabled = categoryList.scrollLeft + 1 >= maxScrollLeft;
   };
 
   const handleCategoryBtnClick = (id) => {
