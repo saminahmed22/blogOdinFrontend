@@ -3,6 +3,9 @@ import { useParams, useOutletContext, useNavigate } from "react-router";
 import styles from "./PostPage.module.css";
 import { useEffect, useState } from "react";
 
+// API
+import { fetchPost } from "../../api/fetchPost.js";
+
 export default function PostPage() {
   const navigate = useNavigate();
 
@@ -13,21 +16,27 @@ export default function PostPage() {
   const [post, setPost] = useState({});
 
   useEffect(() => {
-    const getPost = () => {
-      let foundPost;
+    const getPost = async () => {
+      let feedPost, searchPost, fetchedPost;
 
-      foundPost = feedPosts?.posts?.find((postObj) => postObj.id === postId);
+      feedPost = feedPosts?.posts?.find((postObj) => postObj.id === postId);
 
-      if (!foundPost) {
-        foundPost = searchPosts?.posts?.find(
+      if (!feedPost) {
+        searchPost = searchPosts?.posts?.find(
           (postObj) => postObj.id === postId,
         );
       }
 
-      if (foundPost) {
-        setPost(foundPost);
+      if (!searchPost) {
+        const result = await fetchPost(postId);
+
+        fetchedPost = result.post;
+      }
+
+      if (feedPost || searchPost || fetchedPost) {
+        setPost(feedPost || searchPost || fetchedPost);
       } else {
-        throw new Error("No post has been found for the ID: " + postId);
+        setPost("!post");
       }
     };
 
@@ -94,6 +103,13 @@ export default function PostPage() {
     }
   };
 
+  if (post === "!post") {
+    return (
+      <div className={styles.noPostMessage}>
+        Couldn't find any post with the ID: {postId}
+      </div>
+    );
+  }
   return (
     <div className={styles.postPage}>
       <div className={styles.titleContainer}>
