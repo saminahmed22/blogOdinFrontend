@@ -188,6 +188,7 @@ export function LoginForm() {
     <form
       className={`${styles.loginForm} ${styles.form}`}
       onSubmit={handleLoginSubmit}
+      role="main"
     >
       <div className={styles.formHeading}>Login</div>
 
