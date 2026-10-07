@@ -5,6 +5,7 @@ import styles from "./Searchbar.module.css";
 
 // Icons
 import searchIcon from "../../assets/icons/search.svg";
+import loadingIcon from "../../assets/icons/loading.svg";
 
 // API
 import { fetchSearchPreview } from "../../api/feathSearchPreview.js";
@@ -13,6 +14,7 @@ export default function Searchbar({ context }) {
   let [searchPosts, setSearchPosts] = context;
 
   const initialRun = useRef(true);
+  const searchBoxRef = useRef();
   useEffect(() => {
     if (initialRun.current) {
       initialRun.current = false;
@@ -39,15 +41,13 @@ export default function Searchbar({ context }) {
       await fetchFunc(value);
     };
 
-    const searchBox = document.querySelector(".searchBox");
-    if (searchBox) {
-      searchBox.addEventListener("input", handleInput);
+    if (searchBoxRef.current) {
+      searchBoxRef.current.addEventListener("input", handleInput);
     }
   }, [setSearchPosts]);
 
   const previewDiv = useRef({ mouseover: false, visible: false });
   useEffect(() => {
-    const searchBox = document.querySelector(".searchBox");
     const searchPreview = document.querySelector(".searchPreview");
 
     const togglePreview = (mode) => {
@@ -70,7 +70,7 @@ export default function Searchbar({ context }) {
       togglePreview("none");
     });
 
-    searchBox.addEventListener("focusin", (e) => {
+    searchBoxRef.current.addEventListener("focusin", (e) => {
       if (!previewDiv.current.visible && e.target.value) {
         togglePreview("flex");
 
@@ -78,7 +78,7 @@ export default function Searchbar({ context }) {
       }
     });
 
-    searchBox.addEventListener("focusout", () => {
+    searchBoxRef.current.addEventListener("focusout", () => {
       if (previewDiv.current.visible && !previewDiv.current.mouseover) {
         togglePreview("none");
 
@@ -86,7 +86,7 @@ export default function Searchbar({ context }) {
       }
     });
 
-    searchBox.addEventListener("input", (e) => {
+    searchBoxRef.current.addEventListener("input", (e) => {
       if (e.target.value.length < 1) {
         togglePreview("none");
 
@@ -105,11 +105,18 @@ export default function Searchbar({ context }) {
 
   const getPreviewCards = () => {
     if (searchPosts.status === "fetching") {
-      return <p className={styles.searchPreviewCard}>Loading suggestions...</p>;
+      return (
+        <div className={styles.loadingMessage}>
+          <img src={loadingIcon} alt="Loading icon" />
+          <p>Loading suggestions</p>
+        </div>
+      );
     } else if (searchPosts.status === "error") {
       return <p className={styles.searchPreviewCard}>Failed to fetch</p>;
     } else {
       const postArr = searchPosts?.posts;
+
+      if (!postArr) return;
 
       if (postArr.length < 1) {
         return (
@@ -143,6 +150,7 @@ export default function Searchbar({ context }) {
         type="search"
         placeholder="Search by title or author name"
         name="searchQuery"
+        ref={searchBoxRef}
       />
       <button
         className={styles.searchButton}
