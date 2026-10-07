@@ -14,7 +14,7 @@ export default function Aside({ userData, setUserData }) {
   const authStatus = !!userData.jwt;
 
   const handleLogoutButtonClick = () => {
-    localStorage.clear();
+    localStorage.removeItem("jwt");
 
     setUserData({});
   };
