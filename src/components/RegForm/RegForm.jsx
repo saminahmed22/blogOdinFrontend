@@ -9,7 +9,7 @@ import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
 
 // API
-import { fetchLoginCredit } from "../../api/fetchLoginCredit.js";
+import { fetchRegCredit } from "../../api/fetchRegCredit";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -17,13 +17,20 @@ import visibilityIcon from "../../assets/icons/visibility.svg";
 import visibilityOffIcon from "../../assets/icons/visibility_off.svg";
 
 export function RegForm() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [fetchStatus, setFetchStatus] = useState("halt");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [rePasswordVisibility, setRePasswordVisibility] = useState(false);
 
-  const [validationStatus, setValidationStatus] = useState({ status: true });
+  const [validationStatus, setValidationStatus] = useState({
+    firstName: { status: false },
+    lastName: { status: false },
+    username: { status: false },
+    password: { status: false },
+    rePassword: { status: false },
+    credit: { status: true },
+  });
 
   const passwordFieldRef = useRef();
   const rePasswordFieldRef = useRef();
@@ -34,63 +41,45 @@ export function RegForm() {
     const data = new FormData(e.target);
     const dataObj = Object.fromEntries(data);
 
-    const isValid = validate(dataObj);
+    validate(dataObj);
 
-    setFetchStatus(isValid ? "fetching" : "halt");
+    if (
+      validationStatus.firstName.status &&
+      validationStatus.lastName.status &&
+      validationStatus.username.status &&
+      validationStatus.password.status &&
+      validationStatus.rePassword.status
+    ) {
+      setFetchStatus("fetching");
 
-    if (validationStatus.status) {
       const formData = JSON.stringify(dataObj);
 
-      // const result = null
-      // result.success
-      //   ? handleRegistrationSuccess(result)
-      //   : handleRegistrationFail(result);
+      const result = await fetchRegCredit(formData);
+
+      result.success
+        ? handleRegistrationSuccess(result)
+        : handleRegistrationFail(result);
     }
   };
 
-  // const handleRegistrationSuccess = (result) => {
-  //   // localStorage.setItem("jwt", JSON.stringify(result.jwt));
-  //   // localStorage.setItem("userdata", JSON.stringify(result.user));
-  //   // navigate("/feed", { replace: true });
-  // };
+  const handleRegistrationSuccess = (result) => {
+    localStorage.setItem("jwt", JSON.stringify(result.jwt));
+    localStorage.setItem("userdata", JSON.stringify(result.user));
 
-  // const handleRegistrationFail = (result) => {
-  //   // setFetchStatus("halt");
-  //   // if (result.message) {
-  //   //   setValidationStatus({
-  //   //     username: true,
-  //   //     usernameErrorMessage: "",
-  //   //     password: true,
-  //   //     passwordErrorMessage: "",
-  //   //     credit: false,
-  //   //     creditErrorMessage: result.message,
-  //   //   });
-  //   //   return;
-  //   // }
-  //   // const errors = {
-  //   //   username: true,
-  //   //   usernameMessage: "",
-  //   //   password: true,
-  //   //   passwordMessage: "",
-  //   // };
-  //   // result?.validationErrors?.map((error) => {
-  //   //   if (error.path === "username") {
-  //   //     errors.username = false;
-  //   //     errors.usernameMessage = error.msg;
-  //   //   } else if (error.path === "password") {
-  //   //     errors.password = false;
-  //   //     errors.passwordMessage = error.msg;
-  //   //   }
-  //   // });
-  //   // setValidationStatus({
-  //   //   username: errors.username,
-  //   //   usernameErrorMessage: errors.usernameMessage,
-  //   //   password: errors.password,
-  //   //   passwordErrorMessage: errors.passwordMessage,
-  //   //   credit: true,
-  //   //   creditErrorMessage: "",
-  //   // });
-  // };
+    navigate("/feed", { replace: true });
+  };
+
+  const handleRegistrationFail = (result) => {
+    setFetchStatus("halt");
+
+    const errors = {};
+
+    result?.validationErrors?.map((error) => {
+      errors[error.path] = { status: false, message: error.msg };
+    });
+
+    setValidationStatus((prev) => ({ ...prev, ...errors }));
+  };
 
   const validate = (data) => {
     validateFirstName(data.firstName);
@@ -104,19 +93,21 @@ export function RegForm() {
     if (value) {
       setValidationStatus((prev) => ({
         ...prev,
-        status: true,
         firstName: { field: "firstName", status: true },
       }));
+
+      return true;
     } else {
       setValidationStatus((prev) => ({
         ...prev,
-        status: false,
         firstName: {
           field: "firstName",
-          status: "invalid",
+          status: false,
           message: "Please enter your first name.",
         },
       }));
+
+      return false;
     }
   };
 
@@ -124,19 +115,22 @@ export function RegForm() {
     if (value) {
       setValidationStatus((prev) => ({
         ...prev,
-        status: true,
+
         lastName: { field: "lastName", status: true },
       }));
+
+      return true;
     } else {
       setValidationStatus((prev) => ({
         ...prev,
-        status: false,
         lastName: {
           field: "lastName",
-          status: "invalid",
+          status: false,
           message: "Please enter your last name.",
         },
       }));
+
+      return false;
     }
   };
 
@@ -144,19 +138,21 @@ export function RegForm() {
     if (value) {
       setValidationStatus((prev) => ({
         ...prev,
-        status: true,
         username: { field: "username", status: true },
       }));
+
+      return true;
     } else {
       setValidationStatus((prev) => ({
         ...prev,
-        status: false,
         username: {
           field: "username",
-          status: "invalid",
+          status: false,
           message: "Please enter a username.",
         },
       }));
+
+      return false;
     }
   };
 
@@ -199,38 +195,43 @@ export function RegForm() {
       if (!isValidPassword) {
         setValidationStatus((prev) => ({
           ...prev,
-          status: false,
+
           password: {
             field: "password",
-            status: "invalid",
+            status: false,
             strength: strength.score,
-
             message:
               "Password must be 8-100 characters long and include at least one uppercase letter, one lowercase letter, two digits, and one symbol.",
           },
         }));
+
+        return false;
       } else {
         setValidationStatus((prev) => ({
           ...prev,
-          status: true,
+
           password: {
             field: "password",
             status: true,
             strength: strength.score,
           },
         }));
+
+        return true;
       }
     } else {
       setValidationStatus((prev) => ({
         ...prev,
-        status: false,
+
         password: {
           field: "password",
-          status: "invalid",
+          status: false,
           message: "Please enter a password.",
           strength: strength.score,
         },
       }));
+
+      return false;
     }
   };
 
@@ -239,47 +240,46 @@ export function RegForm() {
       if (value === givenPassword) {
         setValidationStatus((prev) => ({
           ...prev,
-          status: true,
+
           rePassword: { field: "rePassword", status: true },
         }));
+
+        return true;
       } else {
         setValidationStatus((prev) => ({
           ...prev,
-          status: false,
+
           rePassword: {
             field: "rePassword",
-            status: "invalid",
+            status: false,
             message: "Passwords don't match.",
           },
         }));
+
+        return false;
       }
     } else {
       setValidationStatus((prev) => ({
         ...prev,
-        status: false,
+
         rePassword: {
           field: "rePassword",
-          status: "invalid",
+          status: false,
           message: "Please re-enter the password.",
         },
       }));
+
+      return false;
     }
   };
 
   const getMainErrorMessage = () => {
-    if (validationStatus.credit) return;
+    if (validationStatus.credit.status) return;
 
-    if (validationStatus?.creditErrorMessage === "!credit") {
-      return (
-        <div className={styles.mainErrorMessageContainer}>
-          <p className={styles.mainErrorMessage}>
-            Incorrect username or password
-          </p>
-        </div>
-      );
-    } else if (
-      validationStatus?.creditErrorMessage === "!client" ||
-      validationStatus?.creditErrorMessage === "error"
+    if (
+      validationStatus.credit?.message === "!client" ||
+      validationStatus.credit?.message === "error" ||
+      !navigator.onLine
     ) {
       return (
         <div className={styles.mainErrorMessageContainer}>
@@ -341,6 +341,7 @@ export function RegForm() {
     <form
       className={`${styles.regForm} ${styles.form}`}
       onSubmit={handleRegistrationSubmit}
+      role="main"
     >
       <div className={styles.formHeading}>Register</div>
 
@@ -361,7 +362,7 @@ export function RegForm() {
           }}
         />
 
-        {validationStatus?.firstName?.status === "invalid" &&
+        {validationStatus?.firstName?.status === false &&
           getErrorMessage(validationStatus.firstName)}
       </div>
 
@@ -380,7 +381,7 @@ export function RegForm() {
           }}
         />
 
-        {validationStatus?.lastName?.status === "invalid" &&
+        {validationStatus?.lastName?.status === false &&
           getErrorMessage(validationStatus.lastName)}
       </div>
 
@@ -399,7 +400,7 @@ export function RegForm() {
           }}
         />
 
-        {validationStatus?.username?.status === "invalid" &&
+        {validationStatus?.username?.status === false &&
           getErrorMessage(validationStatus.username)}
       </div>
 
@@ -461,7 +462,7 @@ export function RegForm() {
           </p>
         </div>
 
-        {validationStatus?.password?.status === "invalid" &&
+        {validationStatus?.password?.status === false &&
           getErrorMessage(validationStatus.password)}
       </div>
 
@@ -503,7 +504,7 @@ export function RegForm() {
           </button>
         </div>
 
-        {validationStatus?.rePassword?.status === "invalid" &&
+        {validationStatus?.rePassword?.status === false &&
           getErrorMessage(validationStatus.rePassword)}
       </div>
 
