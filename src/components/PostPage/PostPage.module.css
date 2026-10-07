@@ -1,0 +1,133 @@
+.postPage {
+  overflow-x: hidden;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.detailsContainer {
+  width: fit-content;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 20px 0 0 5px;
+}
+
+.authorDetails {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+
+  margin-left: 5px;
+}
+
+.postDetails {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  margin-left: 5px;
+  margin-top: 20px;
+
+  font-size: 0.9rem;
+}
+
+.postDetails span {
+  font-weight: 500;
+}
+
+.profilePicture {
+  height: 35px;
+  width: 35px;
+
+  border-radius: 50%;
+
+  object-fit: cover;
+
+  cursor: pointer;
+}
+
+.altProfilePicture {
+  height: 35px;
+  width: 35px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  background-color: lightcoral;
+
+  border: 1px solid #0000001a;
+}
+
+.authorName {
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+.authorMemberDate {
+  font-size: 0.8rem;
+}
+.authorMemberDate span {
+  font-weight: 500;
+}
+
+.postDate {
+  font-size: 0.8rem;
+}
+
+/* Body */
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 600;
+
+  margin: 10px 0 5px 10px;
+}
+
+.category {
+  width: fit-content;
+
+  display: grid;
+  place-items: center;
+
+  background-color: rgba(240, 128, 128, 0.4);
+
+  border-radius: 12px;
+
+  padding: 0px 10px;
+  margin-left: 10px;
+
+  font-size: 0.8rem;
+}
+
+.description {
+  max-width: 95%;
+  line-break: loose;
+
+  font-size: 1.2rem;
+
+  padding: 25px 0 10px 10px;
+}
