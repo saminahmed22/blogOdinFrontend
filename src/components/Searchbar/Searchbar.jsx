@@ -57,16 +57,12 @@ export default function Searchbar({ context }) {
     searchPreview.addEventListener("mouseover", () => {
       if (!previewDiv.current.mouseover) {
         previewDiv.current.mouseover = true;
-
-        console.log("Mouse Over");
       }
     });
 
     searchPreview.addEventListener("mouseleave", () => {
       if (previewDiv.current.mouseover) {
         previewDiv.current.mouseover = false;
-
-        console.log("Mouse Leave");
       }
     });
 
