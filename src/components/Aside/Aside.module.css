@@ -91,6 +91,26 @@
   object-fit: cover;
 }
 
+.altProfilePicture {
+  height: 35px;
+  width: 35px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  border: 1px solid #0000001a;
+
+  color: black;
+}
+
 .logoutBtn {
   height: 100%;
   width: 60px;
@@ -116,6 +136,8 @@
     backdrop-filter: blur(8px);
 
     background-color: rgba(40, 40, 40, 0.95);
+
+    z-index: 9;
   }
 
   .navbar {
