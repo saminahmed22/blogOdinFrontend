@@ -3,13 +3,16 @@ import styles from "./PostCardActBtn.module.css";
 import optionsIcon from "../../assets/icons/options.svg";
 
 export default function PostCardActionPopver() {
+  const handlePostCardActionClick = (e) => {};
+
   return (
-    <>
+    <PostCardActionPopver>
       <button
         title="Post card actions"
         className={`${styles.postCardActBtn} invertSVG`}
         popoverTarget="postCardActPopover"
         popoverTargetAction="toggle"
+        onClick={handlePostCardActionClick}
       >
         <img src={optionsIcon} alt="Options icon" />
       </button>
@@ -25,6 +28,6 @@ export default function PostCardActionPopver() {
         <button className={styles.saveBtn}>Save</button>
         <button className={styles.reportBtn}>Report</button>
       </dialog>
-    </>
+    </PostCardActionPopver>
   );
 }
