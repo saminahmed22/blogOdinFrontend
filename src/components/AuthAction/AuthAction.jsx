@@ -13,8 +13,21 @@ export function AuthAction() {
     window.history.pushState(null, "", "/auth/register");
   }
 
+  const getHelloMessage = () => {
+    if (mode === "login") {
+      const userData = JSON.parse(localStorage.getItem("userdata"));
+
+      return (
+        <p
+          className={styles.helloMsg}
+        >{`Welcome back, ${userData ? userData.firstName : "someone we used to know"}!`}</p>
+      );
+    }
+  };
+
   return (
     <div className={styles.authAction}>
+      {getHelloMessage()}
       {mode === "login" ? <LoginForm /> : <RegForm />}
     </div>
   );
