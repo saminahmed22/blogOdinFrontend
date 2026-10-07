@@ -27,7 +27,6 @@ export default function PostPage() {
       if (foundPost) {
         setPost(foundPost);
       } else {
-        console.log(searchPosts);
         throw new Error("No post has been found for the ID: " + postId);
       }
     };
@@ -98,7 +97,7 @@ export default function PostPage() {
   return (
     <div className={styles.postPage}>
       <div className={styles.titleContainer}>
-        <p className={styles.title}>{post?.title}</p>
+        <h2 className={styles.title}>{post?.title}</h2>
 
         <p className={styles.category}>{post?.category?.name}</p>
       </div>

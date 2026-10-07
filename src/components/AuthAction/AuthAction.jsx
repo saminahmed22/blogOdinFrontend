@@ -18,9 +18,9 @@ export function AuthAction() {
       const userData = JSON.parse(localStorage.getItem("userdata"));
 
       return (
-        <p
+        <h2
           className={styles.helloMsg}
-        >{`Welcome back, ${userData ? userData.firstName : "someone we used to know"}!`}</p>
+        >{`Welcome back, ${userData ? userData.firstName : "someone we used to know"}!`}</h2>
       );
     }
   };

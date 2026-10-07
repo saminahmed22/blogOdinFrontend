@@ -26,7 +26,7 @@ export default function LandingPage() {
           meant to be.
         </p>
       </div>
-      <div className={styles.actions}>
+      <div className={styles.actions} role="main">
         <Link className={`${styles.link} ${styles.feedLink}`} to={"/feed"}>
           Check it out!
         </Link>

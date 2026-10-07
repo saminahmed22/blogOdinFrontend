@@ -151,6 +151,7 @@ export default function Searchbar({ context }) {
         placeholder="Search by title or author name"
         name="searchQuery"
         ref={searchBoxRef}
+        aria-label="Search"
       />
       <button
         className={styles.searchButton}

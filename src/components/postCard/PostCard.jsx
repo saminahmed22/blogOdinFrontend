@@ -97,7 +97,7 @@ export default function PostCard({ post = {} }) {
       </div>
 
       <div className={styles.titleContainer}>
-        <p className={styles.title}>{post?.title}</p>
+        <h2 className={styles.title}>{post?.title}</h2>
 
         <p className={styles.category} onClick={handleCategoryClick}>
           {post?.category?.name}
