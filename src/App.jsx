@@ -1,5 +1,5 @@
 // Hooks
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Outlet } from "react-router";
 
 // Components
@@ -7,34 +7,27 @@ import Header from "./components/header/Header";
 import Aside from "./components/Aside/Aside";
 
 export default function App() {
-  const storedJWT = localStorage.getItem("jwt");
-
-  let [userData, setUserData] = useState({
-    personalData: null,
-    auth: storedJWT || null,
+  const [userData, setUserData] = useState({
+    personalData: JSON.parse(localStorage.getItem("userdata")),
+    jwt: JSON.parse(localStorage.getItem("jwt")),
   });
 
-  useEffect(() => {
-    if (storedJWT) {
-      // const payloadEncoded = userData.auth.split(".")[1];
-      // const payloadDecoded = JSON.parse(atob(payloadEncoded));
-      // // const userID = payloadDecoded.sub;
+  const [searchPosts, setSearchPosts] = useState({
+    status: "fetching",
+    posts: [],
+  });
 
-      (() => {
-        setUserData((prev) => ({
-          jwt: prev.jwt,
-          personalData: { firstname: "samin", secondName: "ahmed" },
-        }));
-      })();
-    }
-  }, [storedJWT]);
+  const [feedPosts, setFeedPosts] = useState({
+    status: "fetching",
+    posts: [],
+  });
 
   return (
     <>
-      <Header userData={userData} />
+      <Header context={[searchPosts, setSearchPosts]} />
       <div className="contentBody">
-        <Aside />
-        <Outlet context={[userData, setUserData]} />
+        <Aside userData={userData} setUserData={setUserData} />
+        <Outlet context={{ userData, setUserData, feedPosts, setFeedPosts }} />
       </div>
     </>
   );
