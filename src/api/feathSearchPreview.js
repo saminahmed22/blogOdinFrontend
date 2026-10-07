@@ -8,7 +8,7 @@ export async function fetchSearchPreview(queryString) {
 
     const previewItems = await response.json();
 
-    return { status: true, previewItems };
+    return { status: true, ...previewItems };
   } catch (error) {
     return { status: false, error, previewItems: [] };
   }
