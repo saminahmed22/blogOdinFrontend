@@ -23,12 +23,9 @@ export default function Searchbar({ context }) {
     }
 
     const fetchFunc = async (searchQuery) => {
-      const searchPreviews = await fetchSearchPreview(searchQuery);
+      const result = await fetchSearchPreview(searchQuery);
 
-      setSearchPosts({
-        status: searchPreviews.status,
-        posts: [...searchPreviews.previewItems],
-      });
+      setSearchPosts(result);
     };
 
     const handleInput = async (event) => {
