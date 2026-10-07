@@ -52,6 +52,7 @@
 @media (max-width: 800px) {
   .authPage {
     flex-direction: column;
+    overflow: hidden auto;
   }
 
   .authHeroContainer {
