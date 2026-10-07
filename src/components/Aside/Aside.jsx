@@ -28,11 +28,22 @@ export default function Aside({ userData, setUserData }) {
             className={styles.loginBtnLink}
           >
             <button className={`${styles.navBtn}  ${styles.profileBtn}`}>
-              <img
-                src={userData.personalData.profilePictureLink}
-                className={styles.profilePicture}
-                alt=""
-              />
+              {userData.personalData.profilePictureLink ? (
+                <img
+                  src={userData.personalData.profilePictureLink}
+                  className={styles.profilePicture}
+                  alt=""
+                />
+              ) : (
+                <div
+                  className={styles.altProfilePicture}
+                  style={{ backgroundColor: userData.personalData.theme_color }}
+                >
+                  {userData.personalData.firstName[0]}
+                  {userData.personalData.lastName[0]}
+                </div>
+              )}
+
               {`${userData.personalData.firstName} ${userData.personalData.lastName}`}
             </button>
           </Link>
