@@ -27,7 +27,15 @@ export default function App() {
       <Header context={[searchPosts, setSearchPosts]} />
       <div className="contentBody">
         <Aside userData={userData} setUserData={setUserData} />
-        <Outlet context={{ userData, setUserData, feedPosts, setFeedPosts }} />
+        <Outlet
+          context={{
+            userData,
+            setUserData,
+            feedPosts,
+            setFeedPosts,
+            searchPosts,
+          }}
+        />
       </div>
     </>
   );
