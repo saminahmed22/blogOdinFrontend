@@ -13,18 +13,32 @@ export default function App() {
   });
 
   const [searchPosts, setSearchPosts] = useState({
-    status: "fetching",
-    posts: [],
+    fetchConfig: {
+      quantity: 10,
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+    },
+
+    posts: {},
   });
 
   const [feedPosts, setFeedPosts] = useState({
-    status: "fetching",
-    posts: [],
+    fetchConfig: {
+      quantity: 10,
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+    },
+
+    posts: {},
   });
 
   return (
     <>
-      <Header context={[searchPosts, setSearchPosts]} />
+      <Header context={{ searchPosts, setSearchPosts }} />
       <div className="contentBody">
         <Aside userData={userData} setUserData={setUserData} />
         <Outlet
