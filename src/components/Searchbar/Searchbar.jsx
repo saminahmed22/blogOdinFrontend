@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router";
 
 import styles from "./Searchbar.module.css";
@@ -8,135 +8,238 @@ import searchIcon from "../../assets/icons/search.svg";
 import loadingIcon from "../../assets/icons/loading.svg";
 
 // API
-import { fetchSearchPreview } from "../../api/feathSearchPreview.js";
+import { fetchSearchContent } from "../../api/fetchSearchContent.js";
 
 export default function Searchbar({ context }) {
-  let [searchPosts, setSearchPosts] = context;
+  const [fetchStatus, setFetchStatus] = useState("halt");
 
-  const initialRun = useRef(true);
+  const { searchPosts, setSearchPosts } = context;
+
   const searchBoxRef = useRef();
+  const searchPreviewRef = useRef();
+
+  // Preview event handlers
+  const previewMouseOverRef = useRef(false);
   useEffect(() => {
-    if (initialRun.current) {
-      initialRun.current = false;
-
-      return;
-    }
-
-    const fetchFunc = async (searchQuery) => {
-      const result = await fetchSearchPreview(searchQuery);
-
-      setSearchPosts(result);
-    };
-
-    const handleInput = async (event) => {
-      const value = event.target.value;
-
-      const valueLen = value.length;
-
-      if (!valueLen || value[valueLen - 1] === " ") return;
-
-      await fetchFunc(value);
-    };
-
-    if (searchBoxRef.current) {
-      searchBoxRef.current.addEventListener("input", handleInput);
-    }
-  }, [setSearchPosts]);
-
-  const previewDiv = useRef({ mouseover: false, visible: false });
-  useEffect(() => {
-    const searchPreview = document.querySelector(".searchPreview");
+    const searchRef = searchBoxRef.current;
+    const preveiwRef = searchPreviewRef.current;
 
     const togglePreview = (mode) => {
-      searchPreview.style.display = mode;
+      preveiwRef.style.display = mode;
     };
 
-    searchPreview.addEventListener("mouseover", () => {
-      if (!previewDiv.current.mouseover) {
-        previewDiv.current.mouseover = true;
+    // Event handlers for the searchbar
+    const handleSearchBoxFocusIn = () => {
+      togglePreview("flex");
+    };
+
+    const handleSearchBoxFocusOut = () => {
+      if (!previewMouseOverRef.current) {
+        togglePreview("none");
       }
-    });
+    };
 
-    searchPreview.addEventListener("mouseleave", () => {
-      if (previewDiv.current.mouseover) {
-        previewDiv.current.mouseover = false;
-      }
-    });
-
-    searchPreview.addEventListener("click", () => {
-      togglePreview("none");
-    });
-
-    searchBoxRef.current.addEventListener("focusin", (e) => {
-      if (!previewDiv.current.visible && e.target.value) {
+    const handleSearchBoxInput = (e) => {
+      if (e.target.value.length < 1) {
+        setFetchStatus("halt");
+      } else {
         togglePreview("flex");
 
-        previewDiv.current.visible = true;
+        setFetchStatus("fetching");
       }
-    });
+    };
 
-    searchBoxRef.current.addEventListener("focusout", () => {
-      if (previewDiv.current.visible && !previewDiv.current.mouseover) {
-        togglePreview("none");
-
-        previewDiv.current.visible = false;
+    // Event handlers for the preview
+    const handlePreviewMOver = () => {
+      if (!previewMouseOverRef.current) {
+        previewMouseOverRef.current = true;
       }
-    });
+    };
 
-    searchBoxRef.current.addEventListener("input", (e) => {
-      if (e.target.value.length < 1) {
-        togglePreview("none");
-
-        previewDiv.current.mouseover = false;
-        previewDiv.current.focus = false;
-        previewDiv.current.visible = false;
-      } else {
-        if (!previewDiv.current.visible) {
-          togglePreview("flex");
-
-          previewDiv.current.visible = true;
-        }
+    const handlePreviewMOut = () => {
+      if (previewMouseOverRef.current) {
+        previewMouseOverRef.current = false;
       }
-    });
+    };
+
+    const handlePreviewClick = () => {
+      togglePreview("none");
+    };
+
+    // Attaching the event listeners
+    searchRef.addEventListener("focusin", handleSearchBoxFocusIn);
+    searchRef.addEventListener("focusout", handleSearchBoxFocusOut);
+    searchRef.addEventListener("input", handleSearchBoxInput);
+
+    preveiwRef.addEventListener("mouseover", handlePreviewMOver);
+    preveiwRef.addEventListener("mouseleave", handlePreviewMOut);
+    preveiwRef.addEventListener("click", handlePreviewClick);
+
+    // removing the event listeners
+    return () => {
+      searchRef.removeEventListener("focusin", handleSearchBoxFocusIn);
+      searchRef.removeEventListener("focusout", handleSearchBoxFocusOut);
+      searchRef.removeEventListener("input", handleSearchBoxInput);
+
+      preveiwRef.removeEventListener("mouseover", handlePreviewMOver);
+      preveiwRef.removeEventListener("mouseleave", handlePreviewMOut);
+      preveiwRef.removeEventListener("click", handlePreviewClick);
+    };
   }, []);
 
-  const getPreviewCards = () => {
-    if (searchPosts.status === "fetching") {
-      return (
-        <div className={styles.loadingMessage}>
-          <img src={loadingIcon} alt="Loading icon" />
-          <p>Loading suggestions</p>
-        </div>
-      );
-    } else if (searchPosts.status === "error") {
-      return <p className={styles.searchPreviewCard}>Failed to fetch</p>;
-    } else {
-      const postArr = searchPosts?.posts;
+  const updateSearchPostState = useCallback(
+    (mode, result) => {
+      const buildingObj = {
+        fetchConfig: {
+          quantity: 10,
+          hasMore: false,
+          count: 0,
+          amount: 0,
+          cursor: undefined,
+        },
 
-      if (!postArr) return;
+        posts: {},
+      };
 
-      if (postArr.length < 1) {
-        return (
-          <p className={styles.searchPreviewCard}>
-            Didn't find any matching post
-          </p>
-        );
+      // update fetch config options
+
+      buildingObj.fetchConfig.count = result.count;
+
+      buildingObj.fetchConfig.amount =
+        mode === "onChange"
+          ? result.posts.length
+          : searchPosts.fetchConfig.amount + result.posts.length;
+
+      buildingObj.fetchConfig.hasMore =
+        result.count > buildingObj.fetchConfig.amount;
+
+      buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
+        ? result.posts[result.posts.length - 1].id
+        : undefined;
+
+      // Populate posts object
+      if (mode !== "onChange") {
+        buildingObj.posts = { ...searchPosts.posts };
+      }
+
+      for (const post of result.posts) {
+        buildingObj.posts[post.id] = post;
+      }
+
+      console.log(buildingObj);
+
+      setSearchPosts(buildingObj);
+    },
+    [searchPosts.fetchConfig.amount, searchPosts.posts, setSearchPosts],
+  );
+
+  const fetchPosts = useCallback(
+    async (mode = "request") => {
+      const query = searchBoxRef.current.value;
+
+      if (!query.length) return;
+
+      const params = {
+        query,
+        quantity: searchPosts.fetchConfig.quantity,
+        cursor:
+          mode === "onChange" ? undefined : searchPosts.fetchConfig.cursor,
+      };
+
+      const result = await fetchSearchContent(params);
+
+      if (result.success) {
+        updateSearchPostState(mode, result);
+        setFetchStatus("success");
       } else {
+        setFetchStatus("error");
+      }
+    },
+    [
+      searchPosts.fetchConfig.quantity,
+      searchPosts.fetchConfig.cursor,
+      updateSearchPostState,
+    ],
+  );
+
+  // Refetch on scroll handler
+  useEffect(() => {
+    const prevRef = searchPreviewRef.current;
+
+    if (!prevRef) return;
+
+    const handleScroll = async () => {
+      const scrollTop = prevRef.scrollTop;
+      const scrollHeight = prevRef.scrollHeight;
+      const clientHeight = prevRef.clientHeight;
+
+      const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+
+      if (percentage >= 70 && searchPosts.fetchConfig.hasMore) {
+        console.log("IN view");
+
+        fetchPosts();
+      }
+    };
+
+    prevRef.addEventListener("scroll", handleScroll);
+
+    return () => {
+      prevRef.removeEventListener("scroll", handleScroll);
+    };
+  }, [fetchPosts, searchPosts]);
+
+  const getPreviewCards = () => {
+    switch (fetchStatus) {
+      case "halt":
         return (
-          <div className={styles.previewListContainer}>
-            {postArr.map((post) => (
-              <Link
-                key={post.id}
-                to={`/posts/${post.id}`}
-                className={styles.searchPreviewCard}
-              >
-                <p className={styles.searchPreviewTitle}>{post.title}</p>
-                <p className={styles.searchPreviewDesc}>{post.description}</p>
-              </Link>
-            ))}
+          <div className={styles.loadingMessage}>
+            <p>Type something to get suggestions.</p>
           </div>
         );
-      }
+
+      case "fetching":
+        return (
+          <div className={styles.loadingMessage}>
+            <img src={loadingIcon} alt="Loading icon" />
+            <p>Loading suggestions</p>
+          </div>
+        );
+
+      case "error":
+        return <p className={styles.searchPreviewCard}>Failed to fetch.</p>;
+    }
+
+    const posts = searchPosts?.posts;
+
+    if (Object.keys(posts).length < 1) {
+      return (
+        <p className={styles.searchPreviewCard}>
+          Didn't find any matching post.
+        </p>
+      );
+    } else {
+      return (
+        <div className={styles.previewListContainer}>
+          {Object.entries(posts).map(([id, post]) => (
+            <Link
+              key={id}
+              to={`/posts/${id}`}
+              className={styles.searchPreviewCard}
+            >
+              <p className={styles.searchPreviewTitle}>{post.title}</p>
+              <p className={styles.searchPreviewDesc}>{post.description}</p>
+            </Link>
+          ))}
+
+          {searchPosts.fetchConfig.hasMore && (
+            <div className={styles.loadingMessage}>
+              <img src={loadingIcon} alt="Loading icon" />
+              <p>Loading more suggestions</p>
+            </div>
+          )}
+        </div>
+      );
     }
   };
 
@@ -149,7 +252,11 @@ export default function Searchbar({ context }) {
         name="searchQuery"
         ref={searchBoxRef}
         aria-label="Search"
+        onChange={() => {
+          fetchPosts("onChange");
+        }}
       />
+
       <button
         className={styles.searchButton}
         type="submit"
@@ -157,7 +264,11 @@ export default function Searchbar({ context }) {
       >
         <img src={searchIcon} alt="Search icon" />
       </button>
-      <div className={`${styles.searchPreview} searchPreview`}>
+
+      <div
+        className={`${styles.searchPreview} searchPreview`}
+        ref={searchPreviewRef}
+      >
         {getPreviewCards()}
       </div>
     </div>
