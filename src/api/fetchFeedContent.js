@@ -1,19 +1,13 @@
-export async function fetchFeedContent(category, quantity = 10, index) {
-  let url = `http://localhost:3000/api/posts/feed`;
+export async function fetchFeedContent(params) {
+  const url = new URL(`http://localhost:3000/api/posts/feed`);
 
-  url += category ? `/${category}` : "/0";
-
-  url += `/${quantity}`;
-
-  url += `/${index}`;
-
-  try {
-    const response = await fetch(url);
-
-    const posts = await response.json();
-
-    return { status: true, posts };
-  } catch (error) {
-    return { status: false, error, posts: [] };
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.append(key, value);
   }
+
+  const response = await fetch(url);
+
+  const result = await response.json();
+
+  return result;
 }
