@@ -116,15 +116,34 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.searchPreviewDesc {
-  max-width: 90%;
+
+.PreviewCardSecondary {
+  width: 100%;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 5px;
+}
+
+.searchPreviewAuthor {
+  min-width: fit-content;
 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  padding-left: 8px;
   font-size: 0.8rem;
+  font-weight: 550;
+}
+.searchPreviewDesc {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  font-size: 0.8rem;
+
+  padding-right: 10px;
 }
 
 .searchPreviewCard:hover {
