@@ -87,7 +87,7 @@ export default function Searchbar({ context }) {
     };
   }, []);
 
-  const updateSearchPostState = useCallback(
+  const updateSearchPostsState = useCallback(
     (mode, result) => {
       const buildingObj = {
         fetchConfig: {
@@ -102,7 +102,6 @@ export default function Searchbar({ context }) {
       };
 
       // update fetch config options
-
       buildingObj.fetchConfig.count = result.count;
 
       buildingObj.fetchConfig.amount =
@@ -126,13 +125,12 @@ export default function Searchbar({ context }) {
         buildingObj.posts[post.id] = post;
       }
 
-      console.log(buildingObj);
-
       setSearchPosts(buildingObj);
     },
     [searchPosts.fetchConfig.amount, searchPosts.posts, setSearchPosts],
   );
 
+  const fetchingOnReqRef = useRef(false);
   const fetchPosts = useCallback(
     async (mode = "request") => {
       const query = searchBoxRef.current.value;
@@ -149,7 +147,8 @@ export default function Searchbar({ context }) {
       const result = await fetchSearchContent(params);
 
       if (result.success) {
-        updateSearchPostState(mode, result);
+        fetchingOnReqRef.current = false;
+        updateSearchPostsState(mode, result);
         setFetchStatus("success");
       } else {
         setFetchStatus("error");
@@ -158,7 +157,7 @@ export default function Searchbar({ context }) {
     [
       searchPosts.fetchConfig.quantity,
       searchPosts.fetchConfig.cursor,
-      updateSearchPostState,
+      updateSearchPostsState,
     ],
   );
 
@@ -175,8 +174,12 @@ export default function Searchbar({ context }) {
 
       const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
-      if (percentage >= 70 && searchPosts.fetchConfig.hasMore) {
-        console.log("IN view");
+      if (
+        percentage >= 70 &&
+        searchPosts.fetchConfig.hasMore &&
+        !fetchingOnReqRef.current
+      ) {
+        fetchingOnReqRef.current = true;
 
         fetchPosts();
       }
@@ -228,7 +231,12 @@ export default function Searchbar({ context }) {
               className={styles.searchPreviewCard}
             >
               <p className={styles.searchPreviewTitle}>{post.title}</p>
-              <p className={styles.searchPreviewDesc}>{post.description}</p>
+              <div className={styles.PreviewCardSecondary}>
+                <p
+                  className={styles.searchPreviewAuthor}
+                >{`${post.author.firstName} ${post.author.lastName}:`}</p>
+                <p className={styles.searchPreviewDesc}>{post.description}</p>
+              </div>
             </Link>
           ))}
 
@@ -248,10 +256,10 @@ export default function Searchbar({ context }) {
       <input
         className={`${styles.searchBox} searchBox`}
         type="search"
-        placeholder="Search by title or author name"
+        placeholder="Search by title, description or author name"
         name="searchQuery"
         ref={searchBoxRef}
-        aria-label="Search"
+        aria-label="Search by title, description or author name"
         onChange={() => {
           fetchPosts("onChange");
         }}
