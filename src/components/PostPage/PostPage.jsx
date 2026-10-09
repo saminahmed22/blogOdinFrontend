@@ -19,22 +19,21 @@ export default function PostPage() {
     const getPost = async () => {
       let feedPost, searchPost, fetchedPost;
 
-      feedPost = feedPosts?.posts?.find((postObj) => postObj.id === postId);
+      feedPost = feedPosts?.posts[postId];
 
       if (!feedPost) {
-        searchPost = searchPosts?.posts?.find(
-          (postObj) => postObj.id === postId,
-        );
+        searchPost = searchPosts?.posts[postId];
       }
 
       if (!searchPost) {
         const result = await fetchPost(postId);
 
-        fetchedPost = result.post;
+        fetchedPost = { ...result };
       }
 
-      if (feedPost || searchPost || fetchedPost) {
-        setPost(feedPost || searchPost || fetchedPost);
+      console.log(fetchedPost);
+      if (feedPost || searchPost || fetchedPost.success) {
+        setPost(feedPost || searchPost || fetchedPost.post);
       } else {
         setPost("!post");
       }
