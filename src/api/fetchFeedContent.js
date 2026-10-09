@@ -2,12 +2,16 @@ export async function fetchFeedContent(params) {
   const url = new URL(`http://localhost:3000/api/posts/feed`);
 
   for (const [key, value] of Object.entries(params)) {
-    url.searchParams.append(key, value);
+    url.searchParams.set(key, value);
   }
 
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url);
 
-  const result = await response.json();
+    const result = await response.json();
 
-  return result;
+    return result;
+  } catch (error) {
+    return { success: false, error };
+  }
 }
