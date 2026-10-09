@@ -6,7 +6,8 @@
 }
 
 .categoryBar {
-  height: 35px;
+  min-height: 35px;
+  max-height: 35px;
   width: 100%;
 
   display: grid;
