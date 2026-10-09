@@ -3,6 +3,9 @@ import { useParams, useOutletContext, useNavigate } from "react-router";
 import styles from "./PostPage.module.css";
 import { useEffect, useState } from "react";
 
+// Components
+import CommentSection from "../CommentSection/CommentSection";
+
 // API
 import { fetchPost } from "../../api/fetchPost.js";
 
@@ -56,6 +59,7 @@ export default function PostPage() {
         <div
           className={styles.altProfilePicture}
           style={{ backgroundColor: post?.author?.theme_color }}
+          onClick={handleProfileClick}
         >
           {`${post?.author?.firstName[0]}${post?.author?.lastName[0]}`}
         </div>
@@ -121,7 +125,7 @@ export default function PostPage() {
           {getProfilePicture()}
 
           <div className={styles.authorSubDetails}>
-            <p className={styles.authorName}>
+            <p className={styles.authorName} onClick={handleProfileClick}>
               {`${post?.author?.firstName} ${post?.author?.lastName}`}
             </p>
 
@@ -143,8 +147,12 @@ export default function PostPage() {
 
       <article
         className={styles.description}
-        dangerouslySetInnerHTML={{ __html: post?.description }}
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(post?.description),
+        }}
       ></article>
+
+      <CommentSection postAuthorID={post?.author?.id} />
     </div>
   );
 }
