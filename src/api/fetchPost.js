@@ -4,10 +4,10 @@ export async function fetchPost(postID) {
   try {
     const response = await fetch(url);
 
-    const post = await response.json();
+    const result = await response.json();
 
-    return { status: true, post };
+    return result;
   } catch (error) {
-    return { status: false, error, post: null };
+    return { success: false, error };
   }
 }
