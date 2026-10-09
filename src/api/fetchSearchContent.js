@@ -7,14 +7,10 @@ export async function fetchSearchContent(params) {
     url.searchParams.set(key, value);
   }
 
-  console.log(url.href);
-
   try {
     const response = await fetch(url);
 
     const result = await response.json();
-
-    console.log(result);
 
     return result;
   } catch (error) {
