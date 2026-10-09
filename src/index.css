@@ -122,6 +122,6 @@ a {
   .contentBody {
     position: relative;
 
-    display: flex;
+    grid-template-columns: 1fr;
   }
 }
