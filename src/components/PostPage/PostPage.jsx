@@ -31,7 +31,6 @@ export default function PostPage() {
         fetchedPost = { ...result };
       }
 
-      console.log(fetchedPost);
       if (feedPost || searchPost || fetchedPost.success) {
         setPost(feedPost || searchPost || fetchedPost.post);
       } else {
