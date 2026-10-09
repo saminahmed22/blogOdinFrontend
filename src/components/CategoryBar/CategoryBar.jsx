@@ -35,8 +35,14 @@ export default function CategoryBar() {
   }, []);
 
   const buttonRef = useRef(null);
+  const firstButtonRef = useRef(null);
   useEffect(() => {
-    if (!buttonRef.current) return;
+    if (!buttonRef.current) {
+      firstButtonRef.current?.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+      });
+    }
 
     buttonRef.current?.scrollIntoView({
       behavior: "smooth",
@@ -78,7 +84,13 @@ export default function CategoryBar() {
                 onClick={() => {
                   handleCategoryBtnClick(category.id);
                 }}
-                ref={Number(categoryParam) === category.id ? buttonRef : null}
+                ref={
+                  category.id === 1
+                    ? firstButtonRef
+                    : Number(categoryParam) === category.id
+                      ? buttonRef
+                      : null
+                }
               >
                 {category.name}
               </button>
