@@ -202,17 +202,7 @@
 }
 
 .authorSign {
-  color: white;
-  background-color: orangered;
-
-  border-radius: 4px;
-  padding: 0 4px;
-
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 0.7rem;
+  height: 16px;
 }
 
 .createDate {
@@ -232,13 +222,5 @@
 @media (max-width: 800px) {
   .commentCard {
     width: 100%;
-  }
-
-  .authorSign {
-    display: none;
-  }
-
-  .authorName {
-    color: orangered;
   }
 }

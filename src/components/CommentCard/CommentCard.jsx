@@ -12,6 +12,7 @@ import editIcon from "../../assets/icons/edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 import checkIcon from "../../assets/icons/check.svg";
 import closeIcon from "../../assets/icons/close.svg";
+import authorIcon from "../../assets/icons/author.svg";
 
 export default function CommentCard({ data, postAuthorID }) {
   const { postId } = useParams();
@@ -304,7 +305,13 @@ export default function CommentCard({ data, postAuthorID }) {
                 </p>
 
                 {comment.author.id === postAuthorID && (
-                  <p className={styles.authorSign}>Author</p>
+                  <img
+                    className={styles.authorSign}
+                    src={authorIcon}
+                    alt="Author icon"
+                    aria-label="Author"
+                    title="Author"
+                  ></img>
                 )}
               </div>
 
