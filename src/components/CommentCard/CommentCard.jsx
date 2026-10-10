@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router";
 
 // API
-import { submitEditComment } from "../../api/submitEditComment.js";
+import { makeCommentAPIRequest } from "../../api/makeCommentAPIRequest";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -90,7 +90,7 @@ export default function CommentCard({ data, postAuthorID }) {
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await submitEditComment(formData, jwt);
+    const result = await makeCommentAPIRequest(formData, jwt, "PUT");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };

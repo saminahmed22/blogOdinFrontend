@@ -5,7 +5,7 @@ import { useParams, useOutletContext, Link } from "react-router";
 
 // API
 import { fetchComments } from "../../api/fetchComments.js";
-import { submitComment } from "../../api/submitComment.js";
+import { makeCommentAPIRequest } from "../../api/makeCommentAPIRequest.js";
 
 // Components
 import CommentCard from "../CommentCard/CommentCard";
@@ -48,7 +48,7 @@ export default function CommentSection({ postAuthorID }) {
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await submitComment(formData, jwt);
+    const result = await makeCommentAPIRequest(formData, jwt, "POST");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };
