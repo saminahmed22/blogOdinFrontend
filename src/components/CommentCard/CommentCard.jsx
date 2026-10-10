@@ -108,7 +108,10 @@ export default function CommentCard({ data, postAuthorID }) {
   };
 
   const handleSubmitFail = (result) => {
-    if (result?.error === "unauthorize") {
+    if (result.validationErrors) {
+      setSubmitStatus("halt");
+      setValidationStatus(false);
+    } else if (result?.error === "unauthorize") {
       setSubmitStatus("halt");
       setValidationStatus("unauthorize");
     } else if (result.status === 401) {
