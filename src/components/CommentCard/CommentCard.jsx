@@ -20,10 +20,11 @@ export default function CommentCard({ data, postAuthorID }) {
 
   const { userData, setUserData } = useOutletContext();
   const [comment, setComment] = useState(data);
-  const [editMode, setEditMode] = useState(false);
+  const [actionMode, setActionMode] = useState("halt");
   const [textAreaLen, setTextAreaLen] = useState(0);
   const [validationStatus, setValidationStatus] = useState(true);
-  const [editSubmitStatus, setEditSubmitStatus] = useState("halt");
+  const [submitStatus, setSubmitStatus] = useState("halt");
+  const [isDeleted, setIsDeleted] = useState(false);
 
   const textAreaRef = useRef();
 
@@ -66,7 +67,7 @@ export default function CommentCard({ data, postAuthorID }) {
   };
 
   const handleEditBtnClick = () => {
-    setEditMode(true);
+    setActionMode("edit");
     setTextAreaLen(comment.content.length);
   };
 
@@ -77,7 +78,7 @@ export default function CommentCard({ data, postAuthorID }) {
       return;
     }
 
-    setEditSubmitStatus("submitting");
+    setSubmitStatus("submitting");
 
     const dataObj = {
       content: textAreaRef.current.value,
@@ -96,8 +97,8 @@ export default function CommentCard({ data, postAuthorID }) {
   };
 
   const handleSubmitSuccess = (result) => {
-    setEditMode(false);
-    setEditSubmitStatus("halt");
+    setActionMode("halt");
+    setSubmitStatus("halt");
 
     textAreaRef.current.value = "";
     setTextAreaLen(0);
@@ -107,20 +108,51 @@ export default function CommentCard({ data, postAuthorID }) {
 
   const handleSubmitFail = (result) => {
     if (result?.error === "unauthorize") {
-      setEditSubmitStatus("halt");
+      setSubmitStatus("halt");
       setValidationStatus("unauthorize");
     } else if (result.status === 401) {
       localStorage.removeItem("jwt");
 
       setUserData((prev) => ({ personalData: { ...prev.personalData } }));
     } else {
-      setEditSubmitStatus("halt");
+      setSubmitStatus("halt");
       setValidationStatus("error");
     }
   };
 
   const handleCancelBtnClick = () => {
-    setEditMode(false);
+    setActionMode("halt");
+  };
+
+  const handleDeleteButtonClick = () => {
+    setActionMode("delete");
+  };
+
+  const handleDeleteSubmitButtonClick = async () => {
+    setSubmitStatus("submitting");
+
+    const dataObj = {
+      id: comment.id,
+      postId: postId,
+      authorId: comment.author.id,
+    };
+
+    const jwt = userData.jwt;
+
+    const formData = JSON.stringify(dataObj);
+
+    const result = await makeCommentAPIRequest(formData, jwt, "DELETE");
+
+    result.success ? handleDeleteSubmitSuccess() : handleDeleteSubmitFail();
+  };
+
+  const handleDeleteSubmitSuccess = () => {
+    setIsDeleted(true);
+  };
+
+  const handleDeleteSubmitFail = () => {
+    setActionMode("halt");
+    setSubmitStatus("halt");
   };
 
   const getActionBtn = () => {
@@ -128,55 +160,89 @@ export default function CommentCard({ data, postAuthorID }) {
 
     if (userData?.personalData?.id !== comment?.author?.id) return;
 
-    if (editMode) {
-      return (
-        <div className={styles.actions}>
-          <button
-            className={styles.submitBtn}
-            title="Submit edit comment"
-            aria-label="Submit edit comment"
-            onClick={handleSubmitButtonClick}
-            type="submit"
-            form="editForm"
-          >
-            {editSubmitStatus === "halt" ? (
-              <img src={checkIcon} alt="Check icon" />
-            ) : (
-              <img src={loadingIcon} alt="Loading icon" />
-            )}
-          </button>
+    switch (actionMode) {
+      case "edit":
+        return (
+          <div className={styles.actions}>
+            <button
+              className={styles.submitBtn}
+              title="Submit edit comment"
+              aria-label="Submit edit comment"
+              onClick={handleSubmitButtonClick}
+              type="submit"
+            >
+              {submitStatus === "halt" ? (
+                <img src={checkIcon} alt="Check icon" />
+              ) : (
+                <img src={loadingIcon} alt="Loading icon" />
+              )}
+            </button>
 
-          <button
-            className={styles.cancelBtn}
-            title="Cancle edit comment"
-            aria-label="Cancle edit comment"
-            onClick={handleCancelBtnClick}
-          >
-            <img src={closeIcon} alt="Cancle edit icon" />
-          </button>
-        </div>
-      );
-    } else {
-      return (
-        <div className={styles.actions}>
-          <button
-            className={styles.editBtn}
-            title="Edit comment"
-            aria-label="Edit comment"
-            onClick={handleEditBtnClick}
-          >
-            <img src={editIcon} alt="Edit icon" />
-          </button>
+            <button
+              className={styles.cancelBtn}
+              title="Cancle edit comment"
+              aria-label="Cancle edit comment"
+              onClick={handleCancelBtnClick}
+              disabled={submitStatus === "submitting"}
+            >
+              <img src={closeIcon} alt="Cancle edit icon" />
+            </button>
+          </div>
+        );
 
-          <button
-            className={styles.deleteBtn}
-            title="Delete comment"
-            aria-label="Delete comment"
-          >
-            <img src={deleteIcon} alt="Delete icon" />
-          </button>
-        </div>
-      );
+      case "delete":
+        return (
+          <div className={styles.actions}>
+            <p className={styles.deleteConfirmationText}>Are you sure?</p>
+
+            <button
+              className={styles.submitBtn}
+              title="Submit delete comment"
+              aria-label="Submit delete comment"
+              onClick={handleDeleteSubmitButtonClick}
+              type="submit"
+            >
+              {submitStatus === "halt" ? (
+                <img src={checkIcon} alt="Check icon" />
+              ) : (
+                <img src={loadingIcon} alt="Loading icon" />
+              )}
+            </button>
+
+            <button
+              className={styles.cancelBtn}
+              title="Cancle edit comment"
+              aria-label="Cancle edit comment"
+              onClick={handleCancelBtnClick}
+              disabled={submitStatus === "submitting"}
+            >
+              <img src={closeIcon} alt="Cancle edit icon" />
+            </button>
+          </div>
+        );
+
+      default:
+        return (
+          <div className={styles.actions}>
+            <button
+              className={styles.editBtn}
+              title="Edit comment"
+              aria-label="Edit comment"
+              onClick={handleEditBtnClick}
+            >
+              <img src={editIcon} alt="Edit icon" />
+            </button>
+
+            <button
+              className={styles.deleteBtn}
+              title="Delete comment"
+              aria-label="Delete comment"
+              onClick={handleDeleteButtonClick}
+            >
+              <img src={deleteIcon} alt="Delete icon" />
+            </button>
+          </div>
+        );
     }
   };
 
@@ -186,7 +252,7 @@ export default function CommentCard({ data, postAuthorID }) {
   };
 
   const getContentArea = () => {
-    if (editMode) {
+    if (actionMode === "edit") {
       return (
         <div className={styles.editArea}>
           <textarea
@@ -222,36 +288,38 @@ export default function CommentCard({ data, postAuthorID }) {
     }
   };
 
-  return (
-    <div className={styles.commentCard}>
-      <div className={styles.primary}>{getProfilePicture()}</div>
-      <div className={styles.secondary}>
-        <div className={styles.header}>
-          <div className={styles.details}>
-            <div className={styles.subDetails}>
-              <p
-                className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
-                onClick={handleProfileClick}
-              >
-                {`${comment.author.firstName} ${comment.author.lastName}`}
-              </p>
+  if (!isDeleted) {
+    return (
+      <div className={styles.commentCard}>
+        <div className={styles.primary}>{getProfilePicture()}</div>
+        <div className={styles.secondary}>
+          <div className={styles.header}>
+            <div className={styles.details}>
+              <div className={styles.subDetails}>
+                <p
+                  className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
+                  onClick={handleProfileClick}
+                >
+                  {`${comment.author.firstName} ${comment.author.lastName}`}
+                </p>
 
-              {comment.author.id === postAuthorID && (
-                <p className={styles.authorSign}>Author</p>
-              )}
+                {comment.author.id === postAuthorID && (
+                  <p className={styles.authorSign}>Author</p>
+                )}
+              </div>
+
+              <p className={styles.createDate}>
+                {getReadableDate(comment.edited_at)}
+                {comment.created_at !== comment.edited_at && " (edited)"}
+              </p>
             </div>
 
-            <p className={styles.createDate}>
-              {getReadableDate(comment.edited_at)}
-              {comment.created_at !== comment.edited_at && " (edited)"}
-            </p>
+            {getActionBtn()}
           </div>
 
-          {getActionBtn()}
+          {getContentArea()}
         </div>
-
-        {getContentArea()}
       </div>
-    </div>
-  );
+    );
+  }
 }
