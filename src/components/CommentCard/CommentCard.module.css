@@ -28,6 +28,7 @@
 }
 
 .actions {
+  min-width: fit-content;
   width: 60px;
 
   display: flex;
@@ -35,6 +36,7 @@
   justify-content: space-between;
   margin-right: 4px;
   margin-top: -15px;
+  gap: 5px;
 
   button {
     height: 24px;
@@ -44,6 +46,11 @@
 
     display: grid;
     place-items: center;
+  }
+
+  button:disabled img {
+    filter: brightness(0) saturate(100%) invert(44%) sepia(18%) saturate(0%)
+      hue-rotate(179deg) brightness(107%) contrast(90%);
   }
 
   img {
@@ -67,6 +74,12 @@
 .cancelBtn:hover img {
   filter: brightness(0) saturate(100%) invert(20%) sepia(99%) saturate(7445%)
     hue-rotate(1deg) brightness(109%) contrast(117%);
+}
+
+.deleteConfirmationText {
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-right: 5px;
 }
 
 .editArea {
