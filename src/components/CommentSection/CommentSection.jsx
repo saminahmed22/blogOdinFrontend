@@ -69,7 +69,13 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
     textAreaRef.current.value = "";
     setTextAreaCount(0);
 
-    setComments((prev) => [{ ...result.comment }, ...prev]);
+    setComments((prev) => ({
+      ...prev,
+      commentsObj: {
+        [result.comment.id]: { ...result.comment },
+        ...prev.commentsObj,
+      },
+    }));
   };
 
   const handleSubmitFail = (result) => {
@@ -125,7 +131,6 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
         buildingObj.commentsObj[comment.id] = comment;
       }
 
-      console.log(buildingObj);
       commentsRef.current = buildingObj;
       setComments(buildingObj);
     },
@@ -317,7 +322,9 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
 
   return (
     <div className={styles.commentSection}>
-      <p className={styles.commentSectionHeader}>Comments</p>
+      <p className={styles.commentSectionHeader}>
+        Comments({comments.fetchConfig.count})
+      </p>
       {getFormContent()}
       {getComments()}
     </div>
