@@ -1,5 +1,9 @@
-export async function fetchComments(postId) {
-  const url = new URL(`http://192.168.0.150:3000/api/comments/${postId}`);
+export async function fetchComments(params) {
+  const url = new URL(`http://192.168.0.150:3000/api/comments/`);
+
+  for (const [key, value] of Object.entries(params)) {
+    url.searchParams.set(key, value);
+  }
 
   try {
     const response = await fetch(url);
