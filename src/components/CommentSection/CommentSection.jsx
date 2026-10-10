@@ -1,6 +1,6 @@
 import styles from "./CommentSection.module.css";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, useOutletContext, Link } from "react-router";
 
 // API
@@ -14,12 +14,22 @@ import CommentCard from "../CommentCard/CommentCard";
 
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function CommentSection({ postAuthorID }) {
+export default function CommentSection({ postAuthorID, postPageRef }) {
   const { userData, setUserData } = useOutletContext();
 
   const [fetchStatus, setFetchStatus] = useState("fetching");
   const [submitStatus, setSubmitStatus] = useState("halt");
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState({
+    fetchConfig: {
+      quantity: 10,
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+    },
+
+    commentsObj: {},
+  });
   const [textAreaCount, setTextAreaCount] = useState(0);
   const [validationStatus, setValidationStatus] = useState(true);
 
@@ -63,7 +73,10 @@ export default function CommentSection({ postAuthorID }) {
   };
 
   const handleSubmitFail = (result) => {
-    if (result.status === 401) {
+    if (result.validationErrors) {
+      setSubmitStatus("halt");
+      setValidationStatus(false);
+    } else if (result.status === 401) {
       localStorage.removeItem("jwt");
 
       setUserData((prev) => ({ personalData: { ...prev.personalData } }));
@@ -73,36 +86,136 @@ export default function CommentSection({ postAuthorID }) {
     }
   };
 
-  // Fetch comments
-  useEffect(() => {
-    const fetchFunc = async () => {
-      const result = await fetchComments(postId);
+  const commentsRef = useRef(comments);
+  const updateCommentsState = useCallback(
+    (mode, result) => {
+      const buildingObj = {
+        fetchConfig: {
+          quantity: 10,
+          hasMore: false,
+          count: 0,
+          amount: 0,
+          cursor: undefined,
+        },
+
+        commentsObj: {},
+      };
+
+      // update fetch config options
+      buildingObj.fetchConfig.count = result.count;
+
+      buildingObj.fetchConfig.amount =
+        mode === "initial"
+          ? result.comments.length
+          : commentsRef.current.fetchConfig.amount + result.comments.length;
+
+      buildingObj.fetchConfig.hasMore =
+        result.count > buildingObj.fetchConfig.amount;
+
+      buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
+        ? result.comments[result.comments.length - 1].id
+        : undefined;
+
+      // Populate comments object
+      if (mode !== "initial") {
+        buildingObj.commentsObj = { ...commentsRef.current.commentsObj };
+      }
+
+      for (const comment of result.comments) {
+        buildingObj.commentsObj[comment.id] = comment;
+      }
+
+      console.log(buildingObj);
+      commentsRef.current = buildingObj;
+      setComments(buildingObj);
+    },
+    [setComments],
+  );
+
+  const fetchingOnReqRef = useRef(false);
+  const fetchCommentsCB = useCallback(
+    async (mode = "request") => {
+      const params = {
+        postId: postId,
+        quantity: commentsRef.current.fetchConfig.quantity,
+        cursor:
+          mode === "initial"
+            ? undefined
+            : commentsRef.current.fetchConfig.cursor,
+      };
+
+      const result = await fetchComments(params);
 
       if (result.success) {
+        fetchingOnReqRef.current = false;
+        updateCommentsState(mode, result);
         setFetchStatus("success");
-
-        setComments([...Object.values(result.comments)]);
       } else {
         setFetchStatus("error");
       }
+    },
+    [updateCommentsState, postId],
+  );
+
+  // Initial comment fetch
+  useEffect(() => {
+    const fetchFunc = async () => {
+      fetchCommentsCB("initial");
     };
 
     fetchFunc();
-  }, [postId]);
+  }, [fetchCommentsCB]);
+
+  // Refetch on scroll handler
+  useEffect(() => {
+    const commentListElemRef = postPageRef.current;
+
+    if (!commentListElemRef) return;
+
+    const handleScroll = async () => {
+      const scrollTop = commentListElemRef.scrollTop;
+      const scrollHeight = commentListElemRef.scrollHeight;
+      const clientHeight = commentListElemRef.clientHeight;
+
+      const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
+
+      if (
+        percentage >= 70 &&
+        comments.fetchConfig.hasMore &&
+        !fetchingOnReqRef.current
+      ) {
+        fetchingOnReqRef.current = true;
+        fetchCommentsCB();
+      }
+    };
+
+    commentListElemRef.addEventListener("scroll", handleScroll);
+
+    return () => {
+      commentListElemRef.removeEventListener("scroll", handleScroll);
+    };
+  }, [postPageRef, comments.fetchConfig.hasMore, fetchCommentsCB]);
 
   const getComments = () => {
     switch (fetchStatus) {
       case "success":
-        if (comments.length >= 1) {
+        if (Object.keys(comments.commentsObj).length >= 1) {
           return (
             <div className={styles.commentList}>
-              {comments.map((comment) => (
+              {Object.keys(comments.commentsObj).map((id) => (
                 <CommentCard
-                  data={comment}
+                  data={comments?.commentsObj[id]}
                   postAuthorID={postAuthorID}
-                  key={comment.id}
+                  key={id}
                 />
               ))}
+
+              {comments.fetchConfig.hasMore && (
+                <div className={styles.loadingMessage}>
+                  <img src={loadingIcon} alt="Loading icon" />
+                  <p>Loading more comments</p>
+                </div>
+              )}
             </div>
           );
         } else {
@@ -124,7 +237,11 @@ export default function CommentSection({ postAuthorID }) {
         );
 
       case "error":
-        return <p className={styles.errorMessage}>Failed to fetch comments</p>;
+        return (
+          <p className={styles.errorMessageFetchFail}>
+            Failed to fetch comments
+          </p>
+        );
     }
   };
 
