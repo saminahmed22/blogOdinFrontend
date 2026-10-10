@@ -1,7 +1,7 @@
-import { useParams, useOutletContext, useNavigate } from "react-router";
-
 import styles from "./PostPage.module.css";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useRef } from "react";
+import { useParams, useOutletContext, useNavigate } from "react-router";
 
 // Components
 import CommentSection from "../CommentSection/CommentSection";
@@ -17,6 +17,8 @@ export default function PostPage() {
   const { feedPosts, searchPosts } = useOutletContext();
 
   const [post, setPost] = useState({});
+
+  const postPageRef = useRef();
 
   useEffect(() => {
     const getPost = async () => {
@@ -113,7 +115,7 @@ export default function PostPage() {
     );
   }
   return (
-    <div className={styles.postPage}>
+    <div className={styles.postPage} ref={postPageRef}>
       <div className={styles.titleContainer}>
         <h2 className={styles.title}>{post?.title}</h2>
 
@@ -152,7 +154,10 @@ export default function PostPage() {
         }}
       ></article>
 
-      <CommentSection postAuthorID={post?.author?.id} />
+      <CommentSection
+        postAuthorID={post?.author?.id}
+        postPageRef={postPageRef}
+      />
     </div>
   );
 }
