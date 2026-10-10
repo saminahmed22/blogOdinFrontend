@@ -1,10 +1,10 @@
-export async function submitEditComment(data, jwt) {
+export async function makeCommentAPIRequest(data, jwt, method) {
   let url = "http://localhost:3000/api/comments";
 
   try {
     const response = await fetch(url, {
       headers: { "Content-Type": "application/json", Authorization: jwt.token },
-      method: "PUT",
+      method: method,
       body: data,
     });
 
