@@ -126,6 +126,7 @@ export default function CommentCard({ data, postAuthorID }) {
 
   const handleCancelBtnClick = () => {
     setActionMode("halt");
+    setValidationStatus(true);
   };
 
   const handleDeleteButtonClick = () => {
