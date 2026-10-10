@@ -148,7 +148,7 @@ export default function PostPage() {
       <article
         className={styles.description}
         dangerouslySetInnerHTML={{
-          __html: DOMPurify.sanitize(post?.description),
+          __html: post?.description,
         }}
       ></article>
 
