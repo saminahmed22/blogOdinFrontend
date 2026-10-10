@@ -1,5 +1,5 @@
 export async function fetchLoginCredit(data) {
-  let url = "http://localhost:3000/api/auth/login";
+  let url = "http://192.168.0.150:3000/api/auth/login";
 
   try {
     const response = await fetch(url, {

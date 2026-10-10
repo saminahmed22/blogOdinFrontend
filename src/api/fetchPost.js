@@ -1,5 +1,5 @@
 export async function fetchPost(postID) {
-  const url = `http://localhost:3000/api/posts/${postID}`;
+  const url = `http://192.168.0.150:3000/api/posts/${postID}`;
 
   try {
     const response = await fetch(url);

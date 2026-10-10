@@ -1,5 +1,5 @@
 export async function makeCommentAPIRequest(data, jwt, method) {
-  let url = "http://localhost:3000/api/comments";
+  let url = "http://192.168.0.150:3000/api/comments";
 
   try {
     const response = await fetch(url, {

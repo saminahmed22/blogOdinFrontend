@@ -1,5 +1,5 @@
 export async function fetchComments(postId) {
-  const url = new URL(`http://localhost:3000/api/comments/${postId}`);
+  const url = new URL(`http://192.168.0.150:3000/api/comments/${postId}`);
 
   try {
     const response = await fetch(url);

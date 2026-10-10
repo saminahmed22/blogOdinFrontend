@@ -1,5 +1,5 @@
 export async function fetchRegCredit(data) {
-  let url = "http://localhost:3000/api/users/";
+  let url = "http://192.168.0.150:3000/api/users/";
 
   try {
     const response = await fetch(url, {
