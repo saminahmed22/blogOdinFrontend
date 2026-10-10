@@ -17,11 +17,13 @@ export function AuthAction() {
     if (mode === "login") {
       const userData = JSON.parse(localStorage.getItem("userdata"));
 
-      return (
-        <h2
-          className={styles.helloMsg}
-        >{`Welcome back, ${userData ? userData.firstName : "someone we used to know"}!`}</h2>
-      );
+      if (userData) {
+        return (
+          <h2 className={styles.helloMsg}>
+            {`Welcome back, ${userData.firstName}!`}
+          </h2>
+        );
+      }
     }
   };
 
