@@ -1,0 +1,231 @@
+.commentCard {
+  height: fit-content;
+  width: 80%;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+
+  background: rgba(255, 193, 100, 0.298);
+
+  border-radius: 12px;
+}
+
+.primary {
+  margin: 8px 0 0 8px;
+}
+
+.secondary {
+  margin-top: 8px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.actions {
+  width: 60px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 4px;
+  margin-top: -15px;
+
+  button {
+    height: 24px;
+    width: 24px;
+
+    background-color: transparent;
+
+    display: grid;
+    place-items: center;
+  }
+
+  img {
+    height: 20px;
+
+    transition: filter 0.3s ease;
+  }
+}
+
+.editBtn:hover img {
+  filter: brightness(0) saturate(100%) invert(72%) sepia(26%) saturate(5762%)
+    hue-rotate(359deg) brightness(103%) contrast(101%);
+}
+
+.submitBtn:hover img {
+  filter: brightness(0) saturate(100%) invert(29%) sepia(98%) saturate(1170%)
+    hue-rotate(91deg) brightness(92%) contrast(107%);
+}
+
+.deleteBtn:hover img,
+.cancelBtn:hover img {
+  filter: brightness(0) saturate(100%) invert(20%) sepia(99%) saturate(7445%)
+    hue-rotate(1deg) brightness(109%) contrast(117%);
+}
+
+.editArea {
+  width: 95%;
+  margin-bottom: 10px;
+
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: auto auto;
+}
+
+.editCommentArea {
+  grid-column: 1/3;
+
+  min-height: 4lh;
+  height: fit-content;
+
+  width: 100%;
+
+  background-color: rgb(255, 245, 230);
+
+  border-radius: 4px;
+
+  font-family: inherit;
+
+  padding-left: 5px;
+
+  field-sizing: content;
+
+  resize: none;
+  overflow: hidden;
+}
+
+.messageArea {
+  width: calc(100% + 5px);
+
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+.letterCount {
+  align-self: end;
+
+  font-size: 0.8rem;
+
+  text-align: end;
+}
+
+.errorMessageContainer {
+  align-self: start;
+
+  height: fit-content;
+
+  overflow: hidden;
+
+  transition: height 0.3s ease;
+
+  @starting-style {
+    height: 0px;
+  }
+}
+
+.errorMessage {
+  color: crimson;
+  font-size: 0.8rem;
+
+  transform: translateY(0);
+
+  transition: transform 0.3s ease;
+
+  @starting-style {
+    transform: translateY(-100%);
+  }
+}
+
+.subDetails {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.profilePicture {
+  height: 30px;
+  width: 30px;
+
+  border-radius: 100%;
+}
+
+.altProfilePicture {
+  height: 30px;
+  width: 30px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 100%;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  border: 1px solid #0000001a;
+
+  color: black;
+}
+
+.name {
+  font-size: 0.8rem;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.authorSign {
+  color: white;
+  background-color: orangered;
+
+  border-radius: 4px;
+  padding: 0 4px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 0.7rem;
+}
+
+.createDate {
+  font-size: 0.7rem;
+
+  opacity: 0.8;
+}
+
+.comment {
+  font-size: 0.95rem;
+
+  margin-bottom: 10px;
+
+  padding-right: 10px;
+}
+
+@media (max-width: 800px) {
+  .commentCard {
+    width: 100%;
+  }
+
+  .authorSign {
+    display: none;
+  }
+
+  .authorName {
+    color: orangered;
+  }
+}
