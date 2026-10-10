@@ -149,6 +149,10 @@
   }
 }
 
+.errorMessageFetchFail {
+  align-self: center;
+}
+
 .loginMessage {
   grid-column: 1 / 3;
 
