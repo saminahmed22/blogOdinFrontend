@@ -124,6 +124,10 @@ export default function CommentCard({ data, postAuthorID }) {
   };
 
   const getActionBtn = () => {
+    if (!userData?.jwt) return;
+
+    if (userData?.personalData?.id !== comment?.author?.id) return;
+
     if (editMode) {
       return (
         <div className={styles.actions}>
