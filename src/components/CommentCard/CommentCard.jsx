@@ -82,7 +82,7 @@ export default function CommentCard({ data, postAuthorID }) {
     setSubmitStatus("submitting");
 
     const dataObj = {
-      content: textAreaRef.current.value,
+      comment: textAreaRef.current.value,
       id: comment.id,
       postId: postId,
       authorId: comment.author.id,
