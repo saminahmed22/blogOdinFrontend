@@ -34,11 +34,10 @@
 
 .postDetails {
   display: flex;
-
+  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  gap: 10px;
-
+  align-items: flex-start;
+  gap: 5px;
   margin-left: 5px;
   margin-top: 20px;
 
@@ -127,6 +126,8 @@
   margin-left: 10px;
 
   font-size: 0.8rem;
+
+  cursor: pointer;
 }
 
 .description {
@@ -140,4 +141,40 @@
 
 .noPostMessage {
   margin: auto auto;
+}
+
+.scrollTopBtn {
+  height: 40px;
+  width: 40px;
+
+  position: fixed;
+  bottom: 50px;
+  right: 50px;
+
+  display: grid;
+  place-items: center;
+
+  border: none;
+  border-radius: 100%;
+
+  background-color: rgba(40, 40, 40, 0.245);
+
+  transition: bottom 0.3s ease-in-out;
+}
+
+.scrollTopBtnShow {
+  bottom: 50px;
+}
+
+.scrollTopBtnHide {
+  bottom: -50px;
+}
+
+@media (max-width: 800px) {
+  .scrollTopBtn {
+    height: 50px;
+    width: 50px;
+
+    right: 25px;
+  }
 }
