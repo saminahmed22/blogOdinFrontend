@@ -9,6 +9,9 @@ import CommentSection from "../CommentSection/CommentSection";
 // API
 import { fetchPost } from "../../api/fetchPost.js";
 
+// Icons
+import upIcon from "../../assets/icons/up.svg";
+
 export default function PostPage() {
   const navigate = useNavigate();
 
@@ -17,6 +20,7 @@ export default function PostPage() {
   const { feedPosts, searchPosts } = useOutletContext();
 
   const [post, setPost] = useState({});
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const postPageRef = useRef();
 
@@ -94,15 +98,26 @@ export default function PostPage() {
     navigate(`/profile/${post?.author?.id}`);
   };
 
+  const handleCategoryClick = (e) => {
+    e.stopPropagation();
+
+    navigate(`/feed/${post?.category?.id}`);
+  };
+
+  const handleScrollTopClick = () => {
+    postPageRef.current.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
   const getEditedDate = () => {
     if (post.created_at !== post.edited_at) {
       return (
-        <>
-          &bull;
-          <p>
-            <span>Updated at:</span> {getReadableExtDate(post?.edited_at)}
-          </p>
-        </>
+        <p>
+          <span>Updated at:</span> {getReadableExtDate(post?.edited_at)}
+        </p>
       );
     }
   };
@@ -119,7 +134,9 @@ export default function PostPage() {
       <div className={styles.titleContainer}>
         <h2 className={styles.title}>{post?.title}</h2>
 
-        <p className={styles.category}>{post?.category?.name}</p>
+        <p className={styles.category} onClick={handleCategoryClick}>
+          {post?.category?.name}
+        </p>
       </div>
 
       <div className={styles.detailsContainer}>
@@ -157,7 +174,18 @@ export default function PostPage() {
       <CommentSection
         postAuthorID={post?.author?.id}
         postPageRef={postPageRef}
+        showScrollTop={showScrollTop}
+        setShowScrollTop={setShowScrollTop}
       />
+
+      <button
+        className={`${styles.scrollTopBtn} ${showScrollTop ? styles.scrollTopBtnShow : styles.scrollTopBtnHide}`}
+        aria-label="Scroll top"
+        title="Scroll top"
+        onClick={handleScrollTopClick}
+      >
+        <img src={upIcon} alt="Up icon" />
+      </button>
     </div>
   );
 }

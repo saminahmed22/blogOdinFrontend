@@ -14,7 +14,12 @@ import CommentCard from "../CommentCard/CommentCard";
 
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function CommentSection({ postAuthorID, postPageRef }) {
+export default function CommentSection({
+  postAuthorID,
+  postPageRef,
+  showScrollTop,
+  setShowScrollTop,
+}) {
   const { userData, setUserData } = useOutletContext();
 
   const [fetchStatus, setFetchStatus] = useState("fetching");
@@ -184,6 +189,18 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
 
       const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
 
+      if (percentage >= 40) {
+        if (!showScrollTop) {
+          console.log("Toggled on");
+          setShowScrollTop(true);
+        }
+      } else if (percentage <= 20) {
+        if (showScrollTop) {
+          console.log("Toggled off");
+          setShowScrollTop(false);
+        }
+      }
+
       if (
         percentage >= 70 &&
         comments.fetchConfig.hasMore &&
@@ -199,7 +216,13 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
     return () => {
       commentListElemRef.removeEventListener("scroll", handleScroll);
     };
-  }, [postPageRef, comments.fetchConfig.hasMore, fetchCommentsCB]);
+  }, [
+    postPageRef,
+    comments.fetchConfig.hasMore,
+    fetchCommentsCB,
+    showScrollTop,
+    setShowScrollTop,
+  ]);
 
   const getComments = () => {
     switch (fetchStatus) {
