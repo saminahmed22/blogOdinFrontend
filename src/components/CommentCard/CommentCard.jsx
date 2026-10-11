@@ -305,7 +305,14 @@ export default function CommentCard({ data, postAuthorID }) {
                   className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
                   onClick={handleProfileClick}
                 >
-                  {`${comment.author.firstName} ${comment.author.lastName}`}
+                  <span className={styles.name}>
+                    <span className={styles.firstName}>
+                      {comment?.author?.firstName}
+                    </span>
+                    <span className={styles.lastName}>
+                      {comment?.author?.lastName}
+                    </span>
+                  </span>
                 </p>
 
                 {comment.author.id === postAuthorID && (

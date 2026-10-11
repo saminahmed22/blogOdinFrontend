@@ -145,7 +145,14 @@ export default function PostPage() {
 
           <div className={styles.authorSubDetails}>
             <p className={styles.authorName} onClick={handleProfileClick}>
-              {`${post?.author?.firstName} ${post?.author?.lastName}`}
+              <span className={styles.name}>
+                <span className={styles.firstName}>
+                  {post?.author?.firstName}
+                </span>
+                <span className={styles.lastName}>
+                  {post?.author?.lastName}
+                </span>
+              </span>{" "}
             </p>
 
             <p className={styles.authorMemberDate}>

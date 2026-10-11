@@ -44,7 +44,14 @@ export default function Aside({ userData, setUserData }) {
                 </div>
               )}
 
-              {`${userData.personalData.firstName} ${userData.personalData.lastName}`}
+              <span className={styles.name}>
+                <span className={styles.firstName}>
+                  {userData.personalData.firstName}
+                </span>
+                <span className={styles.lastName}>
+                  {userData.personalData.lastName}
+                </span>
+              </span>
             </button>
           </Link>
 
