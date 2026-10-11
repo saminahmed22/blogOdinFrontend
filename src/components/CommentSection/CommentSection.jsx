@@ -323,7 +323,10 @@ export default function CommentSection({ postAuthorID, postPageRef }) {
   return (
     <div className={styles.commentSection}>
       <p className={styles.commentSectionHeader}>
-        Comments({comments.fetchConfig.count})
+        Comments
+        {comments.fetchConfig.count > 0
+          ? `(${comments.fetchConfig.count})`
+          : ""}
       </p>
       {getFormContent()}
       {getComments()}
