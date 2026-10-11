@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 
 export default function Profile() {
-  const params = useParams();
+  const { profileId } = useParams();
 
-  return <div>Profile Page {params.profileId}</div>;
+  return <div>Profile Page {profileId}</div>;
 }

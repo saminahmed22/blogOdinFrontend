@@ -15,12 +15,13 @@ export function AuthAction() {
 
   const getHelloMessage = () => {
     if (mode === "login") {
-      const userData = JSON.parse(localStorage.getItem("userdata"));
+      const userData = JSON.parse(localStorage.getItem("userData"));
 
       if (userData) {
         return (
           <h2 className={styles.helloMsg}>
-            {`Welcome back, ${userData.firstName}!`}
+            Welcome back, {<p className={styles.name}>{userData?.firstName}</p>}
+            !
           </h2>
         );
       }

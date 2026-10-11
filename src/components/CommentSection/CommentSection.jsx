@@ -59,7 +59,7 @@ export default function CommentSection({
 
     dataObj["postId"] = postId;
 
-    const jwt = userData.jwt;
+    const jwt = userData?.jwt;
 
     const formData = JSON.stringify(dataObj);
 

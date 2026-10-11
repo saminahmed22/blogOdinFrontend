@@ -64,7 +64,7 @@ export function RegForm() {
 
   const handleRegistrationSuccess = (result) => {
     localStorage.setItem("jwt", JSON.stringify(result.jwt));
-    localStorage.setItem("userdata", JSON.stringify(result.user));
+    localStorage.setItem("userData", JSON.stringify(result.user));
 
     navigate("/feed", { replace: true });
   };

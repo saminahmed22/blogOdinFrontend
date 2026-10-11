@@ -8,7 +8,7 @@ import Aside from "./components/Aside/Aside";
 
 export default function App() {
   const [userData, setUserData] = useState({
-    personalData: JSON.parse(localStorage.getItem("userdata")),
+    personalData: JSON.parse(localStorage.getItem("userData")),
     jwt: JSON.parse(localStorage.getItem("jwt")),
   });
 

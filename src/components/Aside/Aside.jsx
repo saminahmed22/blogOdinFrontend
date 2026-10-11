@@ -11,7 +11,7 @@ import logoutIcon from "../../assets/icons/logout.svg";
 import styles from "./Aside.module.css";
 
 export default function Aside({ userData, setUserData }) {
-  const authStatus = !!userData.jwt;
+  const authStatus = !!userData?.jwt;
 
   const handleLogoutButtonClick = () => {
     localStorage.removeItem("jwt");
@@ -24,32 +24,34 @@ export default function Aside({ userData, setUserData }) {
       return (
         <div className={styles.navAccSection}>
           <Link
-            to={`/profile/${userData.personalData.id}`}
+            to={`/profile/${userData?.personalData?.id}`}
             className={styles.loginBtnLink}
           >
             <button className={`${styles.navBtn}  ${styles.profileBtn}`}>
-              {userData.personalData.profilePictureLink ? (
+              {userData?.personalData?.profilePictureLink ? (
                 <img
-                  src={userData.personalData.profilePictureLink}
+                  src={userData?.personalData?.profilePictureLink}
                   className={styles.profilePicture}
                   alt=""
                 />
               ) : (
                 <div
                   className={styles.altProfilePicture}
-                  style={{ backgroundColor: userData.personalData.theme_color }}
+                  style={{
+                    backgroundColor: userData?.personalData?.theme_color,
+                  }}
                 >
-                  {userData.personalData.firstName[0]}
-                  {userData.personalData.lastName[0]}
+                  {userData?.personalData?.firstName[0]}
+                  {userData?.personalData?.lastName[0]}
                 </div>
               )}
 
               <span className={styles.name}>
                 <span className={styles.firstName}>
-                  {userData.personalData.firstName}
+                  {userData?.personalData?.firstName}
                 </span>
                 <span className={styles.lastName}>
-                  {userData.personalData.lastName}
+                  {userData?.personalData?.lastName}
                 </span>
               </span>
             </button>

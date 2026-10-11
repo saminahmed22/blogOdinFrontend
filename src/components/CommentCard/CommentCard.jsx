@@ -88,7 +88,7 @@ export default function CommentCard({ data, postAuthorID }) {
       authorId: comment.author.id,
     };
 
-    const jwt = userData.jwt;
+    const jwt = userData?.jwt;
 
     const formData = JSON.stringify(dataObj);
 
@@ -142,7 +142,7 @@ export default function CommentCard({ data, postAuthorID }) {
       authorId: comment.author.id,
     };
 
-    const jwt = userData.jwt;
+    const jwt = userData?.jwt;
 
     const formData = JSON.stringify(dataObj);
 
