@@ -28,16 +28,36 @@
 }
 
 .navAccSection {
+  max-width: 100%;
   grid-row: 2;
 
   height: 60px;
   width: 100%;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr auto;
 
   background-color: #000;
+
+  overflow: hidden;
+}
+
+.name {
+  display: flex;
+  overflow: hidden;
+
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  grid-template-columns: auto auto;
+  gap: 5px;
+  .firstName,
+  .lastName {
+    max-width: 10ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
 }
 
 .navBtn {
@@ -64,7 +84,6 @@
 
 .loginBtnLink {
   height: 100%;
-  flex-grow: 1;
 }
 
 .loginBtn {
@@ -80,6 +99,9 @@
   width: 100%;
 
   padding: 0 0 0 20px;
+
+  display: grid;
+  grid-template-columns: auto 1fr;
 }
 
 .profilePicture {

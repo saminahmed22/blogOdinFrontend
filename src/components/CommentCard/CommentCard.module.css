@@ -15,6 +15,24 @@
   margin: 8px 0 0 8px;
 }
 
+.name {
+  display: flex;
+  overflow: hidden;
+
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  grid-template-columns: auto auto;
+  gap: 5px;
+  .firstName,
+  .lastName {
+    max-width: 10ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+}
+
 .secondary {
   margin-top: 8px;
 
