@@ -75,7 +75,10 @@ export default function CommentSection({
     setTextAreaCount(0);
 
     setComments((prev) => ({
-      ...prev,
+      fetchConfig: {
+        ...prev.fetchConfig,
+        count: prev.fetchConfig.count + 1,
+      },
       commentsObj: {
         [result.comment.id]: { ...result.comment },
         ...prev.commentsObj,
