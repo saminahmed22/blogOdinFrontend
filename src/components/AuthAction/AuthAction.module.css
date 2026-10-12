@@ -38,7 +38,7 @@
 @media (max-width: 800px) {
   .authAction {
     height: 60%;
-
+    width: 100%;
     max-width: 100%;
 
     background: linear-gradient(
