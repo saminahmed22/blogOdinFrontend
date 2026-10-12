@@ -227,6 +227,16 @@ export default function CommentSection({
     setShowScrollTop,
   ]);
 
+  const handleCommentDelete = (id) => {
+    setComments((prev) => {
+      const { [id]: removed, ...rest } = prev.commentsObj;
+      return {
+        fetchConfig: { ...prev.fetchConfig, count: prev.fetchConfig.count - 1 },
+        commentsObj: rest,
+      };
+    });
+  };
+
   const getComments = () => {
     switch (fetchStatus) {
       case "success":
@@ -238,6 +248,7 @@ export default function CommentSection({
                   data={comments?.commentsObj[id]}
                   postAuthorID={postAuthorID}
                   key={id}
+                  handleCommentDelete={handleCommentDelete}
                 />
               ))}
 
