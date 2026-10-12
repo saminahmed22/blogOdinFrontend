@@ -1,0 +1,106 @@
+.profilePage {
+  max-height: 100%;
+
+  display: grid;
+
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.header {
+  min-height: 200px;
+  height: fit-content;
+
+  width: 100%;
+
+  display: grid;
+  place-items: center;
+  gap: 10px;
+
+  padding: 20px 0;
+}
+
+.profilePicture {
+  height: 150px;
+  width: 150px;
+
+  border-radius: 100%;
+
+  display: grid;
+  place-items: center;
+
+  font-size: 3rem;
+  font-weight: 500;
+
+  object-fit: cover;
+}
+
+.name {
+  display: flex;
+  overflow: hidden;
+
+  display: grid;
+  align-items: center;
+  justify-content: start;
+  grid-template-columns: auto auto;
+  gap: 10px;
+
+  margin: 0 10px;
+  .firstName,
+  .lastName {
+    max-width: 20ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    font-size: 2rem;
+    font-weight: 500;
+  }
+}
+
+.bio {
+  font-size: 1.1rem;
+}
+
+/* Loading message */
+.loadingMessageContainer {
+  height: 100%;
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.loadingIcon {
+  height: 28px;
+}
+
+/* Error message */
+
+.errorMessage {
+  align-self: center;
+  justify-self: center;
+}
+
+/* contentBody */
+
+.contentBody {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.contentBodyHeader {
+  font-size: 2rem;
+  margin-left: 20px;
+}
+
+.postList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+
+  overflow: hidden auto;
+}
