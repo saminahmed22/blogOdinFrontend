@@ -47,14 +47,14 @@
 
 .actions {
   min-width: fit-content;
-  width: 60px;
+  width: fit-content;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-right: 4px;
   margin-top: -15px;
-  gap: 5px;
+  gap: 10px;
 
   button {
     height: 24px;
@@ -98,6 +98,8 @@
   font-size: 0.8rem;
   font-weight: 500;
   margin-right: 5px;
+
+  flex-shrink: 0;
 }
 
 .editArea {
