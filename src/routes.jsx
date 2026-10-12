@@ -3,7 +3,7 @@ import ErrorPage from "./ErrorPage";
 
 import Feed from "./components/Feed/Feed";
 import PostPage from "./components/PostPage/PostPage";
-import Profile from "./components/profile/profile";
+import ProfilePage from "./components/ProfilePage/ProfilePage";
 import LandingPage from "./components/LandingPage/LandingPage";
 import { AuthPage } from "./components/AuthPage/AuthPage";
 
@@ -26,7 +26,7 @@ export const routes = [
     path: "profile/:profileId",
     element: <App />,
     errorElement: <ErrorPage />,
-    children: [{ index: true, element: <Profile /> }],
+    children: [{ index: true, element: <ProfilePage /> }],
   },
 
   {
