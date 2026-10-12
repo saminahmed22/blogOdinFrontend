@@ -19,10 +19,24 @@ export default function Aside({ userData, setUserData }) {
     setUserData({});
   };
 
+  const handleMenuBtnClick = () => {
+    const menu = document.querySelector(".aside");
+
+    if (!menu) return;
+
+    const isVisible = menu.classList.contains("asideVisible");
+
+    if (isVisible) {
+      menu.classList.remove("asideVisible");
+    } else {
+      menu.classList.add("asideVisible");
+    }
+  };
+
   const getNavAccElements = () => {
     if (authStatus) {
       return (
-        <div className={styles.navAccSection}>
+        <div className={styles.navAccSection} onClick={handleMenuBtnClick}>
           <Link
             to={`/profile/${userData?.personalData?.id}`}
             className={styles.loginBtnLink}
