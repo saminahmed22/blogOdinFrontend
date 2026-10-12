@@ -14,7 +14,11 @@ import checkIcon from "../../assets/icons/check.svg";
 import closeIcon from "../../assets/icons/close.svg";
 import authorIcon from "../../assets/icons/author.svg";
 
-export default function CommentCard({ data, postAuthorID }) {
+export default function CommentCard({
+  data,
+  postAuthorID,
+  handleCommentDelete,
+}) {
   const { postId } = useParams();
 
   const navigate = useNavigate();
@@ -25,7 +29,6 @@ export default function CommentCard({ data, postAuthorID }) {
   const [textAreaLen, setTextAreaLen] = useState(0);
   const [validationStatus, setValidationStatus] = useState(true);
   const [submitStatus, setSubmitStatus] = useState("halt");
-  const [isDeleted, setIsDeleted] = useState(false);
 
   const textAreaRef = useRef();
 
@@ -104,7 +107,11 @@ export default function CommentCard({ data, postAuthorID }) {
     textAreaRef.current.value = "";
     setTextAreaLen(0);
 
-    setComment((prev) => ({ ...prev, content: result.comment.content }));
+    setComment((prev) => ({
+      ...prev,
+      content: result.comment.content,
+      edited_at: result.comment.edited_at,
+    }));
   };
 
   const handleSubmitFail = (result) => {
@@ -148,11 +155,7 @@ export default function CommentCard({ data, postAuthorID }) {
 
     const result = await makeCommentAPIRequest(formData, jwt, "DELETE");
 
-    result.success ? handleDeleteSubmitSuccess() : handleDeleteSubmitFail();
-  };
-
-  const handleDeleteSubmitSuccess = () => {
-    setIsDeleted(true);
+    result.success ? handleCommentDelete(comment.id) : handleDeleteSubmitFail();
   };
 
   const handleDeleteSubmitFail = () => {
@@ -216,8 +219,8 @@ export default function CommentCard({ data, postAuthorID }) {
 
             <button
               className={styles.cancelBtn}
-              title="Cancle edit comment"
-              aria-label="Cancle edit comment"
+              title="Cancle delete comment"
+              aria-label="Cancle delete comment"
               onClick={handleCancelBtnClick}
               disabled={submitStatus === "submitting"}
             >
@@ -293,51 +296,49 @@ export default function CommentCard({ data, postAuthorID }) {
     }
   };
 
-  if (!isDeleted) {
-    return (
-      <div className={styles.commentCard}>
-        <div className={styles.primary}>{getProfilePicture()}</div>
-        <div className={styles.secondary}>
-          <div className={styles.header}>
-            <div className={styles.details}>
-              <div className={styles.subDetails}>
-                <p
-                  className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
-                  onClick={handleProfileClick}
-                >
-                  <span className={styles.name}>
-                    <span className={styles.firstName}>
-                      {comment?.author?.firstName}
-                    </span>
-                    <span className={styles.lastName}>
-                      {comment?.author?.lastName}
-                    </span>
+  return (
+    <div className={styles.commentCard}>
+      <div className={styles.primary}>{getProfilePicture()}</div>
+      <div className={styles.secondary}>
+        <div className={styles.header}>
+          <div className={styles.details}>
+            <div className={styles.subDetails}>
+              <p
+                className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
+                onClick={handleProfileClick}
+              >
+                <span className={styles.name}>
+                  <span className={styles.firstName}>
+                    {comment?.author?.firstName}
                   </span>
-                </p>
-
-                {comment.author.id === postAuthorID && (
-                  <img
-                    className={styles.authorSign}
-                    src={authorIcon}
-                    alt="Author icon"
-                    aria-label="Author"
-                    title="Author"
-                  ></img>
-                )}
-              </div>
-
-              <p className={styles.createDate}>
-                {getReadableDate(comment.edited_at)}
-                {comment.created_at !== comment.edited_at && " (edited)"}
+                  <span className={styles.lastName}>
+                    {comment?.author?.lastName}
+                  </span>
+                </span>
               </p>
+
+              {comment.author.id === postAuthorID && (
+                <img
+                  className={styles.authorSign}
+                  src={authorIcon}
+                  alt="Author icon"
+                  aria-label="Author"
+                  title="Author"
+                ></img>
+              )}
             </div>
 
-            {getActionBtn()}
+            <p className={styles.createDate}>
+              {getReadableDate(comment.edited_at)}
+              {comment.created_at !== comment.edited_at && " (edited)"}
+            </p>
           </div>
 
-          {getContentArea()}
+          {getActionBtn()}
         </div>
+
+        {getContentArea()}
       </div>
-    );
-  }
+    </div>
+  );
 }
