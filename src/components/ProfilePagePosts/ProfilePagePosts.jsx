@@ -74,7 +74,7 @@ export default function ProfilePagePosts({
       }
 
       postsRef.current = buildingObj;
-      console.log(buildingObj);
+
       setPosts(buildingObj);
     },
     [setPosts],
@@ -106,8 +106,6 @@ export default function ProfilePagePosts({
   // Initial posts fetch
   useEffect(() => {
     if (!posts.fetchConfig.initial) return;
-
-    console.log("post Init stat: " + posts.fetchConfig.initial);
 
     const fetchFunc = async () => {
       fetchPostsCB("initial");
