@@ -60,7 +60,7 @@ export default function PostCard({ post = {} }) {
     return text;
   };
 
-  const getReadableDate = () => {
+  const getReadableDateLong = () => {
     const isoString = post?.created_at;
 
     const options = {
@@ -73,6 +73,14 @@ export default function PostCard({ post = {} }) {
     };
 
     return new Date(isoString).toLocaleString(undefined, options);
+  };
+
+  const getReadableDate = () => {
+    const isoString = post?.created_at;
+
+    const options = { year: "numeric", month: "long", day: "numeric" };
+
+    return new Date(isoString).toLocaleDateString(undefined, options);
   };
 
   return (
@@ -94,7 +102,9 @@ export default function PostCard({ post = {} }) {
                 </span>
               </span>
             </p>
-            <p className={styles.postDate}>{getReadableDate()}</p>
+            <p className={styles.postDate} title={getReadableDateLong()}>
+              {getReadableDate()}
+            </p>
 
             {getPostPublishStatusIcon()}
           </div>
