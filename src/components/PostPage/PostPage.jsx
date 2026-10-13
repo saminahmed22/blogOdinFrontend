@@ -67,19 +67,23 @@ export default function PostPage() {
           style={{ backgroundColor: post?.author?.theme_color }}
           onClick={handleProfileClick}
         >
-          {`${post?.author?.firstName[0]}${post?.author?.lastName[0]}`}
+          {`${post?.author?.firstName[0] || ""}${post?.author?.lastName[0] || ""}`}
         </div>
       );
     }
   };
 
   const getReadableDate = (date) => {
+    if (!date) return "";
+
     const options = { year: "numeric", month: "long", day: "numeric" };
 
     return new Date(date).toLocaleDateString(undefined, options);
   };
 
   const getReadableExtDate = (date) => {
+    if (!date) return "";
+
     const options = {
       year: "numeric",
       month: "long",
