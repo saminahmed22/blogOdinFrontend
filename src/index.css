@@ -38,6 +38,11 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* Remove blue highlights on phones */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
 /* Scrollbar stylings */
 ::-webkit-scrollbar {
   width: 8px;
@@ -73,7 +78,11 @@ input[type="search"]::-webkit-search-cancel-button {
   content: url("./assets/icons/close.svg");
 }
 
-/* Icon color stylings */
+/* Icon default stylings */
+img {
+  pointer-events: none;
+}
+
 .invertImg {
   filter: invert();
 }
