@@ -18,6 +18,7 @@ export default function CommentCard({
   data,
   postAuthorID,
   handleCommentDelete,
+  isProfileCommentCard = false,
 }) {
   const { postId } = useParams();
 
@@ -70,12 +71,31 @@ export default function CommentCard({
     return new Date(date).toLocaleDateString(undefined, options);
   };
 
-  const handleEditBtnClick = () => {
+  const getReadableDateLong = () => {
+    const isoString = comment.edited_at;
+
+    const options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      weekday: "long",
+    };
+
+    return new Date(isoString).toLocaleString(undefined, options);
+  };
+
+  const handleEditBtnClick = (e) => {
+    e.stopPropagation();
+
     setActionMode("edit");
     setTextAreaLen(comment.content.length);
   };
 
-  const handleSubmitButtonClick = async () => {
+  const handleSubmitButtonClick = async (e) => {
+    e.stopPropagation();
+
     if (textAreaLen < 1) {
       setValidationStatus(false);
 
@@ -131,16 +151,22 @@ export default function CommentCard({
     }
   };
 
-  const handleCancelBtnClick = () => {
+  const handleCancelBtnClick = (e) => {
+    e.stopPropagation();
+
     setActionMode("halt");
     setValidationStatus(true);
   };
 
-  const handleDeleteButtonClick = () => {
+  const handleDeleteButtonClick = (e) => {
+    e.stopPropagation();
+
     setActionMode("delete");
   };
 
-  const handleDeleteSubmitButtonClick = async () => {
+  const handleDeleteSubmitButtonClick = async (e) => {
+    e.stopPropagation();
+
     setSubmitStatus("submitting");
 
     const dataObj = {
@@ -296,8 +322,14 @@ export default function CommentCard({
     }
   };
 
+  const handleCommentClick = (e) => {
+    e.stopPropagation();
+  };
   return (
-    <div className={styles.commentCard}>
+    <div
+      className={`${styles.commentCard} ${isProfileCommentCard ? styles.profileCommentCard : ""} `}
+      onClick={handleCommentClick}
+    >
       <div className={styles.primary}>{getProfilePicture()}</div>
       <div className={styles.secondary}>
         <div className={styles.header}>
@@ -328,7 +360,7 @@ export default function CommentCard({
               )}
             </div>
 
-            <p className={styles.createDate}>
+            <p className={styles.createDate} title={getReadableDateLong()}>
               {getReadableDate(comment.edited_at)}
               {comment.created_at !== comment.edited_at && " (edited)"}
             </p>
