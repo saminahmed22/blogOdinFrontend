@@ -1,26 +1,31 @@
 import styles from "./ProfilePage.module.css";
 
 // Hooks
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useParams, useOutletContext } from "react-router";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router";
 
 // Components
-import PostCard from "../postCard/PostCard";
+import ProfilePagePosts from "../ProfilePagePosts/ProfilePagePosts";
+import ProfilePageComments from "../ProfilePageComments/ProfilePageComments";
 
 // API
 import { fetchUserData } from "../../api/fetchUserData";
-import { fetchUserPosts } from "../../api/fetchUserPosts";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 
 export default function ProfilePage() {
-  const { profileId } = useParams();
+  const { profileId, contentType } = useParams();
 
-  const { userData } = useOutletContext();
+  const navigate = useNavigate();
+
+  if (!contentType) {
+    navigate(`/profile/posts/${profileId}`, { replace: true });
+  }
+
   const [targetUser, setTargetUser] = useState();
   const [fetchStatus, setFetchStatus] = useState("fetching");
-  const [postsFetchStatus, setPostsFetchStatus] = useState("fetching");
+
   const [posts, setPosts] = useState({
     fetchConfig: {
       quantity: 10,
@@ -28,12 +33,26 @@ export default function ProfilePage() {
       count: 0,
       amount: 0,
       cursor: undefined,
+      initial: true,
     },
 
     postsObj: {},
   });
 
-  const profilePageRef = useRef();
+  const [comments, setComments] = useState({
+    fetchConfig: {
+      quantity: 10,
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+      initial: true,
+    },
+
+    commentsObj: {},
+  });
+
+  const [pageContentType, setPageContentType] = useState(contentType);
 
   // Initial user data fetch
   useEffect(() => {
@@ -41,8 +60,6 @@ export default function ProfilePage() {
       const result = await fetchUserData(profileId);
 
       if (result.success) {
-        console.log(result);
-
         setFetchStatus("success");
 
         setTargetUser(result.user);
@@ -54,135 +71,47 @@ export default function ProfilePage() {
     fetchFunc();
   }, [profileId]);
 
-  //#region Inifnite scroll posts
-  const postsRef = useRef(posts);
-  const updatePostsState = useCallback(
-    (mode, result) => {
-      const buildingObj = {
+  // Refresh states on ID change
+  const initialRun = useRef(true);
+  useEffect(() => {
+    if (initialRun.current) {
+      initialRun.current = false;
+    }
+
+    const setFunc = () => {
+      setPosts({
         fetchConfig: {
           quantity: 10,
           hasMore: false,
           count: 0,
           amount: 0,
           cursor: undefined,
+          initial: true,
         },
 
         postsObj: {},
-      };
+      });
 
-      // update fetch config options
-      buildingObj.fetchConfig.count = result.count;
+      setComments({
+        fetchConfig: {
+          quantity: 10,
+          hasMore: false,
+          count: 0,
+          amount: 0,
+          cursor: undefined,
+          initial: true,
+        },
 
-      buildingObj.fetchConfig.amount =
-        mode === "initial"
-          ? result.posts.length
-          : postsRef.current.fetchConfig.amount + result.posts.length;
+        commentsObj: {},
+      });
 
-      buildingObj.fetchConfig.hasMore =
-        result.count > buildingObj.fetchConfig.amount;
-
-      buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
-        ? result.posts[result.posts.length - 1].id
-        : undefined;
-
-      // Populate posts object
-      if (mode !== "initial") {
-        buildingObj.postsObj = { ...postsRef.current.postsObj };
-      }
-
-      for (const comment of result.posts) {
-        buildingObj.postsObj[comment.id] = comment;
-      }
-
-      postsRef.current = buildingObj;
-      setPosts(buildingObj);
-    },
-    [setPosts],
-  );
-
-  const fetchingOnReqRef = useRef(false);
-  const fetchPostsCB = useCallback(
-    async (mode = "request") => {
-      const params = {
-        userId: profileId,
-        quantity: postsRef.current.fetchConfig.quantity,
-        cursor:
-          mode === "initial" ? undefined : postsRef.current.fetchConfig.cursor,
-      };
-
-      const result = await fetchUserPosts(params, userData?.jwt);
-
-      if (result.success) {
-        fetchingOnReqRef.current = false;
-        updatePostsState(mode, result);
-        setPostsFetchStatus("success");
-      } else {
-        setPostsFetchStatus("error");
-      }
-    },
-    [updatePostsState, profileId, userData?.jwt],
-  );
-
-  // Initial posts fetch
-  useEffect(() => {
-    const fetchFunc = async () => {
-      fetchPostsCB("initial");
+      setPageContentType(contentType);
     };
 
-    fetchFunc();
-  }, [fetchPostsCB]);
+    setFunc();
+  }, [profileId, contentType, navigate]);
 
-  // Refetch on scroll handler
-  // useEffect(() => {
-  //   const commentListElemRef = postPageRef.current;
-
-  //   if (!commentListElemRef) return;
-
-  //   const handleScroll = async () => {
-  //     const scrollTop = commentListElemRef.scrollTop;
-  //     const scrollHeight = commentListElemRef.scrollHeight;
-  //     const clientHeight = commentListElemRef.clientHeight;
-
-  //     const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
-
-  //     if (percentage >= 40) {
-  //       if (!showScrollTop) {
-  //         console.log("Toggled on");
-  //         setShowScrollTop(true);
-  //       }
-  //     } else if (percentage <= 20) {
-  //       if (showScrollTop) {
-  //         console.log("Toggled off");
-  //         setShowScrollTop(false);
-  //       }
-  //     }
-
-  //     if (
-  //       percentage >= 70 &&
-  //       posts.fetchConfig.hasMore &&
-  //       !fetchingOnReqRef.current
-  //     ) {
-  //       fetchingOnReqRef.current = true;
-  //       fetchpostsCB();
-  //     }
-  //   };
-
-  //   commentListElemRef.addEventListener("scroll", handleScroll);
-
-  //   return () => {
-  //     commentListElemRef.removeEventListener("scroll", handleScroll);
-  //   };
-  // }, [
-  //   postPageRef,
-  //   posts.fetchConfig.hasMore,
-  //   fetchpostsCB,
-  //   showScrollTop,
-  //   setShowScrollTop,
-  // ]);
-
-  //#endregion
-
-  const getProfilePicture = () => {
+  function getProfilePicture() {
     {
       if (targetUser?.profilePictureLink) {
         return (
@@ -196,54 +125,69 @@ export default function ProfilePage() {
         return (
           <div
             className={styles.profilePicture}
-            style={{ backgroundColor: targetUser.theme_color }}
+            style={{
+              backgroundColor: targetUser.theme_color,
+            }}
           >
-            {targetUser?.firstName[0]}
-            {targetUser?.lastName[0]}
+            {targetUser?.firstName[0] ? targetUser?.firstName[0] : ""}
+            {targetUser?.lastName[0] ? targetUser?.lastName[0] : ""}
           </div>
         );
       }
     }
-  };
+  }
 
   const getReadableDate = (date) => {
+    if (!date) return "";
     const options = { year: "numeric", month: "long", day: "numeric" };
 
     return new Date(date).toLocaleDateString(undefined, options);
   };
 
-  const getPostsList = () => {
-    switch (postsFetchStatus) {
-      case "success":
-        return (
-          <div className={styles.postList}>
-            {Object.keys(posts.postsObj).map((id) => (
-              <PostCard post={posts.postsObj[id]} key={id} />
-            ))}
-          </div>
-        );
+  const getHeader = () => {
+    return (
+      <h2 className={styles.contentBodyHeader}>
+        <input
+          type="radio"
+          name="userContentSelect"
+          id="userContentPosts"
+          className={styles.radioPosts}
+          value={"posts"}
+          onChange={() => {
+            if (pageContentType === "posts") return;
 
-      case "fetching":
-        return (
-          <div className={styles.loadingMessageContainer}>
-            <img
-              className={styles.loadingIcon}
-              src={loadingIcon}
-              alt="Loading icon"
-            />
-            <p className={styles.loadingMessage}>Loading Posts</p>
-          </div>
-        );
+            setPageContentType("posts");
 
-      case "error":
-        return <p className={styles.errorMessage}>An error occured.</p>;
-    }
+            navigate(`/profile/posts/${profileId}`, { replace: true });
+          }}
+          checked={pageContentType === "posts"}
+        />
+        <label htmlFor="userContentPosts">Posts</label>
+
+        <input
+          type="radio"
+          name="userContentSelect"
+          id="userContentComments"
+          className={styles.radioComments}
+          value={"comments"}
+          onChange={() => {
+            if (pageContentType === "comments") return;
+
+            setPageContentType("comments");
+
+            navigate(`/profile/comments/${profileId}`, { replace: true });
+          }}
+          checked={pageContentType === "comments"}
+        />
+        <label htmlFor="userContentComments">Comments</label>
+      </h2>
+    );
   };
 
   switch (fetchStatus) {
     case "success":
       return (
-        <div className={styles.profilePage} ref={profilePageRef}>
+        <div className={styles.profilePage}>
           <div className={styles.header}>
             {getProfilePicture()}
 
@@ -260,9 +204,23 @@ export default function ProfilePage() {
             </p>
           </div>
           <div className={styles.contentBody}>
-            <h2 className={styles.contentBodyHeader}>Posts</h2>
+            {getHeader()}
 
-            {getPostsList()}
+            {pageContentType === "posts" ? (
+              <ProfilePagePosts
+                profileId={profileId}
+                posts={posts}
+                setPosts={setPosts}
+                userFirstName={targetUser.firstName}
+              />
+            ) : (
+              <ProfilePageComments
+                profileId={profileId}
+                comments={comments}
+                setComments={setComments}
+                userFirstName={targetUser.firstName}
+              />
+            )}
           </div>
         </div>
       );
