@@ -9,6 +9,16 @@
   background: rgba(255, 193, 100, 0.298);
 
   border-radius: 12px;
+
+  cursor: default;
+}
+
+.profileCommentCard {
+  align-self: center;
+
+  width: 90%;
+
+  margin-bottom: 10px;
 }
 
 .primary {
@@ -237,6 +247,8 @@
   margin-bottom: 10px;
 
   padding-right: 10px;
+
+  word-wrap: anywhere;
 }
 
 @media (max-width: 800px) {
