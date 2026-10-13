@@ -88,6 +88,7 @@ export default function Feed() {
         updateFeedPostsState(mode, result);
         setFetchStatus("success");
       } else {
+        fetchingOnReqRef.current = false;
         setFetchStatus("error");
       }
     },
@@ -183,9 +184,11 @@ export default function Feed() {
         }
 
       case "error":
-        <div className={styles.feedErrorMessage} key={"errorText"}>
-          An error occured. Please try again later.
-        </div>;
+        return (
+          <div className={styles.feedErrorMessage} key={"errorText"}>
+            An error occured. Please try again later.
+          </div>
+        );
     }
   };
 
