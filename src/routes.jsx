@@ -23,7 +23,7 @@ export const routes = [
   },
 
   {
-    path: "profile/:profileId",
+    path: "profile/:contentType?/:profileId",
     element: <App />,
     errorElement: <ErrorPage />,
     children: [{ index: true, element: <ProfilePage /> }],
