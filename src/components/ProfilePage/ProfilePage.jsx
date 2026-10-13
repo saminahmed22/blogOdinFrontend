@@ -1,7 +1,7 @@
 import styles from "./ProfilePage.module.css";
 
 // Hooks
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 
 // Components
@@ -18,10 +18,6 @@ export default function ProfilePage() {
   const { profileId, contentType } = useParams();
 
   const navigate = useNavigate();
-
-  if (!contentType) {
-    navigate(`/profile/posts/${profileId}`, { replace: true });
-  }
 
   const [targetUser, setTargetUser] = useState();
   const [fetchStatus, setFetchStatus] = useState("fetching");
@@ -52,7 +48,12 @@ export default function ProfilePage() {
     commentsObj: {},
   });
 
-  const [pageContentType, setPageContentType] = useState(contentType);
+  // No content type selected
+  useEffect(() => {
+    if (!contentType) {
+      navigate(`/profile/posts/${profileId}`, { replace: true });
+    }
+  }, [contentType, profileId, navigate]);
 
   // Initial user data fetch
   useEffect(() => {
@@ -70,46 +71,6 @@ export default function ProfilePage() {
 
     fetchFunc();
   }, [profileId]);
-
-  // Refresh states on ID change
-  const initialRun = useRef(true);
-  useEffect(() => {
-    if (initialRun.current) {
-      initialRun.current = false;
-    }
-
-    const setFunc = () => {
-      setPosts({
-        fetchConfig: {
-          quantity: 10,
-          hasMore: false,
-          count: 0,
-          amount: 0,
-          cursor: undefined,
-          initial: true,
-        },
-
-        postsObj: {},
-      });
-
-      setComments({
-        fetchConfig: {
-          quantity: 10,
-          hasMore: false,
-          count: 0,
-          amount: 0,
-          cursor: undefined,
-          initial: true,
-        },
-
-        commentsObj: {},
-      });
-
-      setPageContentType(contentType);
-    };
-
-    setFunc();
-  }, [profileId, contentType, navigate]);
 
   function getProfilePicture() {
     {
@@ -154,13 +115,11 @@ export default function ProfilePage() {
           className={styles.radioPosts}
           value={"posts"}
           onChange={() => {
-            if (pageContentType === "posts") return;
-
-            setPageContentType("posts");
+            if (contentType === "posts") return;
 
             navigate(`/profile/posts/${profileId}`, { replace: true });
           }}
-          checked={pageContentType === "posts"}
+          checked={contentType === "posts"}
         />
         <label htmlFor="userContentPosts">Posts</label>
 
@@ -171,13 +130,11 @@ export default function ProfilePage() {
           className={styles.radioComments}
           value={"comments"}
           onChange={() => {
-            if (pageContentType === "comments") return;
-
-            setPageContentType("comments");
+            if (contentType === "comments") return;
 
             navigate(`/profile/comments/${profileId}`, { replace: true });
           }}
-          checked={pageContentType === "comments"}
+          checked={contentType === "comments"}
         />
         <label htmlFor="userContentComments">Comments</label>
       </h2>
@@ -206,8 +163,9 @@ export default function ProfilePage() {
           <div className={styles.contentBody}>
             {getHeader()}
 
-            {pageContentType === "posts" ? (
+            {contentType === "posts" ? (
               <ProfilePagePosts
+                key={profileId}
                 profileId={profileId}
                 posts={posts}
                 setPosts={setPosts}
@@ -215,6 +173,7 @@ export default function ProfilePage() {
               />
             ) : (
               <ProfilePageComments
+                key={profileId}
                 profileId={profileId}
                 comments={comments}
                 setComments={setComments}
