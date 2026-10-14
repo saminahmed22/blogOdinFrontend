@@ -62,12 +62,8 @@ export default function ProfileSetupForm({ data, jwt }) {
     dataObj["userId"] = data.id;
 
     const formData = JSON.stringify(dataObj);
-    console.log(formData);
-    console.log(jwt);
 
     const result = await submitProfileUpdate(formData, jwt, "PUT");
-
-    console.log(result);
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };
