@@ -57,7 +57,7 @@ export default function ProfilePageComments({
         result.count > buildingObj.fetchConfig.amount;
 
       buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
-        ? result.comments[result.comments.length - 1].id
+        ? result.comments[result.comments.length - 1]?.id
         : undefined;
 
       if (fetchConfigInitialMode) {
@@ -70,12 +70,11 @@ export default function ProfilePageComments({
       }
 
       for (const comment of result.comments) {
-        buildingObj.commentsObj[comment.id] = comment;
+        buildingObj.commentsObj[comment?.id] = comment;
       }
 
       commentsRef.current = buildingObj;
 
-      console.log(buildingObj);
       setComments(buildingObj);
     },
     [setComments],
@@ -189,15 +188,15 @@ export default function ProfilePageComments({
 
   const getCommentCard = (comment, index, comments) => {
     return (
-      <Fragment key={`Fragment_${comment.id}`}>
+      <Fragment key={`Fragment_${comment?.id}`}>
         <ProfileCommentCard
-          key={comment.id}
+          key={comment?.id}
           post={comment.Post}
           comment={comment}
           handleCommentDelete={handleCommentDelete}
         />
 
-        {getHr(index, Object.keys(comments).length, comment.id)}
+        {getHr(index, Object.keys(comments).length, comment?.id)}
       </Fragment>
     );
   };
@@ -231,7 +230,9 @@ export default function ProfilePageComments({
                   alt="Loading icon"
                 />
                 <p className={styles.loadingMessage}>
-                  Loading more comments made by {userFirstName}
+                  {profileId === userData?.personalData?.id
+                    ? "Loading more of your comments."
+                    : `Loading more comments made by ${userFirstName}`}
                 </p>
               </div>
             )}
@@ -247,11 +248,15 @@ export default function ProfilePageComments({
           </div>
         );
       } else {
-        return (
-          <span className={styles.noCommentText}>
-            <p className={styles.userFirstName}>{userFirstName}</p>
-            <p>hasn't commented anything yet.</p>
-          </span>
+        return profileId === userData?.personalData?.id ? (
+          <p className={styles.noCommentText}>
+            You havent made any comments yet.
+          </p>
+        ) : (
+          <p className={styles.noCommentText}>
+            <span className={styles.userFirstName}>{userFirstName}</span> hasn't
+            commented anything yet.
+          </p>
         );
       }
 

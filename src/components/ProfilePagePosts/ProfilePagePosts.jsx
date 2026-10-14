@@ -57,7 +57,7 @@ export default function ProfilePagePosts({
         result.count > buildingObj.fetchConfig.amount;
 
       buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
-        ? result.posts[result.posts.length - 1].id
+        ? result.posts[result.posts.length - 1]?.id
         : undefined;
 
       if (fetchConfigInitialMode) {
@@ -70,7 +70,7 @@ export default function ProfilePagePosts({
       }
 
       for (const post of result.posts) {
-        buildingObj.postsObj[post.id] = post;
+        buildingObj.postsObj[post?.id] = post;
       }
 
       postsRef.current = buildingObj;
@@ -165,10 +165,10 @@ export default function ProfilePagePosts({
 
   const getPostCard = (post, index, posts) => {
     return (
-      <Fragment key={`Fragment_${post.id}`}>
-        <PostCard key={post.id} post={post} />
+      <Fragment key={`Fragment_${post?.id}`}>
+        <PostCard key={post?.id} post={post} />
 
-        {getHr(index, Object.keys(posts).length, post.id)}
+        {getHr(index, Object.keys(posts).length, post?.id)}
       </Fragment>
     );
   };
@@ -198,7 +198,9 @@ export default function ProfilePagePosts({
                   alt="Loading icon"
                 />
                 <p className={styles.loadingMessage}>
-                  Loading more Posts of {userFirstName}
+                  {profileId === userData.personalData?.id
+                    ? "Loading more of your posts"
+                    : `Loading more posts of ${userFirstName}`}
                 </p>
               </div>
             )}
@@ -214,11 +216,13 @@ export default function ProfilePagePosts({
           </div>
         );
       } else {
-        return (
-          <span className={styles.noPostText}>
-            <p className={styles.userFirstName}>{userFirstName}</p>
-            <p>hasn't posted anything yet.</p>
-          </span>
+        return profileId === userData?.personalData?.id ? (
+          <p className={styles.noPostText}>You havent made any posts yet.</p>
+        ) : (
+          <p className={styles.noPostText}>
+            <span className={styles.userFirstName}>{userFirstName}</span> hasn't
+            posted anything yet.
+          </p>
         );
       }
 
