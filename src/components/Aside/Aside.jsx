@@ -103,6 +103,8 @@ export default function Aside({ userData, setUserData }) {
   };
 
   const handleNavBtnClick = (e) => {
+    handleMenuBtnClick();
+
     const buttonID = e.target.id;
 
     if (!buttonID) return;
