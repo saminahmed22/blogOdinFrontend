@@ -13,7 +13,7 @@ export function AuthPage() {
     const isLoggedIn = !!JSON.parse(localStorage.getItem("jwt"));
 
     if (isLoggedIn) {
-      navigate("/", { replace: true });
+      navigate("/feed", { replace: true });
     }
   });
 
