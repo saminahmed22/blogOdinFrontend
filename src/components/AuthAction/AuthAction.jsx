@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 // Components
 import { LoginForm } from "../LoginForm/LoginForm";
 import { RegForm } from "../RegForm/RegForm";
-import ProfileSetupForm from "../profileSetupForm/profileSetupForm";
+import ProfileSetupForm from "../ProfileSetupForm/profileSetupForm";
 
 // Icons
 import checkIcon from "../../assets/icons/check.svg";
@@ -90,11 +90,13 @@ export function AuthAction() {
     );
   };
 
-  const moveRegStepTwo = () => {
+  const moveRegStepTwo = (data, jwt) => {
     setRegStep({
       step: "profile",
       reg: "complete",
       profile: "onGoing",
+      data,
+      jwt,
     });
   };
 
@@ -107,7 +109,7 @@ export function AuthAction() {
       ) : regStep.step === "reg" ? (
         <RegForm moveRegStepTwo={moveRegStepTwo} />
       ) : (
-        <ProfileSetupForm />
+        <ProfileSetupForm data={regStep.data} jwt={regStep.jwt} />
       )}
     </div>
   );
