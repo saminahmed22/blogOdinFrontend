@@ -2,24 +2,28 @@ import styles from "./ProfilePage.module.css";
 
 // Hooks
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, useOutletContext } from "react-router";
 
 // Components
 import ProfilePagePosts from "../ProfilePagePosts/ProfilePagePosts";
 import ProfilePageComments from "../ProfilePageComments/ProfilePageComments";
+import ProfileEditModal from "../ProfileEditModal/ProfileEditModal";
 
 // API
 import { fetchUserData } from "../../api/fetchUserData";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
+import editIcon from "../../assets/icons/edit.svg";
 
 export default function ProfilePage() {
   const { profileId, contentType } = useParams();
 
   const navigate = useNavigate();
 
-  const [targetUser, setTargetUser] = useState();
+  const { userData } = useOutletContext();
+
+  let [targetUser, setTargetUser] = useState();
   const [fetchStatus, setFetchStatus] = useState("fetching");
 
   const [posts, setPosts] = useState({
@@ -74,10 +78,18 @@ export default function ProfilePage() {
 
   function getProfilePicture() {
     {
-      if (targetUser?.profilePictureLink) {
+      if (
+        userData?.personalData?.id === profileId
+          ? userData?.personalData?.profilePictureLink
+          : targetUser?.profilePictureLink
+      ) {
         return (
           <img
-            src={targetUser?.profilePicture}
+            src={
+              userData?.personalData?.id === profileId
+                ? userData?.personalData?.profilePictureLink
+                : targetUser?.profilePictureLink
+            }
             className={styles.profilePicture}
             alt="Profile picture"
           />
@@ -146,6 +158,20 @@ export default function ProfilePage() {
       return (
         <div className={styles.profilePage}>
           <div className={styles.header}>
+            {userData?.jwt?.token?.length > 1 &&
+              userData?.personalData?.id === profileId && (
+                <>
+                  <button
+                    className={styles.profileEditBtn}
+                    commandfor={"editProfileModal"}
+                    command={"show-modal"}
+                  >
+                    <img src={editIcon} alt="Edit icon" />
+                  </button>
+                  <ProfileEditModal />
+                </>
+              )}
+
             {getProfilePicture()}
 
             <span className={styles.name}>
@@ -153,13 +179,18 @@ export default function ProfilePage() {
               <span className={styles.lastName}>{targetUser?.lastName}</span>
             </span>
 
-            <p className={styles.bio}>{targetUser?.bio}</p>
+            <p className={styles.bio}>
+              {userData?.personalData?.id === profileId
+                ? userData?.personalData?.bio
+                : targetUser?.bio}
+            </p>
 
             <p>
               <span style={{ fontWeight: 500 }}>Member since:</span>{" "}
               {getReadableDate(targetUser.joined_at)}
             </p>
           </div>
+
           <div className={styles.contentBody}>
             {getHeader()}
 
