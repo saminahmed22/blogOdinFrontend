@@ -1,7 +1,7 @@
 import styles from "./RegForm.module.css";
 
 import { useState, useRef } from "react";
-import { useNavigate, Link } from "react-router";
+import { Link } from "react-router";
 
 import PasswordValidator from "password-validator";
 import { ZxcvbnFactory } from "@zxcvbn-ts/core";
@@ -16,9 +16,7 @@ import loadingIcon from "../../assets/icons/loading.svg";
 import visibilityIcon from "../../assets/icons/visibility.svg";
 import visibilityOffIcon from "../../assets/icons/visibility_off.svg";
 
-export function RegForm() {
-  const navigate = useNavigate();
-
+export function RegForm({ moveRegStepTwo }) {
   const [fetchStatus, setFetchStatus] = useState("halt");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
   const [rePasswordVisibility, setRePasswordVisibility] = useState(false);
@@ -66,7 +64,7 @@ export function RegForm() {
     localStorage.setItem("jwt", JSON.stringify(result.jwt));
     localStorage.setItem("userData", JSON.stringify(result.user));
 
-    navigate("/feed", { replace: true });
+    moveRegStepTwo();
   };
 
   const handleRegistrationFail = (result) => {
