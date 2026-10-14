@@ -35,6 +35,139 @@
   white-space: nowrap;
 }
 
+/* getRegProgressBar */
+
+.getRegProgressBar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-bottom: -50px;
+}
+
+.stepCircle {
+  height: 28px;
+  width: 28px;
+
+  display: grid;
+  place-items: center;
+
+  border-radius: 100%;
+
+  border: 5px solid orangered;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  transition:
+    border 0.3s ease,
+    height 0.3s ease,
+    width 0.3s ease;
+}
+
+.stepCircleCurrent {
+  border: 2px solid orangered;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  transition-delay: 0.8s;
+}
+
+.stepCircleInner {
+  height: 18px;
+  width: 18px;
+
+  background-color: orangered;
+
+  border-radius: 100%;
+
+  transition:
+    height 0.3s ease,
+    width 0.3s ease;
+
+  @starting-style {
+    height: 0;
+    width: 0;
+  }
+}
+
+.stepCircleCurrentProfile,
+.stepCircleInnerProfile {
+  transition-delay: 0.8s !important;
+}
+
+.stepCircleComplete {
+  border: 2px solid orangered;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+
+  img {
+    z-index: 2;
+  }
+}
+
+.stepCircleComplete::after {
+  content: "";
+
+  height: 28px;
+  width: 28px;
+
+  background-color: orangered;
+
+  border-radius: 100%;
+
+  position: absolute;
+
+  transition:
+    height 0.3s ease,
+    width 0.3s ease;
+
+  @starting-style {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+.progressLine {
+  height: 10px;
+  width: 150px;
+
+  background: rgba(255, 68, 0, 0.2);
+
+  margin: 0 -2px;
+}
+
+.progressLineProfile {
+  height: 10px;
+  width: 150px;
+
+  background: rgba(255, 68, 0, 0.2);
+
+  margin: 0 -2px;
+}
+
+.progressLineProfile::after {
+  content: "";
+
+  height: 10px;
+  width: 150px;
+
+  position: absolute;
+
+  background: orangered;
+
+  transition: width 0.5s ease-out;
+  transition-delay: 0.3s;
+
+  @starting-style {
+    width: 0px;
+  }
+}
+
+/* ________________________________________- */
+
 @media (max-width: 800px) {
   .authAction {
     height: 60%;
