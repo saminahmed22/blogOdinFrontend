@@ -46,7 +46,7 @@ export default function CommentCard({
           <img
             src={comment.author.profilePictureLink}
             className={styles.profilePicture}
-            alt=""
+            alt="Profile picture"
             onClick={handleProfileClick}
           />
         );
