@@ -19,8 +19,21 @@
   gap: 10px;
 
   padding: 20px 0;
+
+  position: relative;
 }
 
+.profileEditBtn {
+  height: 35px;
+  width: 35px;
+
+  background-color: transparent;
+
+  position: absolute;
+
+  right: 20px;
+  top: 20px;
+}
 .profilePicture {
   height: 150px;
   width: 150px;
@@ -49,7 +62,7 @@
   margin: 0 10px;
   .firstName,
   .lastName {
-    max-width: 20ch;
+    max-width: 10ch;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -60,7 +73,12 @@
 }
 
 .bio {
+  max-width: 50ch;
+
+  text-align: center;
   font-size: 1.1rem;
+
+  margin: 0 5px;
 }
 
 /* Loading message */
