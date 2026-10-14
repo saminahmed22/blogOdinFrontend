@@ -76,10 +76,14 @@
   margin: auto;
 
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 5px;
 }
 
 .userFirstName {
+  display: inline-block;
+
   max-width: 10ch;
   overflow: hidden;
   text-overflow: ellipsis;
