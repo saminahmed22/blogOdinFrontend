@@ -1,0 +1,151 @@
+.dialog {
+  width: 350px;
+
+  background: rgb(255, 240, 219);
+
+  border: 1px solid rgba(0, 0, 0, 0.739);
+  border-radius: 12px;
+
+  padding: 0 10px 10px 10px;
+
+  margin: auto;
+}
+
+.dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dialogHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 5px;
+  margin-bottom: 10px;
+
+  p {
+    font-size: 1.1rem;
+    font-weight: 500;
+  }
+
+  button {
+    background-color: transparent;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.profilePictureSection {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profilePicture {
+  align-self: center;
+
+  height: 100px;
+  width: 100px;
+  background: red;
+
+  border-radius: 100%;
+
+  display: grid;
+  place-items: center;
+
+  font-size: 3rem;
+  font-weight: 500;
+
+  object-fit: cover;
+}
+
+.inputContainer {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  label {
+    font-size: 1.1rem;
+    font-weight: 400;
+  }
+
+  input {
+    height: 20px;
+
+    border: 1px solid rgba(0, 0, 0, 0.452);
+    border-radius: 8px;
+
+    padding-left: 10px;
+  }
+
+  textarea {
+    min-height: 50px;
+    height: fit-content;
+    max-height: 250px;
+
+    border: 1px solid rgba(0, 0, 0, 0.452);
+    border-radius: 8px;
+
+    field-sizing: content;
+
+    resize: none;
+    overflow: hidden auto;
+
+    font-family: inherit;
+
+    padding-left: 5px;
+  }
+
+  .lengthCount {
+    font-size: 0.8rem;
+
+    align-self: flex-end;
+
+    margin-bottom: 10px;
+  }
+}
+
+.formFooter {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  button {
+    height: 35px;
+
+    min-width: 70px;
+    width: fit-content;
+
+    display: grid;
+    place-items: center;
+
+    background-color: transparent;
+
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+
+    padding: 0 5px;
+
+    transition: background 0.3s ease;
+  }
+
+  button:hover {
+    background: rgba(255, 68, 0, 0.4);
+  }
+}
+
+.loadingIcon {
+  height: 24px;
+}
