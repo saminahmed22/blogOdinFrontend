@@ -64,7 +64,7 @@ export function RegForm({ moveRegStepTwo }) {
     localStorage.setItem("jwt", JSON.stringify(result.jwt));
     localStorage.setItem("userData", JSON.stringify(result.user));
 
-    moveRegStepTwo();
+    moveRegStepTwo(result.user, result.jwt);
   };
 
   const handleRegistrationFail = (result) => {
