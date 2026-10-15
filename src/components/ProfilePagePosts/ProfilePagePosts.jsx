@@ -8,7 +8,7 @@ import { useOutletContext } from "react-router";
 import PostCard from "../postCard/PostCard";
 
 // API
-import { fetchUserPosts } from "../../api/fetchUserPosts";
+import { fetchUserPosts } from "../../api/postsAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -90,7 +90,7 @@ export default function ProfilePagePosts({
           mode === "initial" ? undefined : postsRef.current.fetchConfig.cursor,
       };
 
-      const result = await fetchUserPosts(params, userData?.jwt);
+      const result = await fetchUserPosts(params);
 
       if (result.success) {
         fetchingOnReqRef.current = false;
@@ -100,7 +100,7 @@ export default function ProfilePagePosts({
         setFetchStatus("error");
       }
     },
-    [updatePostsState, profileId, userData?.jwt],
+    [updatePostsState, profileId],
   );
 
   // Initial posts fetch

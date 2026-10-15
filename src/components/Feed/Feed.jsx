@@ -8,7 +8,7 @@ import PostCard from "../postCard/PostCard";
 import CategoryBar from "../CategoryBar/CategoryBar";
 
 // API
-import { fetchFeedContent } from "../../api/fetchFeedContent";
+import { fetchFeedContent } from "../../api/postsAPI";
 
 // Icons
 
@@ -83,9 +83,10 @@ export default function Feed() {
 
       const result = await fetchFeedContent(params);
 
+      console.log(result);
       if (result.success) {
         fetchingOnReqRef.current = false;
-        updateFeedPostsState(mode, result);
+        updateFeedPostsState(mode, result.result);
         setFetchStatus("success");
       } else {
         fetchingOnReqRef.current = false;
