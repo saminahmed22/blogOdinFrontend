@@ -7,28 +7,25 @@ import { useNavigate, useParams } from "react-router";
 
 // Icons
 import scrollIcon from "../../assets/icons/rightArrow.svg";
+import loadingIcon from "../../assets/icons/loading.svg";
 
 // API
-import { fetchCategories } from "../../api/fetchCategories";
+import { fetchCategories } from "../../api/categoriesAPI";
 
 export default function CategoryBar() {
   const navigate = useNavigate();
 
   const { category: categoryParam } = useParams();
-
-  const [categories, setCategories] = useState({
-    status: "fetching",
-    categoriesArr: [],
-  });
+  const [fetchStatus, setFetchStatus] = useState("fetching");
+  const [categories, setCategories] = useState();
 
   useEffect(() => {
     const fetchFunc = async () => {
-      const fetchedCategories = await fetchCategories();
+      const result = await fetchCategories();
 
-      setCategories({
-        status: fetchedCategories.status,
-        categoriesArr: [...fetchedCategories.categories],
-      });
+      setFetchStatus(result.success ? "success" : "error");
+
+      setCategories(result.result);
     };
 
     fetchFunc();
@@ -66,72 +63,72 @@ export default function CategoryBar() {
   };
 
   const renderCategories = () => {
-    if (categories.status === "fetching") {
-      <div className={`${styles.categoryList} categoryList`}>
-        <div
-          className={`${styles.categoryBtn} ${styles.categoryBtnPreview}`}
-        ></div>
-      </div>;
-    } else if (categories.status) {
-      return (
-        <div className={`${styles.categoryList} categoryList`}>
-          {categories.categoriesArr.map((category) => {
-            return (
-              <button
-                key={category.id}
-                id={`category_${category.id}`}
-                className={`${styles.categoryBtn} ${Number(categoryParam) === category.id ? styles.categoryBtnSelected : ""}`}
-                onClick={() => {
-                  handleCategoryBtnClick(category.id);
-                }}
-                ref={
-                  category.id === 1
-                    ? firstButtonRef
-                    : Number(categoryParam) === category.id
-                      ? buttonRef
-                      : null
-                }
-              >
-                {category.name}
-              </button>
-            );
-          })}
-        </div>
-      );
-    } else {
-      return (
-        <div
-          className={`${styles.categoryList} ${styles.categoryListFailed} categoryList`}
-        >
-          Failed to fetch categories
-        </div>
-      );
+    switch (fetchStatus) {
+      case "fetching":
+        return (
+          <div className={styles.messageContainer}>
+            <img src={loadingIcon} alt="Loading icon" />
+            <p className={styles.message}>Loading categories</p>
+          </div>
+        );
+
+      case "success":
+        return (
+          <>
+            <button
+              className={`${styles.categoryMenuScrollBtn} ${styles.categoryScrollRight} categoryScrollRight`}
+              title="Scroll right"
+              onClick={() => {
+                scrollCategoryList("right");
+              }}
+            >
+              <img src={scrollIcon} alt="Scroll right icon" />
+            </button>
+
+            <div className={`${styles.categoryList} categoryList`}>
+              {categories.map((category) => {
+                return (
+                  <button
+                    key={category.id}
+                    id={`category_${category.id}`}
+                    className={`${styles.categoryBtn} ${Number(categoryParam) === category.id ? styles.categoryBtnSelected : ""}`}
+                    onClick={() => {
+                      handleCategoryBtnClick(category.id);
+                    }}
+                    ref={
+                      category.id === 1
+                        ? firstButtonRef
+                        : Number(categoryParam) === category.id
+                          ? buttonRef
+                          : null
+                    }
+                  >
+                    {category.name}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              className={`${styles.categoryMenuScrollBtn} ${styles.categoryScrollLeft} categoryScrollLeft`}
+              title="Scroll Left"
+              onClick={() => {
+                scrollCategoryList("left");
+              }}
+            >
+              <img src={scrollIcon} alt="Scroll left icon" />
+            </button>
+          </>
+        );
+
+      case "error":
+        return (
+          <div className={styles.messageContainer}>
+            <p className={styles.message}>Failed to fetch categories</p>
+          </div>
+        );
     }
   };
 
-  return (
-    <div className={styles.categoryBar}>
-      <button
-        className={`${styles.categoryMenuScrollBtn} ${styles.categoryScrollRight} categoryScrollRight`}
-        title="Scroll right"
-        onClick={() => {
-          scrollCategoryList("right");
-        }}
-      >
-        <img src={scrollIcon} alt="Scroll right icon" />
-      </button>
-
-      {renderCategories()}
-
-      <button
-        className={`${styles.categoryMenuScrollBtn} ${styles.categoryScrollLeft} categoryScrollLeft`}
-        title="Scroll Left"
-        onClick={() => {
-          scrollCategoryList("left");
-        }}
-      >
-        <img src={scrollIcon} alt="Scroll left icon" />
-      </button>
-    </div>
-  );
+  return <div className={styles.categoryBar}>{renderCategories()}</div>;
 }
