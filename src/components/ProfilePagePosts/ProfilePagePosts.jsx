@@ -31,6 +31,10 @@ export default function ProfilePagePosts({
             ? "Loading your posts"
             : `Loading ${userFirstName}'s posts`,
 
+        customLoadingMoreMessage: userData?.personalData?.id
+          ? "Loading more of your posts"
+          : `Loading more of ${userFirstName}'s posts`,
+
         customNoContentMessage:
           profileId === userData?.personalData?.id
             ? "You haven't posted anything yet."

@@ -30,6 +30,7 @@ export default function Feed() {
           scrollTopBtn: true,
           cardsSeparator: true,
           customLoadingMessage: "Loading posts",
+          customLoadingMoreMessage: "Loading more posts",
           customNoContentMessage: "No posts to see here. :(",
           customErrorMessage: "Failed to load posts.",
           customRefetchFailMessage: "Failed to fetch more posts.",

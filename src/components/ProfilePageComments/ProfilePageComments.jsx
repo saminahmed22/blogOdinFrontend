@@ -32,6 +32,10 @@ export default function ProfilePageComments({
             ? "Loading your comments"
             : `Loading ${userFirstName}'s comments`,
 
+        customLoadingMoreMessage: userData?.personalData?.id
+          ? "Loading more of your comments"
+          : `Loading more of ${userFirstName}'s comments`,
+
         customNoContentMessage:
           profileId === userData?.personalData?.id
             ? "You haven't commented anything yet."
