@@ -5,7 +5,6 @@ export async function fetchFeedContent(params) {
     method: "GET",
     paths: ["posts", "feed"],
     params,
-    authRequired: false,
   });
 
   return result;
@@ -16,7 +15,6 @@ export async function fetchUserPosts(params) {
     method: "GET",
     paths: ["posts", "user"],
     params,
-    authRequired: true,
   });
 
   return result;
@@ -29,7 +27,15 @@ export async function fetchSearchContent(params) {
     method: "GET",
     paths: ["posts", "search"],
     params,
-    authRequired: false,
+  });
+
+  return result;
+}
+
+export async function fetchPost(postId) {
+  const result = await callAPI({
+    method: "GET",
+    paths: ["posts", postId],
   });
 
   return result;
