@@ -21,7 +21,7 @@ import upIcon from "../../assets/icons/up.svg";
       initial: true,
 
       quantity: 10,
-      totalContentCount: 0,
+
       totalContentFetched: 0,
 
       hasMore: false,
@@ -42,8 +42,10 @@ export default function InfiniteScrollProvider({
   contentState,
   setContentState,
   initialDeny = false,
+  customParentRef = null,
   options = {
     cardsSeparator: true,
+    listStyles: {},
     scrollTopBtn: true,
     customLoadingMessage: null,
     customLoadingMoreMessage: null,
@@ -77,7 +79,7 @@ export default function InfiniteScrollProvider({
           initial: true,
 
           quantity: 10,
-          totalContentCount: 0,
+
           totalContentFetched: 0,
 
           hasMore: false,
@@ -109,13 +111,6 @@ export default function InfiniteScrollProvider({
       // Set initial status to false
       buildingObj.config.initial = false;
 
-      // Set totalContentCount from the count number from result if
-      // result is initial, else reuse the totalcount from previous state
-      buildingObj.config.totalContentCount = contentStateRef.current.config
-        .initial
-        ? result.count
-        : contentStateRef.current.config.totalContentCount;
-
       //   sets the total number fetched content
       buildingObj.config.totalContentFetched = contentStateRef.current.config
         .initial
@@ -124,8 +119,7 @@ export default function InfiniteScrollProvider({
           result.content.length;
 
       buildingObj.config.hasMore =
-        buildingObj.config.totalContentCount >
-        buildingObj.config.totalContentFetched;
+        result.content.length >= buildingObj.config.quantity;
 
       buildingObj.config.cursor = buildingObj.config.hasMore
         ? result.content[result.content.length - 1]?.id
@@ -155,7 +149,7 @@ export default function InfiniteScrollProvider({
         initial: true,
 
         quantity: 10,
-        totalContentCount: 0,
+
         totalContentFetched: 0,
 
         hasMore: false,
@@ -218,10 +212,17 @@ export default function InfiniteScrollProvider({
 
   // changes on reInitializeFactor will retrigger the initial fetch, which also resets the states
   useEffect(() => {
-    providerRef.current.scrollTo({
-      top: scrollRef.current,
-      behavior: "instant",
-    });
+    if (customParentRef?.current) {
+      customParentRef.current.scrollTo({
+        top: scrollRef.current,
+        behavior: "instant",
+      });
+    } else {
+      providerRef.current.scrollTo({
+        top: scrollRef.current,
+        behavior: "instant",
+      });
+    }
 
     if (
       contentStateRef.current.config.initial ||
@@ -237,12 +238,12 @@ export default function InfiniteScrollProvider({
     };
 
     fetchFunc();
-  }, [fetchContent, resetAllStates, reInitializeFactor]);
+  }, [fetchContent, resetAllStates, customParentRef, reInitializeFactor]);
 
   // Refetch on scroll handler
   const showScrollTopRef = useRef(showScrollTop);
   useEffect(() => {
-    const providerElemRef = providerRef.current;
+    const providerElemRef = customParentRef?.current || providerRef.current;
 
     const handleScroll = async () => {
       const scrollTopPos = providerElemRef.scrollTop;
@@ -289,16 +290,24 @@ export default function InfiniteScrollProvider({
         scrollPosition: scrollRef.current,
       }));
     };
-  }, [fetchContent, setContentState]);
+  }, [fetchContent, setContentState, customParentRef]);
   //#endregion
 
   //#region Button Click handlers
   const handleScrollTopClick = () => {
-    providerRef.current.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    if (customParentRef?.current) {
+      customParentRef?.current?.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    } else {
+      providerRef.current.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth",
+      });
+    }
   };
 
   //#endregion
@@ -312,7 +321,7 @@ export default function InfiniteScrollProvider({
       ...prev,
       config: {
         ...prev.config,
-        totalContentCount: prev.config.totalContentCount - 1,
+
         totalContentFetched: prev.config.totalContentFetched - 1,
       },
       content: restOfTheConent,
@@ -405,7 +414,11 @@ export default function InfiniteScrollProvider({
   //#endregion
 
   return (
-    <div className={styles.InfiniteScrollProvider} ref={providerRef}>
+    <div
+      className={styles.InfiniteScrollProvider}
+      ref={providerRef}
+      style={options.listStyles}
+    >
       {getContentElements()}
 
       {options.scrollTopBtn && (
