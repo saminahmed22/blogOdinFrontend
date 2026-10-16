@@ -2,37 +2,37 @@ import styles from "./PostCard.module.css";
 
 import { useNavigate } from "react-router";
 
-export default function PostCard({ post = {} }) {
+export default function PostCard({ data }) {
   const navigate = useNavigate();
 
   const handlePostCardClick = () => {
-    navigate(`/posts/${post?.id}`);
+    navigate(`/posts/${data?.id}`);
   };
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/profile/${post?.author?.id}`);
+    navigate(`/profile/${data?.author?.id}`);
   };
 
   const handleCategoryClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/feed/${post.categoryId}`);
+    navigate(`/feed/${data.categoryId}`);
   };
 
   const getProfilePicture = () => {
-    if (post?.author?.profilePictureLink) {
+    if (data?.author?.profilePictureLink) {
       return (
         <img
-          src={post?.author?.profilePictureLink}
+          src={data?.author?.profilePictureLink}
           alt="Author profile picture"
           className={styles.profilePicture}
           onClick={handleProfileClick}
         />
       );
     } else {
-      const color = post?.author?.theme_color;
+      const color = data?.author?.theme_color;
 
       return (
         <div
@@ -40,7 +40,7 @@ export default function PostCard({ post = {} }) {
           onClick={handleProfileClick}
           style={{ backgroundColor: color }}
         >
-          {`${post?.author?.firstName[0]}${post?.author?.lastName[0]}`}
+          {`${data?.author?.firstName[0]}${data?.author?.lastName[0]}`}
         </div>
       );
     }
@@ -49,7 +49,7 @@ export default function PostCard({ post = {} }) {
   const getPostPublishStatusIcon = () => {};
 
   const getShortDesc = () => {
-    let text = post?.description;
+    let text = data?.description;
 
     if (text?.length >= 500) {
       text = text.substring(0, 500);
@@ -61,7 +61,7 @@ export default function PostCard({ post = {} }) {
   };
 
   const getReadableDateLong = () => {
-    const isoString = post?.created_at;
+    const isoString = data?.created_at;
 
     const options = {
       year: "numeric",
@@ -76,7 +76,7 @@ export default function PostCard({ post = {} }) {
   };
 
   const getReadableDate = () => {
-    const isoString = post?.created_at;
+    const isoString = data?.created_at;
 
     const options = { year: "numeric", month: "long", day: "numeric" };
 
@@ -95,10 +95,10 @@ export default function PostCard({ post = {} }) {
             <p className={styles.authorName} onClick={handleProfileClick}>
               <span className={styles.name}>
                 <span className={styles.firstName}>
-                  {post?.author?.firstName}
+                  {data?.author?.firstName}
                 </span>
                 <span className={styles.lastName}>
-                  {post?.author?.lastName}
+                  {data?.author?.lastName}
                 </span>
               </span>
             </p>
@@ -114,10 +114,10 @@ export default function PostCard({ post = {} }) {
       </div>
 
       <div className={styles.titleContainer}>
-        <h2 className={styles.title}>{post?.title}</h2>
+        <h2 className={styles.title}>{data?.title}</h2>
 
         <p className={styles.category} onClick={handleCategoryClick}>
-          {post?.category?.name}
+          {data?.category?.name}
         </p>
       </div>
 
