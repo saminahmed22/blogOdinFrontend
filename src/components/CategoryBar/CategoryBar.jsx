@@ -1,9 +1,9 @@
 import styles from "./CategoryBar.module.css";
 
 // Hooks
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useOutletContext } from "react-router";
 
 // Icons
 import scrollIcon from "../../assets/icons/rightArrow.svg";
@@ -16,20 +16,25 @@ export default function CategoryBar() {
   const navigate = useNavigate();
 
   const { category: categoryParam } = useParams();
-  const [fetchStatus, setFetchStatus] = useState("fetching");
-  const [categories, setCategories] = useState();
 
+  const { categoryState, setCategoryState } = useOutletContext();
+
+  const categoryStateRef = useRef(categoryState);
   useEffect(() => {
+    if (categoryStateRef.current.status === "success") return;
+
     const fetchFunc = async () => {
       const result = await fetchCategories();
 
-      setFetchStatus(result.success ? "success" : "error");
+      setCategoryState({
+        status: result.success ? "success" : "error",
 
-      setCategories(result.result);
+        categories: result.content,
+      });
     };
 
     fetchFunc();
-  }, []);
+  }, [setCategoryState]);
 
   const buttonRef = useRef(null);
   const firstButtonRef = useRef(null);
@@ -63,7 +68,7 @@ export default function CategoryBar() {
   };
 
   const renderCategories = () => {
-    switch (fetchStatus) {
+    switch (categoryState.status) {
       case "fetching":
         return (
           <div className={styles.messageContainer}>
@@ -86,7 +91,7 @@ export default function CategoryBar() {
             </button>
 
             <div className={`${styles.categoryList} categoryList`}>
-              {categories.map((category) => {
+              {categoryState.categories.map((category) => {
                 return (
                   <button
                     key={category.id}
