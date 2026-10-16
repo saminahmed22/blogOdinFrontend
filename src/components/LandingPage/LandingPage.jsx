@@ -1,20 +1,8 @@
 import styles from "./LandingPage.module.css";
 
-import { useEffect } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 
 export default function LandingPage() {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
-
-    if (jwt) {
-      navigate("/feed", { replace: true });
-      return;
-    }
-  });
-
   return (
     <div className={styles.landingPage}>
       <div className={styles.heroContainer}>
