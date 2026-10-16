@@ -1,8 +1,9 @@
 export default async function callAPI({
   method,
   paths,
-  params,
-  authRequired = false,
+  params = {},
+  body,
+  authRequired = true,
 }) {
   const url = new URL("http://192.168.0.150:3000/api");
 
@@ -30,6 +31,7 @@ export default async function callAPI({
                 },
               }
             : {},
+          method,
         );
 
         if (!response.ok) {
@@ -42,6 +44,38 @@ export default async function callAPI({
         const result = await response.json();
 
         return { success: true, ...result };
+      } catch (error) {
+        return { success: false, error };
+      }
+
+    case "POST":
+      try {
+        const response = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+
+            ...(authRequired && jwt?.token?.length > 1
+              ? {
+                  headers: {
+                    Authorization: jwt.token,
+                  },
+                }
+              : {}),
+          },
+          method,
+          body,
+        });
+
+        if (!response.ok) {
+          return {
+            success: false,
+            error: `Response is NOT ok: ${response.status}`,
+          };
+        }
+
+        const content = await response.json();
+
+        return { success: true, content };
       } catch (error) {
         return { success: false, error };
       }
