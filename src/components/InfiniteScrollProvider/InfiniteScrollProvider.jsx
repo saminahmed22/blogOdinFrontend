@@ -49,6 +49,7 @@ export default function InfiniteScrollProvider({
     customLoadingMessage: null,
     customErrorMessage: null,
     customNoContentMessage: null,
+    customRefetchFailMessage: null,
   },
 }) {
   //#region States
@@ -65,7 +66,7 @@ export default function InfiniteScrollProvider({
   //#region Update state functions
   const updateContentState = useCallback(
     (result) => {
-      const buildingObj = {
+      let buildingObj = {
         status: "fetching",
 
         currentReInitializeFactorValue: null,
@@ -88,6 +89,8 @@ export default function InfiniteScrollProvider({
 
       // Set fetch initial status
       if (!result.success) {
+        buildingObj = contentStateRef.current;
+
         buildingObj.status = "error";
 
         contentStateRef.current = buildingObj;
@@ -357,11 +360,21 @@ export default function InfiniteScrollProvider({
 
       case "error":
         return (
-          <div className={styles.messageContainer}>
-            <p className={styles.message}>
-              {options.customErrorMessage || "Failed to fetch"}
-            </p>
-          </div>
+          <>
+            {contentState.config.hasMore &&
+              Object.keys(contentState.content).map((id, index) =>
+                getCard(id, contentState.content[id], index),
+              )}
+
+            <div className={styles.messageContainer}>
+              <p className={styles.message}>
+                {contentState.config.hasMore
+                  ? options.customRefetchFailMessage ||
+                    "Failed to fetch more content"
+                  : options.customErrorMessage || "Failed to fetch"}
+              </p>
+            </div>
+          </>
         );
     }
   };
