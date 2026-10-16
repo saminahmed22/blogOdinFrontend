@@ -43,7 +43,13 @@ export default function InfiniteScrollProvider({
   queryParams,
   contentState,
   setContentState,
-  options = { cardsSeparator: true, scrollTopBtn: true },
+  options = {
+    cardsSeparator: true,
+    scrollTopBtn: true,
+    customLoadingMessage: null,
+    customErrorMessage: null,
+    customNoContentMessage: null,
+  },
 }) {
   //#region States
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -317,7 +323,9 @@ export default function InfiniteScrollProvider({
         return (
           <div className={styles.messageContainer}>
             <img src={loadingIcon} alt="Loading icon" />
-            <p className={styles.message}>Loading</p>
+            <p className={styles.message}>
+              {options.customLoadingMessage || "Loading"}
+            </p>
           </div>
         );
 
@@ -339,14 +347,20 @@ export default function InfiniteScrollProvider({
           );
         } else {
           return (
-            <p className={styles.noPostText}>No content to see here {`:(`}</p>
+            <div className={styles.messageContainer}>
+              <p className={styles.message}>
+                {options.customNoContentMessage || "No content to see here :("}
+              </p>
+            </div>
           );
         }
 
       case "error":
         return (
           <div className={styles.messageContainer}>
-            <p className={styles.message}>Failed to fetch categories</p>
+            <p className={styles.message}>
+              {options.customErrorMessage || "Failed to fetch"}
+            </p>
           </div>
         );
     }
