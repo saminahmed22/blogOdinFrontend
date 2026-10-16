@@ -56,7 +56,7 @@
   min-width: 350px;
 
   display: none;
-  align-items: flex-start;
+  align-items: start;
   justify-content: center;
 
   color: white;
@@ -73,96 +73,6 @@
   z-index: 10;
 
   overflow: hidden auto;
-}
-
-.previewListContainer {
-  height: fit-content;
-  width: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-}
-
-.searchPreviewCard {
-  height: 50px;
-  width: 98%;
-
-  border-bottom: 1px solid #000;
-
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 5px;
-
-  padding-left: 10px;
-
-  text-decoration: none;
-  color: white;
-
-  transition: background-color 0.3s ease;
-}
-
-.searchPreviewCard:last-child {
-  border-bottom: none;
-}
-
-.searchPreviewTitle {
-  max-width: 95%;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.PreviewCardSecondary {
-  width: 100%;
-
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 5px;
-}
-
-.searchPreviewAuthor {
-  min-width: fit-content;
-
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  font-size: 0.8rem;
-  font-weight: 550;
-}
-.searchPreviewDesc {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  font-size: 0.8rem;
-
-  padding-right: 10px;
-}
-
-.searchPreviewCard:hover {
-  background-color: #00000068;
-}
-
-.loadingMessage {
-  height: 50px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 5px;
-
-  margin-left: 10px;
-}
-
-.loadingMessage img {
-  height: 24px;
 }
 
 @media (max-width: 800px) {
