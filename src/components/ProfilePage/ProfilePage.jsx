@@ -27,29 +27,45 @@ export default function ProfilePage() {
   const [fetchStatus, setFetchStatus] = useState("fetching");
 
   const [posts, setPosts] = useState({
-    fetchConfig: {
-      quantity: 10,
-      hasMore: false,
-      count: 0,
-      amount: 0,
-      cursor: undefined,
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    scrollPosition: 0,
+
+    config: {
       initial: true,
+
+      quantity: 10,
+      totalContentCount: 0,
+      totalContentFetched: 0,
+
+      hasMore: false,
+      cursor: undefined,
     },
 
-    postsObj: {},
+    content: {},
   });
 
   const [comments, setComments] = useState({
-    fetchConfig: {
-      quantity: 10,
-      hasMore: false,
-      count: 0,
-      amount: 0,
-      cursor: undefined,
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    scrollPosition: 0,
+
+    config: {
       initial: true,
+
+      quantity: 10,
+      totalContentCount: 0,
+      totalContentFetched: 0,
+
+      hasMore: false,
+      cursor: undefined,
     },
 
-    commentsObj: {},
+    content: {},
   });
 
   // No content type selected
