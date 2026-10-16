@@ -10,7 +10,7 @@ import ProfilePageComments from "../ProfilePageComments/ProfilePageComments";
 import ProfileEditModal from "../ProfileEditModal/ProfileEditModal";
 
 // API
-import { fetchUserData } from "../../api/fetchUserData";
+import { fetchUserData } from "../../api/userAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -23,7 +23,7 @@ export default function ProfilePage() {
 
   const { userData } = useOutletContext();
 
-  let [targetUser, setTargetUser] = useState();
+  const [targetUser, setTargetUser] = useState();
   const [fetchStatus, setFetchStatus] = useState("fetching");
 
   const [posts, setPosts] = useState({
@@ -37,7 +37,7 @@ export default function ProfilePage() {
       initial: true,
 
       quantity: 10,
-      totalContentCount: 0,
+
       totalContentFetched: 0,
 
       hasMore: false,
@@ -58,7 +58,7 @@ export default function ProfilePage() {
       initial: true,
 
       quantity: 10,
-      totalContentCount: 0,
+
       totalContentFetched: 0,
 
       hasMore: false,

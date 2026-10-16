@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 import { useOutletContext } from "react-router";
 
 // API
-import { submitProfileUpdate } from "../../api/submitProfileUpdate";
+import { updateProfile } from "../../api/userAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -67,7 +67,7 @@ export default function ProfileEditModal() {
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await submitProfileUpdate(formData, userData?.jwt, "PUT");
+    const result = await updateProfile(formData, userData?.jwt, "PUT");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };

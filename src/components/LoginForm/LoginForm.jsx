@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 
 // API
-import { fetchLoginCredit } from "../../api/fetchLoginCredit.js";
+import { fetchLoginCredit } from "../../api/userAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";

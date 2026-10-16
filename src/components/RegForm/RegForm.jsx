@@ -9,7 +9,7 @@ import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
 import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
 
 // API
-import { fetchRegCredit } from "../../api/fetchRegCredit";
+import { fetchRegCredit } from "../../api/userAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";

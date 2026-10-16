@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router";
 
 // API
-import { makeCommentAPIRequest } from "../../api/makeCommentAPIRequest";
+import { editComment, deleteComment } from "../../api/commentsAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -115,7 +115,7 @@ export default function CommentCard({
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await makeCommentAPIRequest(formData, jwt, "PUT");
+    const result = await editComment(formData, jwt, "PUT");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };
@@ -179,7 +179,7 @@ export default function CommentCard({
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await makeCommentAPIRequest(formData, jwt, "DELETE");
+    const result = await deleteComment(formData, jwt, "DELETE");
 
     result.success ? handleDelete(comment.id) : handleDeleteSubmitFail();
   };

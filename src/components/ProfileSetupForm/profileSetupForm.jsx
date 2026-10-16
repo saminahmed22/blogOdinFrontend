@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 
 // API
-import { submitProfileUpdate } from "../../api/submitProfileUpdate";
+import { updateProfile } from "../../api/userAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -63,7 +63,7 @@ export default function ProfileSetupForm({ data, jwt }) {
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await submitProfileUpdate(formData, jwt, "PUT");
+    const result = await updateProfile(formData, jwt, "PUT");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };
