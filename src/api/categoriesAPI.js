@@ -7,6 +7,5 @@ export async function fetchCategories() {
     params: {},
   });
 
-  console.log(result);
   return result;
 }
