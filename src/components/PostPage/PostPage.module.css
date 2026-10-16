@@ -154,6 +154,8 @@
 }
 
 .description {
+  min-height: 100px;
+
   max-width: 100%;
   line-break: loose;
 
@@ -191,6 +193,24 @@
 
 .scrollTopBtnHide {
   bottom: -50px;
+}
+
+.messageContainer {
+  height: 30px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  margin: auto;
+
+  font-size: 1rem;
+
+  img {
+    height: 24px;
+  }
 }
 
 @media (max-width: 800px) {
