@@ -1,46 +1,50 @@
 import styles from "./CommentSection.module.css";
 
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useState, useRef } from "react";
 import { useParams, useOutletContext, Link } from "react-router";
 
 // API
-import { fetchComments } from "../../api/fetchComments.js";
-import { makeCommentAPIRequest } from "../../api/makeCommentAPIRequest.js";
+import { createComment, fetchPostComments } from "../../api/commentsAPI";
 
 // Components
+import InfiniteScrollProvider from "../InfiniteScrollProvider/InfiniteScrollProvider";
 import CommentCard from "../CommentCard/CommentCard";
 
 // Icons
-
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function CommentSection({
-  postAuthorID,
-  postPageRef,
-  showScrollTop,
-  setShowScrollTop,
-}) {
+export default function CommentSection({ postPageRef }) {
+  const { postId } = useParams();
+
   const { userData, setUserData } = useOutletContext();
 
-  const [fetchStatus, setFetchStatus] = useState("fetching");
+  // States
   const [submitStatus, setSubmitStatus] = useState("halt");
   const [comments, setComments] = useState({
-    fetchConfig: {
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    scrollPosition: 0,
+
+    config: {
+      initial: true,
+
       quantity: 10,
+
+      totalContentFetched: 0,
+
       hasMore: false,
-      count: 0,
-      amount: 0,
       cursor: undefined,
     },
 
-    commentsObj: {},
+    content: {},
   });
   const [textAreaCount, setTextAreaCount] = useState(0);
   const [validationStatus, setValidationStatus] = useState(true);
 
+  // Refs
   const textAreaRef = useRef();
-
-  const { postId } = useParams();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +67,7 @@ export default function CommentSection({
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await makeCommentAPIRequest(formData, jwt, "POST");
+    const result = await createComment(formData, jwt, "POST");
 
     result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
   };
@@ -97,191 +101,6 @@ export default function CommentSection({
     } else {
       setSubmitStatus("halt");
       setValidationStatus("error");
-    }
-  };
-
-  const commentsRef = useRef(comments);
-  const updateCommentsState = useCallback(
-    (mode, result) => {
-      const buildingObj = {
-        fetchConfig: {
-          quantity: 10,
-          hasMore: false,
-          count: 0,
-          amount: 0,
-          cursor: undefined,
-        },
-
-        commentsObj: {},
-      };
-
-      // update fetch config options
-      buildingObj.fetchConfig.count = result.count;
-
-      buildingObj.fetchConfig.amount =
-        mode === "initial"
-          ? result.comments.length
-          : commentsRef.current.fetchConfig.amount + result.comments.length;
-
-      buildingObj.fetchConfig.hasMore =
-        result.count > buildingObj.fetchConfig.amount;
-
-      buildingObj.fetchConfig.cursor = buildingObj.fetchConfig.hasMore
-        ? result.comments[result.comments.length - 1].id
-        : undefined;
-
-      // Populate comments object
-      if (mode !== "initial") {
-        buildingObj.commentsObj = { ...commentsRef.current.commentsObj };
-      }
-
-      for (const comment of result.comments) {
-        buildingObj.commentsObj[comment.id] = comment;
-      }
-
-      commentsRef.current = buildingObj;
-      setComments(buildingObj);
-    },
-    [setComments],
-  );
-
-  const fetchingOnReqRef = useRef(false);
-  const fetchCommentsCB = useCallback(
-    async (mode = "request") => {
-      const params = {
-        postId: postId,
-        quantity: commentsRef.current.fetchConfig.quantity,
-        cursor:
-          mode === "initial"
-            ? undefined
-            : commentsRef.current.fetchConfig.cursor,
-      };
-
-      const result = await fetchComments(params);
-
-      if (result.success) {
-        fetchingOnReqRef.current = false;
-        updateCommentsState(mode, result);
-        setFetchStatus("success");
-      } else {
-        setFetchStatus("error");
-      }
-    },
-    [updateCommentsState, postId],
-  );
-
-  // Initial comment fetch
-  useEffect(() => {
-    const fetchFunc = async () => {
-      fetchCommentsCB("initial");
-    };
-
-    fetchFunc();
-  }, [fetchCommentsCB]);
-
-  // Refetch on scroll handler
-  useEffect(() => {
-    const commentListElemRef = postPageRef.current;
-
-    if (!commentListElemRef) return;
-
-    const handleScroll = async () => {
-      const scrollTop = commentListElemRef.scrollTop;
-      const scrollHeight = commentListElemRef.scrollHeight;
-      const clientHeight = commentListElemRef.clientHeight;
-
-      const percentage = (scrollTop / (scrollHeight - clientHeight)) * 100;
-
-      if (percentage >= 40) {
-        if (!showScrollTop) {
-          setShowScrollTop(true);
-        }
-      } else if (percentage <= 20) {
-        if (showScrollTop) {
-          setShowScrollTop(false);
-        }
-      }
-
-      if (
-        percentage >= 70 &&
-        comments.fetchConfig.hasMore &&
-        !fetchingOnReqRef.current
-      ) {
-        fetchingOnReqRef.current = true;
-        fetchCommentsCB();
-      }
-    };
-
-    commentListElemRef.addEventListener("scroll", handleScroll);
-
-    return () => {
-      commentListElemRef.removeEventListener("scroll", handleScroll);
-    };
-  }, [
-    postPageRef,
-    comments.fetchConfig.hasMore,
-    fetchCommentsCB,
-    showScrollTop,
-    setShowScrollTop,
-  ]);
-
-  const handleCommentDelete = (id) => {
-    setComments((prev) => {
-      const { [id]: removed, ...rest } = prev.commentsObj;
-      return {
-        fetchConfig: { ...prev.fetchConfig, count: prev.fetchConfig.count - 1 },
-        commentsObj: rest,
-      };
-    });
-  };
-
-  const getComments = () => {
-    switch (fetchStatus) {
-      case "success":
-        if (Object.keys(comments.commentsObj).length >= 1) {
-          return (
-            <div className={styles.commentList}>
-              {Object.keys(comments.commentsObj).map((id) => (
-                <CommentCard
-                  data={comments?.commentsObj[id]}
-                  postAuthorID={postAuthorID}
-                  key={id}
-                  handleCommentDelete={handleCommentDelete}
-                />
-              ))}
-
-              {comments.fetchConfig.hasMore && (
-                <div className={styles.loadingMessage}>
-                  <img src={loadingIcon} alt="Loading icon" />
-                  <p>Loading more comments</p>
-                </div>
-              )}
-            </div>
-          );
-        } else {
-          return (
-            <p className={styles.noCommentsMessage}>
-              No comments has been made yet,
-              <br />
-              be the first one to spark the conversation!
-            </p>
-          );
-        }
-
-      case "fetching":
-        return (
-          <div className={styles.loadingMessage}>
-            <img src={loadingIcon} alt="Loading icon" />
-            <p>Loading comments</p>
-          </div>
-        );
-
-      case "error":
-        return (
-          <p className={styles.errorMessageFetchFail}>
-            Failed to fetch comments
-          </p>
-        );
     }
   };
 
@@ -357,14 +176,31 @@ export default function CommentSection({
 
   return (
     <div className={styles.commentSection}>
-      <p className={styles.commentSectionHeader}>
-        Comments
-        {comments.fetchConfig.count > 0
-          ? `(${comments.fetchConfig.count})`
-          : ""}
-      </p>
+      <p className={styles.commentSectionHeader}>Comments</p>
       {getFormContent()}
-      {getComments()}
+
+      <div className={styles.commentList}>
+        <InfiniteScrollProvider
+          Card={CommentCard}
+          fetchFunction={fetchPostComments}
+          reInitializeFactor={postId}
+          contentState={comments}
+          setContentState={setComments}
+          queryParams={{ postId }}
+          customParentRef={postPageRef}
+          options={{
+            scrollTopBtn: false,
+            cardsSeparator: false,
+            listStyles: { gap: "10px" },
+            customLoadingMessage: "Loading comments",
+            customLoadingMoreMessage: "Loading more comments",
+            customNoContentMessage:
+              "No one has made any comment yet.\nMake an comments to spark the conversation!",
+            customErrorMessage: "Failed to load comments.",
+            customRefetchFailMessage: "Failed to fetch more comments.",
+          }}
+        />
+      </div>
     </div>
   );
 }
