@@ -26,7 +26,13 @@ export default function Feed() {
         contentState={feedPosts}
         setContentState={setFeedPosts}
         queryParams={{ categoryId: category }}
-        options={{ scrollTopBtn: true, cardsSeparator: true }}
+        options={{
+          scrollTopBtn: true,
+          cardsSeparator: true,
+          customLoadingMessage: "Loading posts",
+          customErrorMessage: "Failed to load posts.",
+          customNoContentMessage: "No posts to see here :(",
+        }}
       />
     </div>
   );
