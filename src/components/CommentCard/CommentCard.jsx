@@ -17,7 +17,7 @@ import authorIcon from "../../assets/icons/author.svg";
 export default function CommentCard({
   data,
   postAuthorID,
-  handleCommentDelete,
+  handleDelete,
   isProfileCommentCard = false,
 }) {
   const { postId } = useParams();
@@ -181,7 +181,7 @@ export default function CommentCard({
 
     const result = await makeCommentAPIRequest(formData, jwt, "DELETE");
 
-    result.success ? handleCommentDelete(comment.id) : handleDeleteSubmitFail();
+    result.success ? handleDelete(comment.id) : handleDeleteSubmitFail();
   };
 
   const handleDeleteSubmitFail = () => {
