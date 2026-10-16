@@ -70,3 +70,12 @@
 .scrollTopBtnHide {
   bottom: -50px;
 }
+
+@media (max-width: 800px) {
+  .scrollTopBtn {
+    height: 50px;
+    width: 50px;
+
+    right: 25px;
+  }
+}
