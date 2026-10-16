@@ -5,41 +5,37 @@ import { useNavigate } from "react-router";
 // Components
 import CommentCard from "../CommentCard/CommentCard";
 
-export default function ProfileCommentCard({
-  post,
-  comment,
-  handleCommentDelete,
-}) {
+export default function ProfileCommentCard({ data, handleDelete }) {
   const navigate = useNavigate();
 
   const handlePostCardClick = () => {
-    navigate(`/posts/${post?.id}`);
+    navigate(`/posts/${data?.Post?.id}`);
   };
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/profile/${post?.author?.id}`);
+    navigate(`/profile/${data?.Post?.author?.id}`);
   };
 
   const handleCategoryClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/feed/${post.categoryId}`);
+    navigate(`/feed/${data?.Post.categoryId}`);
   };
 
   const getProfilePicture = () => {
-    if (post?.author?.profilePictureLink) {
+    if (data?.Post?.author?.profilePictureLink) {
       return (
         <img
-          src={post?.author?.profilePictureLink}
+          src={data?.Post?.author?.profilePictureLink}
           alt="Author profile picture"
           className={styles.profilePicture}
           onClick={handleProfileClick}
         />
       );
     } else {
-      const color = post?.author?.theme_color;
+      const color = data?.Post?.author?.theme_color;
 
       return (
         <div
@@ -47,7 +43,7 @@ export default function ProfileCommentCard({
           onClick={handleProfileClick}
           style={{ backgroundColor: color }}
         >
-          {`${post?.author?.firstName[0]}${post?.author?.lastName[0]}`}
+          {`${data?.Post?.author?.firstName[0]}${data?.Post?.author?.lastName[0]}`}
         </div>
       );
     }
@@ -56,7 +52,7 @@ export default function ProfileCommentCard({
   const getPostPublishStatusIcon = () => {};
 
   const getReadableDateLong = () => {
-    const isoString = post?.created_at;
+    const isoString = data?.Post?.created_at;
 
     const options = {
       year: "numeric",
@@ -71,7 +67,7 @@ export default function ProfileCommentCard({
   };
 
   const getReadableDate = () => {
-    const isoString = post?.created_at;
+    const isoString = data?.Post?.created_at;
 
     const options = { year: "numeric", month: "long", day: "numeric" };
 
@@ -90,10 +86,10 @@ export default function ProfileCommentCard({
             <p className={styles.authorName} onClick={handleProfileClick}>
               <span className={styles.name}>
                 <span className={styles.firstName}>
-                  {post?.author?.firstName}
+                  {data?.Post?.author?.firstName}
                 </span>
                 <span className={styles.lastName}>
-                  {post?.author?.lastName}
+                  {data?.Post?.author?.lastName}
                 </span>
               </span>
             </p>
@@ -109,10 +105,10 @@ export default function ProfileCommentCard({
       </div>
 
       <div className={styles.titleContainer}>
-        <h2 className={styles.title}>{post?.title}</h2>
+        <h2 className={styles.title}>{data?.Post?.title}</h2>
 
         <p className={styles.category} onClick={handleCategoryClick}>
-          {post?.category?.name}
+          {data?.Post?.category?.name}
         </p>
       </div>
 
@@ -120,9 +116,9 @@ export default function ProfileCommentCard({
         <div className={styles.tether}></div>
 
         <CommentCard
-          data={comment}
-          postAuthorID={post.author.id}
-          handleCommentDelete={handleCommentDelete}
+          data={data}
+          postAuthorID={data?.Post.author.id}
+          handleDelete={handleDelete}
           isProfileCommentCard={true}
         />
       </div>
