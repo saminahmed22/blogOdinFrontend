@@ -12,6 +12,27 @@ export default function App() {
     jwt: JSON.parse(localStorage.getItem("jwt")),
   });
 
+  const [feedPosts, setFeedPosts] = useState({
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    config: {
+      initial: true,
+
+      quantity: 10,
+      totalContentCount: 0,
+      totalContentFetched: 0,
+
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+    },
+
+    content: {},
+  });
+
   const [searchPosts, setSearchPosts] = useState({
     fetchConfig: {
       quantity: 10,
@@ -24,16 +45,10 @@ export default function App() {
     posts: {},
   });
 
-  const [feedPosts, setFeedPosts] = useState({
-    fetchConfig: {
-      quantity: 10,
-      hasMore: false,
-      count: 0,
-      amount: 0,
-      cursor: undefined,
-    },
+  const [categoryState, setCategoryState] = useState({
+    status: "fetching",
 
-    posts: {},
+    categories: [],
   });
 
   return (
@@ -48,6 +63,8 @@ export default function App() {
             feedPosts,
             setFeedPosts,
             searchPosts,
+            categoryState,
+            setCategoryState,
           }}
         />
       </div>
