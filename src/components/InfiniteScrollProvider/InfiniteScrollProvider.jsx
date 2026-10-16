@@ -25,8 +25,6 @@ import upIcon from "../../assets/icons/up.svg";
       totalContentFetched: 0,
 
       hasMore: false,
-      count: 0,
-      amount: 0,
       cursor: undefined,
     },
 
@@ -159,8 +157,6 @@ export default function InfiniteScrollProvider({
         totalContentFetched: 0,
 
         hasMore: false,
-        count: 0,
-        amount: 0,
         cursor: undefined,
       },
 
@@ -299,6 +295,24 @@ export default function InfiniteScrollProvider({
 
   //#endregion
 
+  //#region handlers
+
+  const handleCardDelete = (id) => {
+    const { [id]: removedContent, ...restOfTheConent } = contentState.content;
+
+    setContentState((prev) => ({
+      ...prev,
+      config: {
+        ...prev.config,
+        totalContentCount: prev.config.totalContentCount - 1,
+        totalContentFetched: prev.config.totalContentFetched - 1,
+      },
+      content: restOfTheConent,
+    }));
+  };
+
+  //#endregion
+
   //#region Render cards
   const getSeparator = (index, id) => {
     if (!options.cardsSeparator) return;
@@ -313,7 +327,7 @@ export default function InfiniteScrollProvider({
   const getCard = (id, data, index) => {
     return (
       <Fragment key={`Fragment_${id}`}>
-        <Card key={id} data={data} />
+        <Card key={id} data={data} handleDelete={handleCardDelete} />
 
         {getSeparator(index, id)}
       </Fragment>
