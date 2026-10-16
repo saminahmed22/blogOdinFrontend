@@ -23,7 +23,7 @@ export default function App() {
       initial: true,
 
       quantity: 10,
-      totalContentCount: 0,
+
       totalContentFetched: 0,
 
       hasMore: false,
@@ -44,7 +44,7 @@ export default function App() {
       initial: true,
 
       quantity: 10,
-      totalContentCount: 0,
+
       totalContentFetched: 0,
 
       hasMore: false,
