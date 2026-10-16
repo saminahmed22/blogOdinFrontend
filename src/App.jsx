@@ -17,6 +17,8 @@ export default function App() {
 
     currentReInitializeFactorValue: null,
 
+    scrollPosition: 0,
+
     config: {
       initial: true,
 
