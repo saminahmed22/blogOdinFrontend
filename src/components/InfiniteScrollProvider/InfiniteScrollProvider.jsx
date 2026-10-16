@@ -24,6 +24,7 @@ export default function InfiniteScrollProvider({
   const providerRef = useRef();
   const contentStateRef = useRef(contentState);
   const fetchingOnReqRef = useRef(false);
+  const scrollRef = useRef(contentState.scrollPosition);
   //#endregion
 
   //#region Update state functions
@@ -33,6 +34,8 @@ export default function InfiniteScrollProvider({
         status: "fetching",
 
         currentReInitializeFactorValue: null,
+
+        scrollPosition: 0,
 
         config: {
           initial: true,
@@ -62,6 +65,8 @@ export default function InfiniteScrollProvider({
       buildingObj.status = "success";
 
       buildingObj.currentReInitializeFactorValue = reInitializeFactor;
+
+      buildingObj.scrollPosition = scrollRef.current;
 
       // Set initial status to false
       buildingObj.config.initial = false;
@@ -105,6 +110,8 @@ export default function InfiniteScrollProvider({
       status: "fetching",
 
       currentReInitializeFactorValue: null,
+
+      scrollPosition: 0,
 
       config: {
         initial: true,
@@ -150,7 +157,6 @@ export default function InfiniteScrollProvider({
 
   //#region Effects
 
-  console.log("ScrollRestoration");
   // Initial Post fetch
   const initialEffectRef = useRef(true);
   useEffect(() => {
@@ -161,8 +167,6 @@ export default function InfiniteScrollProvider({
       return;
     } // Returns on initial run
 
-    console.log("Initial effect called");
-
     const fetchFunc = async () => {
       fetchContent();
     };
@@ -172,15 +176,17 @@ export default function InfiniteScrollProvider({
 
   // changes on reInitializeFactor will retrigger the initial fetch, which also resets the states
   useEffect(() => {
-    // ISSUE: it reinitializes the provider state on re-rendering even on route changes, like going back and fourth with posts
+    providerRef.current.scrollTo({
+      top: scrollRef.current,
+      behavior: "instant",
+    });
+
     if (
       contentStateRef.current.config.initial ||
       contentStateRef.current.currentReInitializeFactorValue ===
         reInitializeFactor
     )
       return;
-
-    console.log("ReInit effect called");
 
     resetAllStates();
 
@@ -201,21 +207,19 @@ export default function InfiniteScrollProvider({
       const scrollHeightPos = providerElemRef.scrollHeight;
       const clientHeightPos = providerElemRef.clientHeight;
 
+      scrollRef.current = scrollTopPos;
+
       if (scrollTopPos >= 500) {
         if (!showScrollTopRef.current) {
           showScrollTopRef.current = true;
 
           setShowScrollTop(true);
-
-          console.log("Button ON");
         }
       } else {
         if (showScrollTopRef.current) {
           showScrollTopRef.current = false;
 
           setShowScrollTop(false);
-
-          console.log("Button OFF");
         }
       }
 
@@ -229,8 +233,6 @@ export default function InfiniteScrollProvider({
       ) {
         fetchingOnReqRef.current = true;
         fetchContent();
-
-        console.log("Refetch effect called");
       }
     };
 
@@ -238,8 +240,14 @@ export default function InfiniteScrollProvider({
 
     return () => {
       providerElemRef.removeEventListener("scroll", handleScroll);
+
+      // Sets the scroll position to the state before component unmounts
+      setContentState((prev) => ({
+        ...prev,
+        scrollPosition: scrollRef.current,
+      }));
     };
-  }, [fetchContent]);
+  }, [fetchContent, setContentState]);
   //#endregion
 
   //#region Button Click handlers
