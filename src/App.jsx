@@ -34,15 +34,24 @@ export default function App() {
   });
 
   const [searchPosts, setSearchPosts] = useState({
-    fetchConfig: {
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    scrollPosition: 0,
+
+    config: {
+      initial: true,
+
       quantity: 10,
+      totalContentCount: 0,
+      totalContentFetched: 0,
+
       hasMore: false,
-      count: 0,
-      amount: 0,
       cursor: undefined,
     },
 
-    posts: {},
+    content: {},
   });
 
   const [categoryState, setCategoryState] = useState({
