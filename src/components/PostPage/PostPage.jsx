@@ -7,10 +7,11 @@ import { useParams, useOutletContext, useNavigate } from "react-router";
 import CommentSection from "../CommentSection/CommentSection";
 
 // API
-import { fetchPost } from "../../api/fetchPost.js";
+import { fetchPost } from "../../api/postsAPI";
 
 // Icons
 import upIcon from "../../assets/icons/up.svg";
+import loadingIcon from "../../assets/icons/loading.svg";
 
 export default function PostPage() {
   const navigate = useNavigate();
@@ -19,36 +20,60 @@ export default function PostPage() {
 
   const { feedPosts, searchPosts } = useOutletContext();
 
-  const [post, setPost] = useState({});
+  // States
+  const [fetchStatus, setFetchStatus] = useState("fetching");
+  const [post, setPost] = useState();
   const [showScrollTop, setShowScrollTop] = useState(false);
 
+  // Refs
   const postPageRef = useRef();
 
+  // Effects
   useEffect(() => {
     const getPost = async () => {
-      let feedPost, searchPost, fetchedPost;
+      let post;
 
-      feedPost = feedPosts?.posts[postId];
+      post = feedPosts?.content?.[postId];
+      if (post) {
+        setPost(post);
 
-      if (!feedPost) {
-        searchPost = searchPosts?.posts[postId];
+        setFetchStatus("success");
+
+        return;
       }
 
-      if (!searchPost) {
-        const result = await fetchPost(postId);
+      post = searchPosts?.content?.[postId];
+      if (post) {
+        setPost(post);
 
-        fetchedPost = { ...result };
+        setFetchStatus("success");
+
+        return;
       }
 
-      if (feedPost || searchPost || fetchedPost.success) {
-        setPost(feedPost || searchPost || fetchedPost.post);
+      const result = await fetchPost(postId);
+
+      if (result.success) {
+        if (result.content) {
+          setPost(result.content);
+
+          setFetchStatus("success");
+
+          return;
+        } else {
+          setFetchStatus("noPost");
+
+          return;
+        }
       } else {
-        setPost("!post");
+        setFetchStatus("error");
+
+        return;
       }
     };
 
     getPost();
-  }, [feedPosts?.posts, postId, searchPosts]);
+  }, [postId, feedPosts?.content, searchPosts?.content]);
 
   const getProfilePicture = () => {
     if (post?.author?.profilePictureLink) {
@@ -117,7 +142,7 @@ export default function PostPage() {
   };
 
   const getEditedDate = () => {
-    if (post.created_at !== post.edited_at) {
+    if (post?.created_at !== post?.current?.edited_at) {
       return (
         <p>
           <span>Updated at:</span> {getReadableExtDate(post?.edited_at)}
@@ -126,77 +151,92 @@ export default function PostPage() {
     }
   };
 
-  if (post === "!post") {
+  const getPostPageContent = () => {
     return (
-      <div className={styles.noPostMessage}>
-        Couldn't find any post with the ID: {postId}
-      </div>
-    );
-  }
-  return (
-    <div className={styles.postPage} ref={postPageRef}>
-      <div className={styles.titleContainer}>
-        <h2 className={styles.title}>{post?.title}</h2>
+      <div className={styles.postPage} ref={postPageRef}>
+        <div className={styles.titleContainer}>
+          <h2 className={styles.title}>{post?.title}</h2>
 
-        <p className={styles.category} onClick={handleCategoryClick}>
-          {post?.category?.name}
-        </p>
-      </div>
+          <p className={styles.category} onClick={handleCategoryClick}>
+            {post?.category?.name}
+          </p>
+        </div>
 
-      <div className={styles.detailsContainer}>
-        <div className={styles.authorDetails}>
-          {getProfilePicture()}
+        <div className={styles.detailsContainer}>
+          <div className={styles.authorDetails}>
+            {getProfilePicture()}
 
-          <div className={styles.authorSubDetails}>
-            <p className={styles.authorName} onClick={handleProfileClick}>
-              <span className={styles.name}>
-                <span className={styles.firstName}>
-                  {post?.author?.firstName}
+            <div className={styles.authorSubDetails}>
+              <p className={styles.authorName} onClick={handleProfileClick}>
+                <span className={styles.name}>
+                  <span className={styles.firstName}>
+                    {post?.author?.firstName}
+                  </span>
+                  <span className={styles.lastName}>
+                    {post?.author?.lastName}
+                  </span>
                 </span>
-                <span className={styles.lastName}>
-                  {post?.author?.lastName}
-                </span>
-              </span>{" "}
+              </p>
+
+              <p className={styles.authorMemberDate}>
+                <span>Member since:</span>{" "}
+                {getReadableDate(post?.author?.joined_at)}
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.postDetails}>
+            <p>
+              <span>Published at:</span> {getReadableExtDate(post?.created_at)}
             </p>
 
-            <p className={styles.authorMemberDate}>
-              <span>Member since:</span>{" "}
-              {getReadableDate(post?.author?.joined_at)}
-            </p>
+            {getEditedDate()}
           </div>
         </div>
 
-        <div className={styles.postDetails}>
-          <p>
-            <span>Published at:</span> {getReadableExtDate(post?.created_at)}
-          </p>
+        <article
+          className={styles.description}
+          dangerouslySetInnerHTML={{
+            __html: post?.description,
+          }}
+        ></article>
 
-          {getEditedDate()}
-        </div>
+        <CommentSection postPageRef={postPageRef} />
+
+        <button
+          className={`${styles.scrollTopBtn} ${showScrollTop ? styles.scrollTopBtnShow : styles.scrollTopBtnHide}`}
+          aria-label="Scroll top"
+          title="Scroll top"
+          onClick={handleScrollTopClick}
+        >
+          <img src={upIcon} alt="Up icon" />
+        </button>
       </div>
+    );
+  };
 
-      <article
-        className={styles.description}
-        dangerouslySetInnerHTML={{
-          __html: post?.description,
-        }}
-      ></article>
+  const getMessage = (message) => {
+    return (
+      <div className={styles.messageContainer}>
+        {fetchStatus === "fetching" && (
+          <img src={loadingIcon} alt="Loading icon" />
+        )}
+        <p className={styles.message}>{message}</p>
+      </div>
+    );
+  };
 
-      <CommentSection
-        postAuthorID={post?.author?.id}
-        postPageRef={postPageRef}
-        showScrollTop={showScrollTop}
-        setShowScrollTop={setShowScrollTop}
-      />
+  switch (fetchStatus) {
+    case "fetching":
+      return getMessage("Loading the post");
 
-      <button
-        className={`${styles.scrollTopBtn} ${showScrollTop ? styles.scrollTopBtnShow : styles.scrollTopBtnHide}`}
-        aria-label="Scroll top"
-        title="Scroll top"
-        onClick={handleScrollTopClick}
-      >
-        <img src={upIcon} alt="Up icon" />
-      </button>
-    </div>
-  );
+    case "success":
+      return getPostPageContent();
+
+    case "noPost":
+      return getMessage(`Couldn't find any post with the ID: ${postId}.`);
+
+    case "error":
+      return getMessage("An error occured.");
+  }
 }
