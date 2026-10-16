@@ -7,6 +7,35 @@ import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import loadingIcon from "../../assets/icons/loading.svg";
 import upIcon from "../../assets/icons/up.svg";
 
+// ********************************************************************************************
+// _________Required state structure
+/*
+{
+    status: "fetching",
+
+    currentReInitializeFactorValue: null,
+
+    scrollPosition: 0,
+
+    config: {
+      initial: true,
+
+      quantity: 10,
+      totalContentCount: 0,
+      totalContentFetched: 0,
+
+      hasMore: false,
+      count: 0,
+      amount: 0,
+      cursor: undefined,
+    },
+
+    content: {},
+  }
+*/
+
+// ********************************************************************************************
+
 export default function InfiniteScrollProvider({
   Card,
   fetchFunction,
