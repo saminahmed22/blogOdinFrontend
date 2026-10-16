@@ -41,10 +41,12 @@ export default function InfiniteScrollProvider({
   queryParams,
   contentState,
   setContentState,
+  initialDeny = false,
   options = {
     cardsSeparator: true,
     scrollTopBtn: true,
     customLoadingMessage: null,
+    customLoadingMoreMessage: null,
     customErrorMessage: null,
     customNoContentMessage: null,
     customRefetchFailMessage: null,
@@ -193,7 +195,13 @@ export default function InfiniteScrollProvider({
 
   // Initial Post fetch
   const initialEffectRef = useRef(true);
+  const initialDenyRef = useRef(initialDeny);
   useEffect(() => {
+    if (initialDenyRef.current) {
+      initialDenyRef.current = false;
+      return;
+    }
+
     if (!contentStateRef.current.config.initial) return;
 
     if (initialEffectRef.current) {
@@ -206,7 +214,7 @@ export default function InfiniteScrollProvider({
     };
 
     fetchFunc();
-  }, [fetchContent]);
+  }, [fetchContent, initialDeny]);
 
   // changes on reInitializeFactor will retrigger the initial fetch, which also resets the states
   useEffect(() => {
@@ -357,7 +365,9 @@ export default function InfiniteScrollProvider({
               {contentState.config.hasMore && (
                 <div className={styles.messageContainer}>
                   <img src={loadingIcon} alt="Loading icon" />
-                  <p className={styles.message}>Loading more </p>
+                  <p className={styles.message}>
+                    {options.customLoadingMoreMessage || "Loading more content"}
+                  </p>
                 </div>
               )}
             </>
