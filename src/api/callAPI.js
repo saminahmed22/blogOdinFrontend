@@ -33,12 +33,15 @@ export default async function callAPI({
         );
 
         if (!response.ok) {
-          return { success: false };
+          return {
+            success: false,
+            error: `Response is NOT ok: ${response.status}`,
+          };
         }
 
         const result = await response.json();
 
-        return { success: true, result };
+        return { success: true, ...result };
       } catch (error) {
         return { success: false, error };
       }
