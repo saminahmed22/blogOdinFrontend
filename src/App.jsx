@@ -27,8 +27,6 @@ export default function App() {
       totalContentFetched: 0,
 
       hasMore: false,
-      count: 0,
-      amount: 0,
       cursor: undefined,
     },
 
