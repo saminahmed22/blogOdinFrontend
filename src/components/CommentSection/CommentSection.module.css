@@ -104,24 +104,6 @@
   padding-bottom: 50px;
 }
 
-.noCommentsMessage {
-  width: 100%;
-
-  align-self: center;
-  text-align: center;
-}
-
-.loadingMessage {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.loadingMessage img {
-  height: 24px;
-}
-
 .errorMessageContainer {
   align-self: start;
 
@@ -147,10 +129,6 @@
   @starting-style {
     transform: translateY(-100%);
   }
-}
-
-.errorMessageFetchFail {
-  align-self: center;
 }
 
 .loginMessage {
