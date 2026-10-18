@@ -29,6 +29,7 @@ export default function Feed() {
         options={{
           scrollTopBtn: true,
           cardsSeparator: true,
+          lastCardStyles: { marginBottom: "50px" },
           customLoadingMessage: "Loading posts",
           customLoadingMoreMessage: "Loading more posts",
           customNoContentMessage: "No posts to see here. :(",

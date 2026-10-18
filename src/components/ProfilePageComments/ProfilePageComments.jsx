@@ -27,6 +27,7 @@ export default function ProfilePageComments({
       options={{
         scrollTopBtn: true,
         cardsSeparator: true,
+        lastCardStyles: { marginBottom: "50px" },
         customLoadingMessage:
           profileId === userData?.personalData?.id
             ? "Loading your comments"

@@ -26,6 +26,7 @@ export default function ProfilePagePosts({
       options={{
         scrollTopBtn: true,
         cardsSeparator: true,
+        lastCardStyles: { marginBottom: "50px" },
         customLoadingMessage:
           profileId === userData?.personalData?.id
             ? "Loading your posts"
