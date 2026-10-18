@@ -13,7 +13,7 @@ import CommentCard from "../CommentCard/CommentCard";
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function CommentSection({ postPageRef }) {
+export default function CommentSection({ postPageRef, postAuthorID }) {
   const { postId } = useParams();
 
   const { userData, setUserData } = useOutletContext();
@@ -67,9 +67,11 @@ export default function CommentSection({ postPageRef }) {
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await createComment(formData, jwt, "POST");
+    const response = await createComment(formData, jwt, "POST");
 
-    result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
+    response.success
+      ? handleSubmitSuccess(response.result)
+      : handleSubmitFail(response);
   };
 
   const handleSubmitSuccess = (result) => {
@@ -79,13 +81,14 @@ export default function CommentSection({ postPageRef }) {
     setTextAreaCount(0);
 
     setComments((prev) => ({
-      fetchConfig: {
-        ...prev.fetchConfig,
-        count: prev.fetchConfig.count + 1,
+      ...prev,
+      config: {
+        ...prev.config,
+        totalContentFetched: prev.config.totalContentFetched + 1,
       },
-      commentsObj: {
+      content: {
         [result.comment.id]: { ...result.comment },
-        ...prev.commentsObj,
+        ...prev.content,
       },
     }));
   };
@@ -182,6 +185,7 @@ export default function CommentSection({ postPageRef }) {
       <div className={styles.commentList}>
         <InfiniteScrollProvider
           Card={CommentCard}
+          CardParams={{ postAuthorID }}
           fetchFunction={fetchPostComments}
           reInitializeFactor={postId}
           contentState={comments}
@@ -192,10 +196,11 @@ export default function CommentSection({ postPageRef }) {
             scrollTopBtn: false,
             cardsSeparator: false,
             listStyles: { gap: "10px" },
+            lastCardStyles: { marginBottom: "50px" },
             customLoadingMessage: "Loading comments",
             customLoadingMoreMessage: "Loading more comments",
             customNoContentMessage:
-              "No one has made any comment yet.\nMake an comments to spark the conversation!",
+              "No one has made any comments yet.\nMake an comment to spark the conversation!",
             customErrorMessage: "Failed to load comments.",
             customRefetchFailMessage: "Failed to fetch more comments.",
           }}
