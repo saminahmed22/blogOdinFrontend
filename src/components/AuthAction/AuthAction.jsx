@@ -47,7 +47,6 @@ export function AuthAction() {
     const regCircle = (
       <div
         className={`${styles.stepCircle} ${regStep.reg === "complete" ? styles.stepCircleComplete : styles.stepCircleCurrent}`}
-        onClick={moveRegStepTwo}
       >
         {regStep.reg === "complete" ? (
           <img className="invertImg" src={checkIcon} alt="Check icon" />
@@ -90,13 +89,12 @@ export function AuthAction() {
     );
   };
 
-  const moveRegStepTwo = (data, jwt) => {
+  const moveRegStepTwo = (data) => {
     setRegStep({
       step: "profile",
       reg: "complete",
       profile: "onGoing",
       data,
-      jwt,
     });
   };
 
@@ -109,7 +107,7 @@ export function AuthAction() {
       ) : regStep.step === "reg" ? (
         <RegForm moveRegStepTwo={moveRegStepTwo} />
       ) : (
-        <ProfileSetupForm data={regStep.data} jwt={regStep.jwt} />
+        <ProfileSetupForm data={regStep.data} />
       )}
     </div>
   );
