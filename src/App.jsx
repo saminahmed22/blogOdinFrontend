@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Outlet } from "react-router";
 
 // Components
-import Header from "./components/header/Header";
+import Header from "./components/Header/Header";
 import Aside from "./components/Aside/Aside";
 
 export default function App() {
