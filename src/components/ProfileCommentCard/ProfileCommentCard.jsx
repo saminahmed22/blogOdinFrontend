@@ -1,12 +1,18 @@
 import styles from "./ProfileCommentCard.module.css";
 
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 // Components
 import CommentCard from "../CommentCard/CommentCard";
 
-export default function ProfileCommentCard({ data, handleDelete }) {
+export default function ProfileCommentCard({
+  data,
+  handleDelete,
+  customStyles = {},
+}) {
   const navigate = useNavigate();
+
+  const { profileId } = useParams();
 
   const handlePostCardClick = () => {
     navigate(`/posts/${data?.Post?.id}`);
@@ -14,6 +20,10 @@ export default function ProfileCommentCard({ data, handleDelete }) {
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
+
+    if (profileId === data?.Post?.author?.id) {
+      return;
+    }
 
     navigate(`/profile/${data?.Post?.author?.id}`);
   };
@@ -75,7 +85,11 @@ export default function ProfileCommentCard({ data, handleDelete }) {
   };
 
   return (
-    <div className={styles.postCard} onClick={handlePostCardClick}>
+    <div
+      className={styles.postCard}
+      onClick={handlePostCardClick}
+      style={customStyles}
+    >
       <div className={styles.header}>
         <div className={styles.detailsContainer}>
           <div className={styles.profilePictureContainer}>

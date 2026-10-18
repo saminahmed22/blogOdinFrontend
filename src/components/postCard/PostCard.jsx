@@ -1,9 +1,11 @@
 import styles from "./PostCard.module.css";
 
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
-export default function PostCard({ data }) {
+export default function PostCard({ data, customStyles = {} }) {
   const navigate = useNavigate();
+
+  const { profileId } = useParams();
 
   const handlePostCardClick = () => {
     navigate(`/posts/${data?.id}`);
@@ -11,6 +13,10 @@ export default function PostCard({ data }) {
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
+
+    if (profileId === data?.author?.id) {
+      return;
+    }
 
     navigate(`/profile/${data?.author?.id}`);
   };
@@ -84,7 +90,11 @@ export default function PostCard({ data }) {
   };
 
   return (
-    <div className={styles.postCard} onClick={handlePostCardClick}>
+    <div
+      className={styles.postCard}
+      onClick={handlePostCardClick}
+      style={customStyles}
+    >
       <div className={styles.header}>
         <div className={styles.detailsContainer}>
           <div className={styles.profilePictureContainer}>
