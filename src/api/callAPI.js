@@ -1,6 +1,6 @@
 export default async function callAPI({
   method,
-  paths,
+  paths = [],
   params = {},
   body,
   authRequired = true,
@@ -19,68 +19,34 @@ export default async function callAPI({
 
   const jwt = JSON.parse(localStorage.getItem("jwt"));
 
-  switch (method) {
-    case "GET":
-      try {
-        const response = await fetch(
-          url,
-          authRequired && jwt?.token?.length > 1
-            ? {
-                headers: {
-                  Authorization: jwt.token,
-                },
-              }
-            : {},
-          method,
-        );
+  const options = {
+    headers: {
+      ...(method !== "GET" && { "Content-Type": "application/json" }),
 
-        if (!response.ok) {
-          return {
-            success: false,
-            error: `Response is NOT ok: ${response.status}`,
-          };
-        }
+      ...(authRequired && jwt?.token?.length > 1
+        ? { Authorization: jwt.token }
+        : {}),
+    },
 
-        const result = await response.json();
+    ...(method !== "GET" && { body }),
+    method,
+  };
 
-        return { success: true, ...result };
-      } catch (error) {
-        return { success: false, error };
-      }
+  try {
+    const response = await fetch(url, options);
 
-    case "POST":
-      try {
-        const response = await fetch(url, {
-          headers: {
-            "Content-Type": "application/json",
+    const result = await response.json();
 
-            ...(authRequired && jwt?.token?.length > 1
-              ? {
-                  headers: {
-                    Authorization: jwt.token,
-                  },
-                }
-              : {}),
-          },
-          method,
-          body,
-        });
+    if (!response.ok) {
+      return {
+        success: false,
+        error: `Response is NOT ok: ${response.status}`,
+        ...result,
+      };
+    }
 
-        if (!response.ok) {
-          return {
-            success: false,
-            error: `Response is NOT ok: ${response.status}`,
-          };
-        }
-
-        const content = await response.json();
-
-        return { success: true, content };
-      } catch (error) {
-        return { success: false, error };
-      }
-
-    default:
-      throw new Error("No method has been provided");
+    return { success: true, result };
+  } catch (error) {
+    return { success: false, error };
   }
 }
