@@ -183,4 +183,8 @@
   .navBtn:active {
     background: rgba(40, 40, 40, 0.832);
   }
+
+  .fillerText {
+    margin-top: 10px;
+  }
 }
