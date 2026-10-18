@@ -36,6 +36,7 @@ import upIcon from "../../assets/icons/up.svg";
 
 export default function InfiniteScrollProvider({
   Card,
+  CardParams = {},
   fetchFunction,
   reInitializeFactor,
   queryParams,
@@ -46,6 +47,7 @@ export default function InfiniteScrollProvider({
   options = {
     cardsSeparator: true,
     listStyles: {},
+    lastCardStyles: {},
     scrollTopBtn: true,
     customLoadingMessage: null,
     customLoadingMoreMessage: null,
@@ -67,7 +69,7 @@ export default function InfiniteScrollProvider({
 
   //#region Update state functions
   const updateContentState = useCallback(
-    (result) => {
+    (response) => {
       let buildingObj = {
         status: "fetching",
 
@@ -90,7 +92,7 @@ export default function InfiniteScrollProvider({
       };
 
       // Set fetch initial status
-      if (!result.success) {
+      if (!response.success) {
         buildingObj = contentStateRef.current;
 
         buildingObj.status = "error";
@@ -101,6 +103,8 @@ export default function InfiniteScrollProvider({
 
         return;
       }
+
+      const result = response.result;
 
       buildingObj.status = "success";
 
@@ -177,11 +181,11 @@ export default function InfiniteScrollProvider({
       ...queryParams,
     };
 
-    const result = await fetchFunction(params);
+    const response = await fetchFunction(params);
 
     fetchingOnReqRef.current = false;
 
-    updateContentState(result);
+    updateContentState(response);
   }, [fetchFunction, queryParams, updateContentState]);
   //#endregion
 
@@ -341,10 +345,16 @@ export default function InfiniteScrollProvider({
     }
   };
 
-  const getCard = (id, data, index) => {
+  const getCard = ({ id, data, index, responseLen }) => {
     return (
       <Fragment key={`Fragment_${id}`}>
-        <Card key={id} data={data} handleDelete={handleCardDelete} />
+        <Card
+          key={id}
+          data={data}
+          {...CardParams}
+          handleDelete={handleCardDelete}
+          customStyles={index === responseLen - 1 ? options.lastCardStyles : {}}
+        />
 
         {getSeparator(index, id)}
       </Fragment>
@@ -368,7 +378,12 @@ export default function InfiniteScrollProvider({
           return (
             <>
               {Object.keys(contentState.content).map((id, index) =>
-                getCard(id, contentState.content[id], index),
+                getCard({
+                  id,
+                  data: contentState.content[id],
+                  index: index,
+                  responseLen: Object.keys(contentState.content).length,
+                }),
               )}
 
               {contentState.config.hasMore && (
