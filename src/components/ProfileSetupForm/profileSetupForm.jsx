@@ -10,7 +10,7 @@ import { updateProfile } from "../../api/userAPI";
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function ProfileSetupForm({ data, jwt }) {
+export default function ProfileSetupForm({ data }) {
   const navigate = useNavigate();
 
   const [submitStatus, setSubmitStatus] = useState("halt");
@@ -59,13 +59,13 @@ export default function ProfileSetupForm({ data, jwt }) {
 
     const dataObj = Object.fromEntries(submittedData);
 
-    dataObj["userId"] = data.id;
-
     const formData = JSON.stringify(dataObj);
 
-    const result = await updateProfile(formData, jwt, "PUT");
+    const response = await updateProfile(formData);
 
-    result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
+    response.success
+      ? handleSubmitSuccess(response.result)
+      : handleSubmitFail();
   };
 
   const handleSubmitSuccess = (result) => {

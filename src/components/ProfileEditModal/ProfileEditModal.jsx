@@ -43,7 +43,7 @@ export default function ProfileEditModal() {
           className={styles.profilePicture}
           style={{ background: userData?.personalData?.theme_color }}
         >
-          {userData?.personalData?.firstName[0]}{" "}
+          {userData?.personalData?.firstName[0]}
           {userData?.personalData?.lastName[0]}
         </div>
       );
@@ -63,13 +63,13 @@ export default function ProfileEditModal() {
 
     const dataObj = Object.fromEntries(submittedData);
 
-    dataObj["userId"] = userData?.personalData?.id || "";
-
     const formData = JSON.stringify(dataObj);
 
-    const result = await updateProfile(formData, userData?.jwt, "PUT");
+    const response = await updateProfile(formData);
 
-    result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
+    response.success
+      ? handleSubmitSuccess(response.result)
+      : handleSubmitFail();
   };
 
   const handleSubmitSuccess = (result) => {
