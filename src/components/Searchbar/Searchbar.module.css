@@ -67,9 +67,10 @@
   border-radius: 12px;
 
   position: absolute;
-  position-anchor: search-box;
+  position-anchor: --search-box;
   position-area: bottom center;
-  top: 50px;
+  top: 2px;
+  left: -8px;
   z-index: 10;
 
   overflow: hidden auto;
