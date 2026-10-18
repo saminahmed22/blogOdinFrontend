@@ -24,12 +24,12 @@ export default function CategoryBar() {
     if (categoryStateRef.current.status === "success") return;
 
     const fetchFunc = async () => {
-      const result = await fetchCategories();
+      const response = await fetchCategories();
 
       setCategoryState({
-        status: result.success ? "success" : "error",
+        status: response?.success ? "success" : "error",
 
-        categories: result.content,
+        categories: response?.result?.content,
       });
     };
 

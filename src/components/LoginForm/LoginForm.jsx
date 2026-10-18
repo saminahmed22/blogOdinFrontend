@@ -58,9 +58,11 @@ export function LoginForm() {
 
     setFetchStatus("fetching");
 
-    const result = await fetchLoginCredit(formData);
+    const response = await fetchLoginCredit(formData);
 
-    result.success ? handleLoginSuccess(result) : handleLoginFail(result);
+    response.success
+      ? handleLoginSuccess(response.result)
+      : handleLoginFail(response);
   };
 
   const handleLoginSuccess = (result) => {

@@ -78,12 +78,12 @@ export default function ProfilePage() {
   // Initial user data fetch
   useEffect(() => {
     const fetchFunc = async () => {
-      const result = await fetchUserData(profileId);
+      const response = await fetchUserData(profileId);
 
-      if (result.success) {
+      if (response?.success) {
         setFetchStatus("success");
 
-        setTargetUser(result.user);
+        setTargetUser(response?.result?.user);
       } else {
         setFetchStatus("error");
       }
@@ -115,7 +115,7 @@ export default function ProfilePage() {
           <div
             className={styles.profilePicture}
             style={{
-              backgroundColor: targetUser.theme_color,
+              backgroundColor: targetUser?.theme_color,
             }}
           >
             {targetUser?.firstName[0] ? targetUser?.firstName[0] : ""}
@@ -201,9 +201,9 @@ export default function ProfilePage() {
                 : targetUser?.bio}
             </p>
 
-            <p>
+            <p className={styles.joined_at}>
               <span style={{ fontWeight: 500 }}>Member since:</span>{" "}
-              {getReadableDate(targetUser.joined_at)}
+              {getReadableDate(targetUser?.joined_at)}
             </p>
           </div>
 
@@ -216,7 +216,7 @@ export default function ProfilePage() {
                 profileId={profileId}
                 posts={posts}
                 setPosts={setPosts}
-                userFirstName={targetUser.firstName}
+                userFirstName={targetUser?.firstName}
               />
             ) : (
               <ProfilePageComments
@@ -224,7 +224,7 @@ export default function ProfilePage() {
                 profileId={profileId}
                 comments={comments}
                 setComments={setComments}
-                userFirstName={targetUser.firstName}
+                userFirstName={targetUser?.firstName}
               />
             )}
           </div>

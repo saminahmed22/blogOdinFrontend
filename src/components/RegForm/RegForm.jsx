@@ -52,11 +52,11 @@ export function RegForm({ moveRegStepTwo }) {
 
       const formData = JSON.stringify(dataObj);
 
-      const result = await fetchRegCredit(formData);
+      const response = await fetchRegCredit(formData);
 
-      result.success
-        ? handleRegistrationSuccess(result)
-        : handleRegistrationFail(result);
+      response.success
+        ? handleRegistrationSuccess(response?.result)
+        : handleRegistrationFail(response);
     }
   };
 
@@ -64,7 +64,7 @@ export function RegForm({ moveRegStepTwo }) {
     localStorage.setItem("jwt", JSON.stringify(result.jwt));
     localStorage.setItem("userData", JSON.stringify(result.user));
 
-    moveRegStepTwo(result.user, result.jwt);
+    moveRegStepTwo(result.user);
   };
 
   const handleRegistrationFail = (result) => {
