@@ -52,19 +52,25 @@
 .profilePicture {
   align-self: center;
 
-  height: 100px;
-  width: 100px;
-  background: red;
+  height: 120px;
+  width: 120px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
   border-radius: 100%;
 
-  display: grid;
-  place-items: center;
+  cursor: pointer;
+
+  font-weight: 600;
+
+  border: 1px solid #0000001a;
+
+  color: black;
 
   font-size: 3rem;
-  font-weight: 500;
-
-  object-fit: cover;
 }
 
 .inputContainer {
