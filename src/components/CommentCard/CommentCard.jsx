@@ -19,8 +19,9 @@ export default function CommentCard({
   postAuthorID,
   handleDelete,
   isProfileCommentCard = false,
+  customStyles = {},
 }) {
-  const { postId } = useParams();
+  const { postId, profileId } = useParams();
 
   const navigate = useNavigate();
 
@@ -36,6 +37,9 @@ export default function CommentCard({
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
+    if (profileId === comment?.author?.id) {
+      return;
+    }
     navigate(`/profile/${comment?.author?.id}`);
   };
 
@@ -115,9 +119,11 @@ export default function CommentCard({
 
     const formData = JSON.stringify(dataObj);
 
-    const result = await editComment(formData, jwt, "PUT");
+    const response = await editComment(formData, jwt, "PUT");
 
-    result.success ? handleSubmitSuccess(result) : handleSubmitFail(result);
+    response.success
+      ? handleSubmitSuccess(response.result)
+      : handleSubmitFail(response);
   };
 
   const handleSubmitSuccess = (result) => {
@@ -329,6 +335,7 @@ export default function CommentCard({
     <div
       className={`${styles.commentCard} ${isProfileCommentCard ? styles.profileCommentCard : ""} `}
       onClick={handleCommentClick}
+      style={customStyles}
     >
       <div className={styles.primary}>{getProfilePicture()}</div>
       <div className={styles.secondary}>
@@ -336,7 +343,7 @@ export default function CommentCard({
           <div className={styles.details}>
             <div className={styles.subDetails}>
               <p
-                className={`${styles.name} ${comment.author.id === postAuthorID && styles.authorName}`}
+                className={`${styles.name} ${comment?.author?.id === postAuthorID && styles.authorName}`}
                 onClick={handleProfileClick}
               >
                 <span className={styles.name}>
