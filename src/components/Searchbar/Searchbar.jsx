@@ -95,10 +95,10 @@ export default function Searchbar({ context }) {
       <input
         className={`${styles.searchBox} searchBox`}
         type="search"
-        placeholder="Search by title, description or author name"
+        placeholder="Search posts by title, description, or author"
         name="searchQuery"
         ref={searchBoxRef}
-        aria-label="Search by title, description or author name"
+        aria-label="Search posts by title, description, or author"
       />
 
       <button
@@ -120,6 +120,7 @@ export default function Searchbar({ context }) {
           contentState={searchPosts}
           setContentState={setSearchPosts}
           queryParams={{ query: searchQuery }}
+          customParentRef={searchPreviewRef}
           initialDeny={true}
           options={{
             scrollTopBtn: false,
