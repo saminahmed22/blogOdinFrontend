@@ -7,7 +7,7 @@
 
   display: grid;
 
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: 1fr auto;
 }
 
 .detailsContainer {
@@ -164,10 +164,6 @@
   margin: 25px 10px 40px 10px;
 }
 
-.noPostMessage {
-  margin: auto auto;
-}
-
 .scrollTopBtn {
   height: 40px;
   width: 40px;
@@ -207,6 +203,11 @@
   margin: auto;
 
   font-size: 1rem;
+  text-align: center;
+
+  .message {
+    max-width: 70%;
+  }
 
   img {
     height: 24px;
@@ -219,5 +220,35 @@
     width: 50px;
 
     right: 25px;
+  }
+
+  .title {
+    font-size: 1.2rem;
+  }
+
+  .authorName {
+    font-size: 0.75rem;
+  }
+
+  .authorMemberDate {
+    font-size: 0.7rem;
+  }
+
+  .category {
+    font-size: 0.7rem;
+  }
+
+  .postDate {
+    font-size: 0.8rem;
+  }
+
+  .profilePicture,
+  .altProfilePicture {
+    height: 30px;
+    width: 30px;
+  }
+
+  .description {
+    font-size: 1rem;
   }
 }

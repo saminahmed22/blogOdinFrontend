@@ -158,3 +158,13 @@
 .loadingIcon {
   height: 24px;
 }
+
+@media (max-width: 800px) {
+  .commentSection {
+    height: 350px;
+  }
+
+  .commentSectionHeader {
+    font-size: 1.5rem;
+  }
+}

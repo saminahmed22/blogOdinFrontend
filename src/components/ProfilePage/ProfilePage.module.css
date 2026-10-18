@@ -81,6 +81,10 @@
   margin: 0 5px;
 }
 
+.joined_at {
+  font-size: 0.8rem;
+}
+
 /* Loading message */
 .loadingMessageContainer {
   height: 100%;
@@ -166,4 +170,17 @@
   border: none;
 
   outline: 1px solid rgba(0, 0, 0, 0.09);
+}
+
+@media (max-width: 800px) {
+  .name {
+    .firstName,
+    .lastName {
+      font-size: 1.4rem;
+    }
+  }
+
+  .bio {
+    font-size: 0.9rem;
+  }
 }

@@ -190,7 +190,6 @@
 
   align-items: center;
   justify-content: flex-start;
-  gap: 5px;
 }
 
 .profilePicture {
@@ -254,5 +253,17 @@
 @media (max-width: 800px) {
   .commentCard {
     width: 100%;
+  }
+
+  .name {
+    font-size: 0.7rem;
+  }
+
+  .comment {
+    font-size: 0.75rem;
+  }
+
+  .createDate {
+    font-size: 0.65rem;
   }
 }
