@@ -4,7 +4,7 @@ import { createMemoryRouter, RouterProvider } from "react-router";
 import { MemoryRouter } from "react-router";
 import { routes } from "../../routes";
 
-import Header from "../../components/header/Header";
+import Header from "./Header";
 
 describe("Header component", () => {
   it("should renders correct heading", () => {

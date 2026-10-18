@@ -9,7 +9,9 @@ import menuIcon from "../../assets/icons/menu.svg";
 import Searchbar from "../Searchbar/Searchbar";
 
 export default function Header({ context }) {
-  const handleMenuBtnClick = () => {
+  const handleMenuBtnClick = (e) => {
+    e.stopPropagation();
+
     const menu = document.querySelector(".aside");
 
     if (!menu) return;
