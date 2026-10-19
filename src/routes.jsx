@@ -6,6 +6,7 @@ import Feed from "./components/Feed/Feed";
 import PostPage from "./components/PostPage/PostPage";
 import ProfilePageKeyd from "./components/ProfilePage/ProfilePageKeyd";
 import LandingPage from "./components/LandingPage/LandingPage";
+import DraftsPage from "./components/DraftsPage/DraftsPage";
 import { AuthPage } from "./components/AuthPage/AuthPage";
 
 function isLoggedIn() {
@@ -47,6 +48,8 @@ export const routes = [
         path: "profile/:contentType?/:profileId",
         element: <ProfilePageKeyd />,
       },
+
+      { path: "drafts", element: <DraftsPage /> },
     ],
   },
 
