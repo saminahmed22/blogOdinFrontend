@@ -28,7 +28,7 @@
 
   min-width: 300px;
 
-  padding-left: 10px;
+  text-indent: 10px;
 
   anchor-name: --search-box;
 }
