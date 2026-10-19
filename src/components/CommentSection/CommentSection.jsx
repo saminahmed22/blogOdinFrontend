@@ -63,11 +63,9 @@ export default function CommentSection({ postPageRef, postAuthorID }) {
 
     dataObj["postId"] = postId;
 
-    const jwt = userData?.jwt;
-
     const formData = JSON.stringify(dataObj);
 
-    const response = await createComment(formData, jwt, "POST");
+    const response = await createComment(formData);
 
     response.success
       ? handleSubmitSuccess(response.result)
