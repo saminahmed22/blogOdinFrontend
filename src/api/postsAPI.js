@@ -30,6 +30,16 @@ export async function fetchUserDraftedPosts(params) {
   return result;
 }
 
+export async function togglePostPublishStatus(body) {
+  const result = await callAPI({
+    method: "PUT",
+    paths: ["posts", "user", "drafts"],
+    body,
+  });
+
+  return result;
+}
+
 export async function fetchSearchContent(params) {
   if (!params.query.length) return;
 
