@@ -1,20 +1,27 @@
-import { Link } from "react-router";
-
 import styles from "./Header.module.css";
 
-// Icons
-import menuIcon from "../../assets/icons/menu.svg";
+// Hooks
+import { useState } from "react";
+import { Link } from "react-router";
 
 // Components
 import Searchbar from "../Searchbar/Searchbar";
 
+// Icons
+import openIcon from "../../assets/icons/asideOpen.svg";
+import closeIcon from "../../assets/icons/asideClose.svg";
+
 export default function Header({ context }) {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   const handleMenuBtnClick = (e) => {
     e.stopPropagation();
 
     const menu = document.querySelector(".aside");
 
     if (!menu) return;
+
+    setIsSidebarOpen((prev) => !prev);
 
     const isVisible = menu.classList.contains("asideVisible");
 
@@ -34,7 +41,11 @@ export default function Header({ context }) {
       </Link>
       <Searchbar context={context} />
       <button className={styles.menuBtn} onClick={handleMenuBtnClick}>
-        <img src={menuIcon} alt="Menu icon" title="Open or close menu" />
+        <img
+          src={isSidebarOpen ? closeIcon : openIcon}
+          alt={isSidebarOpen ? "Open icon" : "Close Icon"}
+          title="Open or close menu"
+        />
       </button>
     </header>
   );
