@@ -353,7 +353,11 @@ export default function InfiniteScrollProvider({
           data={data}
           {...CardParams}
           handleDelete={handleCardDelete}
-          customStyles={index === responseLen - 1 ? options.lastCardStyles : {}}
+          customStyles={
+            index === responseLen - 1 && !contentState?.config?.hasMore
+              ? options.lastCardStyles
+              : {}
+          }
         />
 
         {getSeparator(index, id)}
@@ -366,10 +370,12 @@ export default function InfiniteScrollProvider({
       case "fetching":
         return (
           <div className={styles.messageContainer}>
-            <img src={loadingIcon} alt="Loading icon" />
-            <p className={styles.message}>
-              {options.customLoadingMessage || "Loading"}
-            </p>
+            <span className={styles.messageSpan}>
+              <img src={loadingIcon} alt="Loading icon" />
+              <p className={styles.message}>
+                {options.customLoadingMessage || "Loading"}
+              </p>
+            </span>
           </div>
         );
 
@@ -388,10 +394,13 @@ export default function InfiniteScrollProvider({
 
               {contentState.config.hasMore && (
                 <div className={styles.messageContainer}>
-                  <img src={loadingIcon} alt="Loading icon" />
-                  <p className={styles.message}>
-                    {options.customLoadingMoreMessage || "Loading more content"}
-                  </p>
+                  <span className={styles.messageSpan}>
+                    <img src={loadingIcon} alt="Loading icon" />
+                    <p className={styles.message}>
+                      {options.customLoadingMoreMessage ||
+                        "Loading more content"}
+                    </p>
+                  </span>
                 </div>
               )}
             </>
@@ -399,9 +408,12 @@ export default function InfiniteScrollProvider({
         } else {
           return (
             <div className={styles.messageContainer}>
-              <p className={styles.message}>
-                {options.customNoContentMessage || "No content to see here :("}
-              </p>
+              <span className={styles.messageSpan}>
+                <p className={styles.message}>
+                  {options.customNoContentMessage ||
+                    "No content to see here :("}
+                </p>
+              </span>
             </div>
           );
         }
@@ -415,12 +427,14 @@ export default function InfiniteScrollProvider({
               )}
 
             <div className={styles.messageContainer}>
-              <p className={styles.message}>
-                {contentState.config.hasMore
-                  ? options.customRefetchFailMessage ||
-                    "Failed to fetch more content"
-                  : options.customErrorMessage || "Failed to fetch"}
-              </p>
+              <span className={styles.messageSpan}>
+                <p className={styles.message}>
+                  {contentState.config.hasMore
+                    ? options.customRefetchFailMessage ||
+                      "Failed to fetch more content"
+                    : options.customErrorMessage || "Failed to fetch"}
+                </p>
+              </span>
             </div>
           </>
         );
