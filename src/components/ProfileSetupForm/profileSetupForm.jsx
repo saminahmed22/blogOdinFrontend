@@ -36,7 +36,8 @@ export default function ProfileSetupForm({ data }) {
           className={styles.profilePicture}
           style={{ background: data.theme_color }}
         >
-          {data.firstName[0]} {data.lastName[0]}
+          {data.firstName[0]}
+          {data.lastName[0]}
         </div>
       );
     }
