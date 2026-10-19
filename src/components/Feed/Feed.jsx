@@ -27,7 +27,7 @@ export default function Feed() {
         setContentState={setFeedPosts}
         queryParams={{ categoryId: category }}
         options={{
-          scrollTopBtn: true,
+          scrollTopBtn: false,
           cardsSeparator: true,
           lastCardStyles: { marginBottom: "50px" },
           customLoadingMessage: "Loading posts",
