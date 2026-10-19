@@ -20,6 +20,16 @@ export async function fetchUserPosts(params) {
   return result;
 }
 
+export async function fetchUserDraftedPosts(params) {
+  const result = await callAPI({
+    method: "GET",
+    paths: ["posts", "user", "drafts"],
+    params,
+  });
+
+  return result;
+}
+
 export async function fetchSearchContent(params) {
   if (!params.query.length) return;
 
