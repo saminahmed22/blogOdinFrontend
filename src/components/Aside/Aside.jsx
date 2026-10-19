@@ -118,6 +118,10 @@ export default function Aside({ userData, setUserData }) {
         navigate(`/profile/comments/${userData.personalData.id}`);
         break;
 
+      case "draftsBtn":
+        navigate(`/drafts`);
+        break;
+
       default:
         return;
     }
@@ -163,6 +167,15 @@ export default function Aside({ userData, setUserData }) {
           </>
         )}
 
+        <button
+          className={`${styles.navBtn}`}
+          onClick={handleNavBtnClick}
+          id="draftsBtn"
+        >
+          <img className={styles.navBtnIcon} src={draftIcon} alt="Draft icon" />
+          Drafts
+        </button>
+
         {/* Add ID to the button when moving buttons here */}
         <span
           className={styles.fillerText}
@@ -199,15 +212,6 @@ export default function Aside({ userData, setUserData }) {
                 alt="Bookmark icon"
               />
               Bookmarks
-            </button>
-
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
-              <img
-                className={styles.navBtnIcon}
-                src={draftIcon}
-                alt="Draft icon"
-              />
-              Drafts
             </button>
 
             <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
