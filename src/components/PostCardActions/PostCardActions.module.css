@@ -7,20 +7,30 @@
   padding-right: 10px;
 }
 
-.publishBtn {
+.postActBtn {
   height: 20px;
-  width: 60px;
 
   display: grid;
   place-items: center;
 
   border: none;
-  border-radius: 12px;
 
   color: white;
-  background-color: orangered;
+  background-color: transparent;
 
-  padding: 0;
+  img {
+    height: 20px;
+
+    filter: brightness(0) saturate(100%);
+  }
+}
+
+.publishBtn {
+  width: 60px;
+
+  background-color: #ff4500;
+
+  border-radius: 12px;
 
   img {
     height: 15px;
@@ -28,4 +38,17 @@
     filter: brightness(0) saturate(100%) invert(93%) sepia(100%) saturate(27%)
       hue-rotate(27deg) brightness(106%) contrast(107%);
   }
+}
+
+.bookMarkBtn img {
+  transition: filter 0.3s ease;
+}
+
+.bookMarkBtn:hover img {
+  filter: brightness(0) saturate(100%) invert(36%) sepia(85%) saturate(3977%)
+    hue-rotate(1deg) brightness(102%) contrast(105%);
+}
+
+.bookMarkBtnBookmarked img {
+  filter: none;
 }
