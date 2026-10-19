@@ -1,3 +1,5 @@
+// Hooks
+import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 
 // Icons
@@ -14,10 +16,17 @@ import draftIcon from "../../assets/icons/draft.svg";
 import followerIcon from "../../assets/icons/follower.svg";
 import followingIcon from "../../assets/icons/following.svg";
 import newsIcon from "../../assets/icons/news.svg";
+import openIcon from "../../assets/icons/asideOpen.svg";
+import closeIcon from "../../assets/icons/asideClose.svg";
 
 import styles from "./Aside.module.css";
 
 export default function Aside({ userData, setUserData }) {
+  const userPreferences = JSON.parse(localStorage.getItem("prefs"));
+
+  // States
+  const [isShrinked, setIsShrinked] = useState(userPreferences?.asideShrink);
+
   const navigate = useNavigate();
 
   const authStatus = !!userData?.jwt?.token;
@@ -42,6 +51,15 @@ export default function Aside({ userData, setUserData }) {
     }
   };
 
+  const handleAsideShrinkBtnClick = () => {
+    setIsShrinked((prev) => !prev);
+
+    localStorage.setItem(
+      "prefs",
+      JSON.stringify({ ...userPreferences, asideShrink: !isShrinked }),
+    );
+  };
+
   const getNavAccElements = () => {
     if (authStatus) {
       return (
@@ -49,6 +67,8 @@ export default function Aside({ userData, setUserData }) {
           <Link
             to={`/profile/${userData?.personalData?.id}`}
             className={styles.loginBtnLink}
+            title="Profile"
+            aria-label="Profile"
           >
             <button className={`${styles.navBtn}  ${styles.profileBtn}`}>
               {userData?.personalData?.profilePictureLink ? (
@@ -83,6 +103,8 @@ export default function Aside({ userData, setUserData }) {
           <button
             className={` ${styles.navBtn} ${styles.logoutBtn}`}
             onClick={handleLogoutButtonClick}
+            title="Log out"
+            aria-label="Log out"
           >
             <img src={logoutIcon} alt="logout icon" />
           </button>
@@ -90,7 +112,7 @@ export default function Aside({ userData, setUserData }) {
       );
     } else {
       return (
-        <Link to={"/auth/login"}>
+        <Link to={"/auth/login"} title="Log in" aria-label="Log in">
           <div className={styles.navAccSection}>
             <button className={` ${styles.navBtn} ${styles.loginBtn}`}>
               <img src={loginIcon} alt="Add icon" className="invertImg" />
@@ -128,7 +150,18 @@ export default function Aside({ userData, setUserData }) {
   };
 
   return (
-    <aside className={`${styles.aside} aside`}>
+    <aside className={`${styles.aside} ${isShrinked && styles.shrinked} aside`}>
+      <button
+        className={styles.asideShrinkBtn}
+        onClick={handleAsideShrinkBtnClick}
+        title={isShrinked ? "Open sidebar" : "Close sidebar"}
+      >
+        <img
+          src={isShrinked ? closeIcon : openIcon}
+          alt={isShrinked ? "Close Icon" : "Open icon"}
+        />
+      </button>
+
       <nav className={styles.navbar}>
         {authStatus && (
           <>
@@ -136,45 +169,59 @@ export default function Aside({ userData, setUserData }) {
               className={`${styles.navBtn}`}
               onClick={handleNavBtnClick}
               id="createPostBtn"
+              title="Create a post"
+              aria-label="Create a post"
             >
               <img className={styles.navBtnIcon} src={addIcon} alt="Add icon" />
-              Create a post
+              <span>Create a post</span>
             </button>
+
             <button
               className={`${styles.navBtn}`}
               onClick={handleNavBtnClick}
               id="myPostsBtn"
+              title="Posts"
+              aria-label="Posts"
             >
               <img
                 className={styles.navBtnIcon}
                 src={postIcon}
                 alt="Post icon"
               />
-              My posts
+              <span>My posts</span>
             </button>
+
             <button
               className={`${styles.navBtn}`}
               onClick={handleNavBtnClick}
               id="myCommentsBtn"
+              title="Comments"
+              aria-label="Comments"
             >
               <img
                 className={styles.navBtnIcon}
                 src={commentIcon}
                 alt="Comment icon"
               />
-              My comments
+              <span>My comments</span>
+            </button>
+
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              id="draftsBtn"
+              title="Drafts"
+              aria-label="Drafts"
+            >
+              <img
+                className={styles.navBtnIcon}
+                src={draftIcon}
+                alt="Draft icon"
+              />
+              <span>Drafts</span>
             </button>
           </>
         )}
-
-        <button
-          className={`${styles.navBtn}`}
-          onClick={handleNavBtnClick}
-          id="draftsBtn"
-        >
-          <img className={styles.navBtnIcon} src={draftIcon} alt="Draft icon" />
-          Drafts
-        </button>
 
         {/* Add ID to the button when moving buttons here */}
         <span
@@ -187,69 +234,104 @@ export default function Aside({ userData, setUserData }) {
 
         {authStatus && (
           <>
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              title="Chats"
+              aria-label="Chats"
+            >
               <img
                 className={styles.navBtnIcon}
                 src={messageIcon}
                 alt="Chats icon"
               />
-              Chats
+              <span>Chats</span>
             </button>
 
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              title="Notifications"
+              aria-label="Notifications"
+            >
               <img
                 className={styles.navBtnIcon}
                 src={notificationIcon}
                 alt="Notification icon"
               />
-              Notifications
+              <span>Notifications</span>
             </button>
 
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              title="Bookmarks"
+              aria-label="Bookmarks"
+            >
               <img
                 className={styles.navBtnIcon}
                 src={bookmarkIcon}
                 alt="Bookmark icon"
               />
-              Bookmarks
+              <span>Bookmarks</span>
             </button>
 
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              title="Following"
+              aria-label="Following"
+            >
               <img
                 className={styles.navBtnIcon}
                 src={followingIcon}
                 alt="Following icon"
               />
-              Following
+              <span>Following</span>
             </button>
 
-            <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+            <button
+              className={`${styles.navBtn}`}
+              onClick={handleNavBtnClick}
+              title="Followers"
+              aria-label="Followers"
+            >
               <img
                 className={styles.navBtnIcon}
                 src={followerIcon}
                 alt="Follower icon"
               />
-              Followers
+              <span>Followers</span>
             </button>
           </>
         )}
 
-        <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+        <button
+          className={`${styles.navBtn}`}
+          onClick={handleNavBtnClick}
+          title="Trending"
+          aria-label="Trending"
+        >
           <img
             className={styles.navBtnIcon}
             src={trendIcon}
             alt="Trending icon"
           />
-          Trending
+          <span>Trending</span>
         </button>
 
-        <button className={`${styles.navBtn}`} onClick={handleNavBtnClick}>
+        <button
+          className={`${styles.navBtn}`}
+          onClick={handleNavBtnClick}
+          title="Newsletter"
+          aria-label="Newsletter"
+        >
           <img
             className={styles.navBtnIcon}
             src={newsIcon}
             alt="Newsletter icon"
           />
-          Newsletter
+          <span>Newsletter</span>
         </button>
       </nav>
 
