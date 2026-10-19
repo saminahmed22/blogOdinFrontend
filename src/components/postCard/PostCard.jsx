@@ -1,8 +1,15 @@
 import styles from "./PostCard.module.css";
 
+// Hooks
+import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
+// Components
+import PostCardActions from "../PostCardActions/PostCardActions";
+
 export default function PostCard({ data, customStyles = {} }) {
+  const [publishStaus, setPublishStaus] = useState(data?.published);
+
   const navigate = useNavigate();
 
   const { profileId } = useParams();
@@ -93,7 +100,10 @@ export default function PostCard({ data, customStyles = {} }) {
     <div
       className={styles.postCard}
       onClick={handlePostCardClick}
-      style={customStyles}
+      style={{
+        ...customStyles,
+        ...(publishStaus ? {} : { backgroundColor: "#ff450029" }),
+      }}
     >
       <div className={styles.header}>
         <div className={styles.detailsContainer}>
@@ -120,7 +130,11 @@ export default function PostCard({ data, customStyles = {} }) {
           </div>
         </div>
 
-        {/* <PostCardActionPopver /> */}
+        <PostCardActions
+          postId={data?.id}
+          publishStaus={publishStaus}
+          setPublishStaus={setPublishStaus}
+        />
       </div>
 
       <div className={styles.titleContainer}>
