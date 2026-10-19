@@ -2,13 +2,15 @@ import styles from "./PostCard.module.css";
 
 // Hooks
 import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams, useOutletContext } from "react-router";
 
 // Components
 import PostCardActions from "../PostCardActions/PostCardActions";
 
 export default function PostCard({ data, customStyles = {} }) {
   const [publishStaus, setPublishStaus] = useState(data?.published);
+
+  const { userData } = useOutletContext();
 
   const navigate = useNavigate();
 
@@ -131,7 +133,8 @@ export default function PostCard({ data, customStyles = {} }) {
         </div>
 
         <PostCardActions
-          postId={data?.id}
+          data={data}
+          userId={userData?.personalData?.id}
           publishStaus={publishStaus}
           setPublishStaus={setPublishStaus}
         />
