@@ -9,6 +9,9 @@ import PostCardActions from "../PostCardActions/PostCardActions";
 
 export default function PostCard({ data, customStyles = {}, handleDelete }) {
   const [publishStaus, setPublishStaus] = useState(data?.published);
+  const [bookmarkStaus, setBookmarkStatus] = useState(
+    data?._count?.bookmarks === 1,
+  );
 
   const { userData } = useOutletContext();
 
@@ -137,6 +140,8 @@ export default function PostCard({ data, customStyles = {}, handleDelete }) {
           userId={userData?.personalData?.id}
           publishStaus={publishStaus}
           setPublishStaus={setPublishStaus}
+          bookmarkStaus={bookmarkStaus}
+          setBookmarkStatus={setBookmarkStatus}
           handleDelete={handleDelete}
         />
       </div>
