@@ -10,6 +10,7 @@ import PostCardActions from "../PostCardActions/PostCardActions";
 export default function PostCard({
   data,
   customStyles = {},
+  handleBookmark,
   handleDelete,
   isBookmarkPage,
   isDraftPage,
@@ -151,6 +152,7 @@ export default function PostCard({
           handleDelete={handleDelete}
           isBookmarkPage={isBookmarkPage}
           isDraftPage={isDraftPage}
+          handleBookmark={handleBookmark}
         />
       </div>
 

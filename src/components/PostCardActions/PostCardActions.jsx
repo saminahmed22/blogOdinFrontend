@@ -25,6 +25,7 @@ export default function PostCardActions({
   setPublishStaus,
   bookmarkStaus,
   setBookmarkStatus,
+  handleBookmark,
   handleDelete,
   isBookmarkPage = false,
   isDraftPage = false,
@@ -67,6 +68,11 @@ export default function PostCardActions({
     const response = bookmarkStaus
       ? await deleteBookmakr(body)
       : await createBookmark(body);
+
+    handleBookmark(
+      response?.success ? (bookmarkStaus ? 0 : 1) : bookmarkStaus ? 1 : 0,
+      data?.id,
+    );
 
     setBookmarkStatus((prev) => (response?.success ? !prev : prev));
 

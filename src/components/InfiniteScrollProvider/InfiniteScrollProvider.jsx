@@ -333,6 +333,19 @@ export default function InfiniteScrollProvider({
     }));
   };
 
+  const handleBookmark = (status, id) => {
+    setContentState((prev) => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        [id]: {
+          ...prev.content[id],
+          _count: { ...prev.content[id]._count, bookmarks: status },
+        },
+      },
+    }));
+  };
+
   //#endregion
 
   //#region Render cards
@@ -354,6 +367,7 @@ export default function InfiniteScrollProvider({
           data={data}
           {...CardParams}
           handleDelete={handleCardDelete}
+          handleBookmark={handleBookmark}
           customStyles={
             index === responseLen - 1 && !contentState?.config?.hasMore
               ? options.lastCardStyles
