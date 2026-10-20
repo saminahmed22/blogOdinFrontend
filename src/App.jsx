@@ -1,12 +1,14 @@
 // Hooks
 import { useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, useSearchParams } from "react-router";
 
 // Components
 import Header from "./components/Header/Header";
 import Aside from "./components/Aside/Aside";
 
 export default function App() {
+  const [searchParams] = useSearchParams();
+
   const [userData, setUserData] = useState({
     personalData: JSON.parse(localStorage.getItem("userData")),
     jwt: JSON.parse(localStorage.getItem("jwt")),
@@ -33,6 +35,9 @@ export default function App() {
     content: {},
   });
 
+  const [searchQuery, setSearchQuery] = useState(
+    searchParams.get("searchQuery") || "",
+  );
   const [searchPosts, setSearchPosts] = useState({
     status: "fetching",
 
@@ -62,7 +67,9 @@ export default function App() {
 
   return (
     <>
-      <Header context={{ searchPosts, setSearchPosts }} />
+      <Header
+        context={{ searchQuery, setSearchQuery, searchPosts, setSearchPosts }}
+      />
       <div className="contentBody">
         <Aside userData={userData} setUserData={setUserData} />
         <Outlet
@@ -71,7 +78,10 @@ export default function App() {
             setUserData,
             feedPosts,
             setFeedPosts,
+            searchQuery,
+            setSearchQuery,
             searchPosts,
+            setSearchPosts,
             categoryState,
             setCategoryState,
           }}
