@@ -1,14 +1,19 @@
 .postCardActions {
+  min-height: 100%;
+
   max-height: fit-content;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 
   padding-right: 10px;
 }
 
 .postActBtn {
-  height: 20px;
+  height: 24px;
+  width: 24px;
 
   display: grid;
   place-items: center;
@@ -18,11 +23,7 @@
   color: white;
   background-color: transparent;
 
-  img {
-    height: 20px;
-
-    filter: brightness(0) saturate(100%);
-  }
+  transition: filter 0.3s ease;
 }
 
 .publishBtn {
@@ -40,10 +41,6 @@
   }
 }
 
-.bookMarkBtn img {
-  transition: filter 0.3s ease;
-}
-
 .bookMarkBtn:hover img {
   filter: brightness(0) saturate(100%) invert(36%) sepia(85%) saturate(3977%)
     hue-rotate(1deg) brightness(102%) contrast(105%);
@@ -51,4 +48,14 @@
 
 .bookMarkBtnBookmarked img {
   filter: none;
+}
+
+.editBtn:hover {
+  filter: brightness(0) saturate(100%) invert(57%) sepia(94%) saturate(975%)
+    hue-rotate(1deg) brightness(104%) contrast(104%);
+}
+
+.deleteBtn:hover {
+  filter: brightness(0) saturate(100%) invert(17%) sepia(100%) saturate(5476%)
+    hue-rotate(341deg) brightness(89%) contrast(93%);
 }
