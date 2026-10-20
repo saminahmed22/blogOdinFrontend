@@ -40,6 +40,26 @@ export async function togglePostPublishStatus(body) {
   return result;
 }
 
+export async function createBookmark(body) {
+  const result = await callAPI({
+    method: "POST",
+    paths: ["posts", "user", "bookmark"],
+    body,
+  });
+
+  return result;
+}
+
+export async function deleteBookmakr(body) {
+  const result = await callAPI({
+    method: "DELETE",
+    paths: ["posts", "user", "bookmark"],
+    body,
+  });
+
+  return result;
+}
+
 export async function fetchSearchContent(params) {
   if (!params.query.length) return;
 
