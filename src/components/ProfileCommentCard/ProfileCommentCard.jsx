@@ -15,37 +15,37 @@ export default function ProfileCommentCard({
   const { profileId } = useParams();
 
   const handlePostCardClick = () => {
-    navigate(`/posts/${data?.Post?.id}`);
+    navigate(`/posts/${data?.post?.id}`);
   };
 
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
-    if (profileId === data?.Post?.author?.id) {
+    if (profileId === data?.post?.author?.id) {
       return;
     }
 
-    navigate(`/profile/${data?.Post?.author?.id}`);
+    navigate(`/profile/${data?.post?.author?.id}`);
   };
 
   const handleCategoryClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/feed/${data?.Post.categoryId}`);
+    navigate(`/feed/${data?.post.categoryId}`);
   };
 
   const getProfilePicture = () => {
-    if (data?.Post?.author?.profilePictureLink) {
+    if (data?.post?.author?.profilePictureLink) {
       return (
         <img
-          src={data?.Post?.author?.profilePictureLink}
+          src={data?.post?.author?.profilePictureLink}
           alt="Author profile picture"
           className={styles.profilePicture}
           onClick={handleProfileClick}
         />
       );
     } else {
-      const color = data?.Post?.author?.theme_color;
+      const color = data?.post?.author?.theme_color;
 
       return (
         <div
@@ -53,7 +53,7 @@ export default function ProfileCommentCard({
           onClick={handleProfileClick}
           style={{ backgroundColor: color }}
         >
-          {`${data?.Post?.author?.firstName[0]}${data?.Post?.author?.lastName[0]}`}
+          {`${data?.post?.author?.firstName[0]}${data?.post?.author?.lastName[0]}`}
         </div>
       );
     }
@@ -62,7 +62,7 @@ export default function ProfileCommentCard({
   const getPostPublishStatusIcon = () => {};
 
   const getReadableDateLong = () => {
-    const isoString = data?.Post?.created_at;
+    const isoString = data?.post?.created_at;
 
     const options = {
       year: "numeric",
@@ -77,7 +77,7 @@ export default function ProfileCommentCard({
   };
 
   const getReadableDate = () => {
-    const isoString = data?.Post?.created_at;
+    const isoString = data?.post?.created_at;
 
     const options = { year: "numeric", month: "long", day: "numeric" };
 
@@ -100,10 +100,10 @@ export default function ProfileCommentCard({
             <p className={styles.authorName} onClick={handleProfileClick}>
               <span className={styles.name}>
                 <span className={styles.firstName}>
-                  {data?.Post?.author?.firstName}
+                  {data?.post?.author?.firstName}
                 </span>
                 <span className={styles.lastName}>
-                  {data?.Post?.author?.lastName}
+                  {data?.post?.author?.lastName}
                 </span>
               </span>
             </p>
@@ -119,10 +119,10 @@ export default function ProfileCommentCard({
       </div>
 
       <div className={styles.titleContainer}>
-        <h2 className={styles.title}>{data?.Post?.title}</h2>
+        <h2 className={styles.title}>{data?.post?.title}</h2>
 
         <p className={styles.category} onClick={handleCategoryClick}>
-          {data?.Post?.category?.name}
+          {data?.post?.category?.name}
         </p>
       </div>
 
@@ -131,7 +131,7 @@ export default function ProfileCommentCard({
 
         <CommentCard
           data={data}
-          postAuthorID={data?.Post.author.id}
+          postAuthorID={data?.post?.author?.id}
           handleDelete={handleDelete}
           isProfileCommentCard={true}
         />
