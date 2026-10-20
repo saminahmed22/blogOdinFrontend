@@ -446,7 +446,10 @@ export default function InfiniteScrollProvider({
     <div
       className={styles.InfiniteScrollProvider}
       ref={providerRef}
-      style={options.listStyles}
+      style={{
+        ...options.listStyles,
+        ...(customParentRef ? {} : { overflowY: "auto" }),
+      }}
     >
       {getContentElements()}
 
