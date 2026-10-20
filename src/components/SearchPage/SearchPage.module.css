@@ -1,0 +1,31 @@
+.searchPage {
+  max-height: 100%;
+  height: 100%;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 10px;
+
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+.searchPageEmpty {
+  display: grid;
+  place-items: center;
+}
+
+.heading {
+  font-size: 1rem;
+  font-weight: 600;
+
+  margin: 20px 0 0 20px;
+
+  span {
+    font-weight: 400;
+  }
+}
+
+.noSearchText {
+  margin: auto;
+}
