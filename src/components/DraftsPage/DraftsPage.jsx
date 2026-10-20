@@ -43,7 +43,7 @@ export default function DraftsPage() {
         setContentState={setDraftPosts}
         CardParams={{ isDraftPage: true }}
         options={{
-          scrollTopBtn: true,
+          scrollTopBtn: false,
           cardsSeparator: true,
           lastCardStyles: { marginBottom: "50px" },
           customLoadingMessage: "Loading your drafted posts",
