@@ -71,7 +71,15 @@ export async function deleteBookmakr(body) {
 }
 
 export async function fetchSearchContent(params) {
-  if (!params.query.length) return;
+  if (!params?.query?.length) {
+    params["query"] = new URLSearchParams(window.location.search).get(
+      "searchQuery",
+    );
+  }
+
+  if (!params?.query?.length) {
+    return;
+  }
 
   const result = await callAPI({
     method: "GET",
