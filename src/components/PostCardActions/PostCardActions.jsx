@@ -4,21 +4,31 @@ import styles from "./PostCardActions.module.css";
 import { useState } from "react";
 
 // API
-import { togglePostPublishStatus } from "../../api/postsAPI";
+import {
+  togglePostPublishStatus,
+  createBookmark,
+  deleteBookmakr,
+} from "../../api/postsAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 import bookmarkIcon from "../../assets/icons/bookmark.svg";
 import bookmarkedIcon from "../../assets/icons/bookmarked.svg";
 
+import editIcon from "../../assets/icons/edit.svg";
+import deleteIcon from "../../assets/icons/delete.svg";
+
 export default function PostCardActions({
   data,
   userId,
   publishStaus,
   setPublishStaus,
+  bookmarkStaus,
+  setBookmarkStatus,
+  handleDelete,
 }) {
   const [publishingStaus, setPublishingStatus] = useState("halt");
-  const [bookmarkingStaus, setBookmarkingStatus] = useState("notBookmarked");
+  const [bookmarkingStaus, setBookmarkingStatus] = useState("halt");
 
   const handlePublishBtnClick = async (e) => {
     e.stopPropagation();
@@ -36,6 +46,8 @@ export default function PostCardActions({
       setPublishStaus(response?.result?.content?.published);
 
       setPublishingStatus("success");
+
+      handleDelete(data?.id);
     } else {
       setPublishingStatus("error");
     }
@@ -44,9 +56,19 @@ export default function PostCardActions({
   const handleBookmarkBtnClick = async (e) => {
     e.stopPropagation();
 
-    setBookmarkingStatus((prev) =>
-      prev === "bookmarked" ? "notBookmarked" : "bookmarked",
-    );
+    setBookmarkingStatus("bookmarking");
+
+    const body = JSON.stringify({
+      postId: data.id,
+    });
+
+    const response = bookmarkStaus
+      ? await deleteBookmakr(body)
+      : await createBookmark(body);
+
+    setBookmarkStatus((prev) => (response?.success ? !prev : prev));
+
+    setBookmarkingStatus(response?.success ? "success" : "error");
   };
 
   return (
@@ -69,7 +91,7 @@ export default function PostCardActions({
         </button>
       )}
 
-      {userId !== data?.author?.id && (
+      {userId && userId !== data?.author?.id && (
         <button
           className={` ${styles.postActBtn} ${bookmarkingStaus === "bookmarked" ? styles.bookMarkBtnBookmarked : styles.bookMarkBtn}`}
           title="Bookmark this post"
@@ -77,16 +99,32 @@ export default function PostCardActions({
           onClick={handleBookmarkBtnClick}
           disabled={bookmarkingStaus === "bookmarking"}
         >
-          {bookmarkingStaus === "notBookmarked" ? (
-            <img src={bookmarkIcon} alt="Loading icon" />
-          ) : bookmarkingStaus === "bookmarked" ? (
-            <img src={bookmarkedIcon} alt="Loading icon" />
-          ) : bookmarkingStaus === "error" ? (
-            "Error"
+          {bookmarkStaus ? (
+            <img src={bookmarkedIcon} alt="Bookmarked icon" />
           ) : (
-            <img src={loadingIcon} alt="Loading icon" />
+            <img src={bookmarkIcon} alt="Bookmark icon" />
           )}
         </button>
+      )}
+
+      {userId === data?.author?.id && (
+        <>
+          <button
+            className={`${styles.postActBtn} ${styles.editBtn}`}
+            title="Edit this post"
+            aria-label="Edit this post"
+          >
+            <img src={editIcon} alt="Edit icon" />
+          </button>
+
+          <button
+            className={`${styles.postActBtn}  ${styles.deleteBtn}`}
+            title="Delete this post"
+            aria-label="Delete this post"
+          >
+            <img src={deleteIcon} alt="Delete icon" />
+          </button>
+        </>
       )}
     </div>
   );
