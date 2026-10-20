@@ -34,7 +34,13 @@ export default function Aside({ userData, setUserData }) {
   const handleLogoutButtonClick = () => {
     localStorage.removeItem("jwt");
 
-    setUserData({});
+    const localUserData = JSON.parse(localStorage.getItem("userData"));
+
+    const remainingUserData = { firstName: localUserData.firstName };
+
+    localStorage.setItem("userData", JSON.stringify(remainingUserData));
+
+    setUserData(remainingUserData);
   };
 
   const handleMenuBtnClick = () => {
@@ -263,13 +269,13 @@ export default function Aside({ userData, setUserData }) {
             </button>
 
             <button
-              className={`${styles.navBtn}`}
+              className={`${styles.navBtn} `}
               onClick={handleNavBtnClick}
               title="Bookmarks"
               aria-label="Bookmarks"
             >
               <img
-                className={styles.navBtnIcon}
+                className={`${styles.navBtnIcon} invertImg`}
                 src={bookmarkIcon}
                 alt="Bookmark icon"
               />
