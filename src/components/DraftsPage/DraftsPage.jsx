@@ -1,7 +1,7 @@
 import stlyes from "./DraftsPage.module.css";
 
 // Hooks
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 // Components
 import InfiniteScrollProvider from "../InfiniteScrollProvider/InfiniteScrollProvider";
@@ -32,10 +32,8 @@ export default function DraftsPage() {
     content: {},
   });
 
-  const draftPageRef = useRef();
-
   return (
-    <div className={stlyes.draftsPage} ref={draftPageRef}>
+    <div className={stlyes.draftsPage} role="main">
       <h2 className={stlyes.heading}>Your drafts</h2>
 
       <InfiniteScrollProvider
@@ -43,7 +41,7 @@ export default function DraftsPage() {
         fetchFunction={fetchUserDraftedPosts}
         contentState={draftPosts}
         setContentState={setDraftPosts}
-        customParentRef={draftPageRef}
+        CardParams={{ isDraftPage: true }}
         options={{
           scrollTopBtn: true,
           cardsSeparator: true,
