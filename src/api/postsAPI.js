@@ -39,6 +39,16 @@ export async function togglePostPublishStatus(body) {
 
   return result;
 }
+// Bookmarks
+export async function getBookmark(params) {
+  const result = await callAPI({
+    method: "GET",
+    paths: ["posts", "user", "bookmark"],
+    params,
+  });
+
+  return result;
+}
 
 export async function createBookmark(body) {
   const result = await callAPI({
