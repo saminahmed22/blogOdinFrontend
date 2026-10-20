@@ -231,7 +231,8 @@ export default function InfiniteScrollProvider({
     if (
       contentStateRef.current.config.initial ||
       contentStateRef.current.currentReInitializeFactorValue ===
-        reInitializeFactor
+        reInitializeFactor ||
+      reInitializeFactor === ""
     )
       return;
 
