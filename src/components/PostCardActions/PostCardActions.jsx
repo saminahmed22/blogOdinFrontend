@@ -26,6 +26,8 @@ export default function PostCardActions({
   bookmarkStaus,
   setBookmarkStatus,
   handleDelete,
+  isBookmarkPage = false,
+  isDraftPage = false,
 }) {
   const [publishingStaus, setPublishingStatus] = useState("halt");
   const [bookmarkingStaus, setBookmarkingStatus] = useState("halt");
@@ -47,7 +49,7 @@ export default function PostCardActions({
 
       setPublishingStatus("success");
 
-      handleDelete(data?.id);
+      if (isDraftPage) handleDelete(data?.id);
     } else {
       setPublishingStatus("error");
     }
@@ -69,6 +71,10 @@ export default function PostCardActions({
     setBookmarkStatus((prev) => (response?.success ? !prev : prev));
 
     setBookmarkingStatus(response?.success ? "success" : "error");
+
+    if (isBookmarkPage) {
+      handleDelete(data.id);
+    }
   };
 
   return (
