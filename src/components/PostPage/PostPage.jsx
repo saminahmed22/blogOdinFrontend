@@ -190,7 +190,11 @@ export default function PostPage() {
           <div className={styles.titleContainer}>
             <h2 className={styles.title}>{post?.title}</h2>
 
-            <p className={styles.category} onClick={handleCategoryClick}>
+            <p
+              className={styles.category}
+              onClick={handleCategoryClick}
+              style={{ backgroundColor: post?.category?.color }}
+            >
               {post?.category?.name}
             </p>
           </div>
