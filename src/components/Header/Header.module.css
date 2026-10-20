@@ -34,14 +34,6 @@
   transition: color 0.3s ease;
 }
 
-.homeRedirectLink:hover {
-  color: wheat;
-}
-
-.homeRedirectLink:active {
-  color: rgb(248, 189, 78);
-}
-
 .menuBtn {
   height: 30px;
   width: 30px;
