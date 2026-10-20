@@ -133,9 +133,11 @@ export default function Aside({ userData, setUserData }) {
   const handleNavBtnClick = (e) => {
     handleMenuBtnClick();
 
-    const buttonID = e.target.id;
+    const navBtn = e.target.closest("button");
 
-    if (!buttonID) return;
+    if (!navBtn) return;
+
+    const buttonID = navBtn.id;
 
     switch (buttonID) {
       case "myPostsBtn":
@@ -148,6 +150,10 @@ export default function Aside({ userData, setUserData }) {
 
       case "draftsBtn":
         navigate(`/drafts`);
+        break;
+
+      case "bookmarksBtn":
+        navigate(`/bookmarks`);
         break;
 
       default:
@@ -226,6 +232,21 @@ export default function Aside({ userData, setUserData }) {
               />
               <span>Drafts</span>
             </button>
+
+            <button
+              className={`${styles.navBtn} `}
+              onClick={handleNavBtnClick}
+              title="Bookmarks"
+              aria-label="Bookmarks"
+              id="bookmarksBtn"
+            >
+              <img
+                className={`${styles.navBtnIcon} invertImg`}
+                src={bookmarkIcon}
+                alt="Bookmark icon"
+              />
+              <span>Bookmarks</span>
+            </button>
           </>
         )}
 
@@ -266,20 +287,6 @@ export default function Aside({ userData, setUserData }) {
                 alt="Notification icon"
               />
               <span>Notifications</span>
-            </button>
-
-            <button
-              className={`${styles.navBtn} `}
-              onClick={handleNavBtnClick}
-              title="Bookmarks"
-              aria-label="Bookmarks"
-            >
-              <img
-                className={`${styles.navBtnIcon} invertImg`}
-                src={bookmarkIcon}
-                alt="Bookmark icon"
-              />
-              <span>Bookmarks</span>
             </button>
 
             <button
