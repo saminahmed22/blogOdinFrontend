@@ -7,7 +7,7 @@ import { useNavigate, useParams, useOutletContext } from "react-router";
 // Components
 import PostCardActions from "../PostCardActions/PostCardActions";
 
-export default function PostCard({ data, customStyles = {} }) {
+export default function PostCard({ data, customStyles = {}, handleDelete }) {
   const [publishStaus, setPublishStaus] = useState(data?.published);
 
   const { userData } = useOutletContext();
@@ -137,13 +137,18 @@ export default function PostCard({ data, customStyles = {} }) {
           userId={userData?.personalData?.id}
           publishStaus={publishStaus}
           setPublishStaus={setPublishStaus}
+          handleDelete={handleDelete}
         />
       </div>
 
       <div className={styles.titleContainer}>
         <h2 className={styles.title}>{data?.title}</h2>
 
-        <p className={styles.category} onClick={handleCategoryClick}>
+        <p
+          className={styles.category}
+          onClick={handleCategoryClick}
+          style={{ backgroundColor: data?.category?.color }}
+        >
           {data?.category?.name}
         </p>
       </div>
