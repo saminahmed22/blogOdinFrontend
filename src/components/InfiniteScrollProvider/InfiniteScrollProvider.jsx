@@ -381,7 +381,11 @@ export default function InfiniteScrollProvider({
         );
 
       case "success":
-        if (Object.keys(contentState.content).length >= 1) {
+        if (
+          Object.keys(contentState.content).length >= 1 &&
+          Object.keys(contentState.content).length - 1 !==
+            contentState?.config?.totalContentFetched
+        ) {
           return (
             <>
               {Object.keys(contentState.content).map((id, index) =>
