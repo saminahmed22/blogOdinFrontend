@@ -7,6 +7,7 @@ import PostPage from "./components/PostPage/PostPage";
 import ProfilePageKeyd from "./components/ProfilePage/ProfilePageKeyd";
 import LandingPage from "./components/LandingPage/LandingPage";
 import DraftsPage from "./components/DraftsPage/DraftsPage";
+import BookmarkPage from "./components/BookmarkPage/BookmarkPage";
 import { AuthPage } from "./components/AuthPage/AuthPage";
 
 function isLoggedIn() {
@@ -50,6 +51,8 @@ export const routes = [
       },
 
       { path: "drafts", element: <DraftsPage /> },
+
+      { path: "bookmarks", element: <BookmarkPage /> },
     ],
   },
 
