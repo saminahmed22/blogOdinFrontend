@@ -13,6 +13,10 @@ import deleteIcon from "../../assets/icons/delete.svg";
 import checkIcon from "../../assets/icons/check.svg";
 import closeIcon from "../../assets/icons/close.svg";
 import authorIcon from "../../assets/icons/author.svg";
+import upVoteIcon from "../../assets/icons/upVote.svg";
+import downVoteIcon from "../../assets/icons/downVote.svg";
+import upVotedIcon from "../../assets/icons/upVoted.svg";
+import downVotedIcon from "../../assets/icons/downVoted.svg";
 
 export default function CommentCard({
   data,
@@ -196,91 +200,129 @@ export default function CommentCard({
   };
 
   const getActionBtn = () => {
-    if (!userData?.jwt) return;
-
-    if (userData?.personalData?.id !== comment?.author?.id) return;
+    if (!userData?.jwt?.token?.length) return;
 
     switch (actionMode) {
       case "edit":
         return (
           <div className={styles.actions}>
-            <button
-              className={styles.submitBtn}
-              title="Submit edit comment"
-              aria-label="Submit edit comment"
-              onClick={handleSubmitButtonClick}
-              type="submit"
-            >
-              {submitStatus === "halt" ? (
-                <img src={checkIcon} alt="Check icon" />
-              ) : (
-                <img src={loadingIcon} alt="Loading icon" />
-              )}
-            </button>
-
-            <button
-              className={styles.cancelBtn}
-              title="Cancle edit comment"
-              aria-label="Cancle edit comment"
-              onClick={handleCancelBtnClick}
-              disabled={submitStatus === "submitting"}
-            >
-              <img src={closeIcon} alt="Cancle edit icon" />
-            </button>
+            {comment?.author?.id === userData?.personalData?.id && (
+              <>
+                {" "}
+                <button
+                  className={styles.submitBtn}
+                  title="Submit edit comment"
+                  aria-label="Submit edit comment"
+                  onClick={handleSubmitButtonClick}
+                  type="submit"
+                >
+                  {submitStatus === "halt" ? (
+                    <img src={checkIcon} alt="Check icon" />
+                  ) : (
+                    <img src={loadingIcon} alt="Loading icon" />
+                  )}
+                </button>
+                <button
+                  className={styles.cancelBtn}
+                  title="Cancle edit comment"
+                  aria-label="Cancle edit comment"
+                  onClick={handleCancelBtnClick}
+                  disabled={submitStatus === "submitting"}
+                >
+                  <img src={closeIcon} alt="Cancle edit icon" />
+                </button>{" "}
+              </>
+            )}
           </div>
         );
 
       case "delete":
         return (
           <div className={styles.actions}>
-            <p className={styles.deleteConfirmationText}>Are you sure?</p>
-
-            <button
-              className={styles.submitBtn}
-              title="Submit delete comment"
-              aria-label="Submit delete comment"
-              onClick={handleDeleteSubmitButtonClick}
-              type="submit"
-            >
-              {submitStatus === "halt" ? (
-                <img src={checkIcon} alt="Check icon" />
-              ) : (
-                <img src={loadingIcon} alt="Loading icon" />
-              )}
-            </button>
-
-            <button
-              className={styles.cancelBtn}
-              title="Cancle delete comment"
-              aria-label="Cancle delete comment"
-              onClick={handleCancelBtnClick}
-              disabled={submitStatus === "submitting"}
-            >
-              <img src={closeIcon} alt="Cancle edit icon" />
-            </button>
+            {comment?.author?.id === userData?.personalData?.id && (
+              <>
+                <p className={styles.deleteConfirmationText}>Are you sure?</p>
+                <button
+                  className={styles.submitBtn}
+                  title="Submit delete comment"
+                  aria-label="Submit delete comment"
+                  onClick={handleDeleteSubmitButtonClick}
+                  type="submit"
+                >
+                  {submitStatus === "halt" ? (
+                    <img src={checkIcon} alt="Check icon" />
+                  ) : (
+                    <img src={loadingIcon} alt="Loading icon" />
+                  )}
+                </button>
+                <button
+                  className={styles.cancelBtn}
+                  title="Cancle delete comment"
+                  aria-label="Cancle delete comment"
+                  onClick={handleCancelBtnClick}
+                  disabled={submitStatus === "submitting"}
+                >
+                  <img src={closeIcon} alt="Cancle edit icon" />
+                </button>
+              </>
+            )}
           </div>
         );
 
       default:
         return (
           <div className={styles.actions}>
-            <button
-              className={styles.editBtn}
-              title="Edit comment"
-              aria-label="Edit comment"
-              onClick={handleEditBtnClick}
-            >
-              <img src={editIcon} alt="Edit icon" />
-            </button>
+            <div className={styles.voteContainer}>
+              <button
+                className={`${styles.pageActBtn} ${styles.voteBtn} ${styles.upvoteBtn}`}
+                title="Upvote"
+                aria-label="Upvote"
+              >
+                <img className="invertImg" src={upVoteIcon} alt="Upvote Icon" />
+              </button>
 
-            <button
-              className={styles.deleteBtn}
-              title="Delete comment"
-              aria-label="Delete comment"
-              onClick={handleDeleteButtonClick}
-            >
-              <img src={deleteIcon} alt="Delete icon" />
-            </button>
+              <p
+                className={styles.voteCount}
+                title="Vote count"
+                aria-label="Vote count"
+              >
+                {data?.totalVote || 0}
+              </p>
+
+              <button
+                className={`${styles.pageActBtn}  ${styles.voteBtn} ${styles.downvoteBtn}`}
+                title="Downvote"
+                aria-label="Downvote"
+              >
+                <img
+                  className="invertImg"
+                  src={downVoteIcon}
+                  alt="Downvote Icon"
+                />
+              </button>
+            </div>
+
+            {comment?.author?.id === userData?.personalData?.id && (
+              <>
+                <button
+                  className={styles.editBtn}
+                  title="Edit comment"
+                  aria-label="Edit comment"
+                  onClick={handleEditBtnClick}
+                >
+                  <img src={editIcon} alt="Edit icon" />
+                </button>
+
+                <button
+                  className={styles.deleteBtn}
+                  title="Delete comment"
+                  aria-label="Delete comment"
+                  onClick={handleDeleteButtonClick}
+                >
+                  <img src={deleteIcon} alt="Delete icon" />
+                </button>
+              </>
+            )}
           </div>
         );
     }
