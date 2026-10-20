@@ -7,7 +7,13 @@ import { useNavigate, useParams, useOutletContext } from "react-router";
 // Components
 import PostCardActions from "../PostCardActions/PostCardActions";
 
-export default function PostCard({ data, customStyles = {}, handleDelete }) {
+export default function PostCard({
+  data,
+  customStyles = {},
+  handleDelete,
+  isBookmarkPage,
+  isDraftPage,
+}) {
   const [publishStaus, setPublishStaus] = useState(data?.published);
   const [bookmarkStaus, setBookmarkStatus] = useState(
     data?._count?.bookmarks === 1,
@@ -143,6 +149,8 @@ export default function PostCard({ data, customStyles = {}, handleDelete }) {
           bookmarkStaus={bookmarkStaus}
           setBookmarkStatus={setBookmarkStatus}
           handleDelete={handleDelete}
+          isBookmarkPage={isBookmarkPage}
+          isDraftPage={isDraftPage}
         />
       </div>
 
