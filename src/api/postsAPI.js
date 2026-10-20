@@ -60,7 +60,7 @@ export async function createBookmark(body) {
   return result;
 }
 
-export async function deleteBookmakr(body) {
+export async function deleteBookmark(body) {
   const result = await callAPI({
     method: "DELETE",
     paths: ["posts", "user", "bookmark"],

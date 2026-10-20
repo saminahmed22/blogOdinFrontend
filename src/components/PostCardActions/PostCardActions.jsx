@@ -7,14 +7,13 @@ import { useState } from "react";
 import {
   togglePostPublishStatus,
   createBookmark,
-  deleteBookmakr,
+  deleteBookmark,
 } from "../../api/postsAPI";
 
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 import bookmarkIcon from "../../assets/icons/bookmark.svg";
 import bookmarkedIcon from "../../assets/icons/bookmarked.svg";
-
 import editIcon from "../../assets/icons/edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
 
@@ -23,7 +22,7 @@ export default function PostCardActions({
   userId,
   publishStaus,
   setPublishStaus,
-  bookmarkStaus,
+  bookmarkStatus,
   setBookmarkStatus,
   handleBookmark,
   handleDelete,
@@ -65,12 +64,12 @@ export default function PostCardActions({
       postId: data.id,
     });
 
-    const response = bookmarkStaus
-      ? await deleteBookmakr(body)
+    const response = bookmarkStatus
+      ? await deleteBookmark(body)
       : await createBookmark(body);
 
     handleBookmark(
-      response?.success ? (bookmarkStaus ? 0 : 1) : bookmarkStaus ? 1 : 0,
+      response?.success ? (bookmarkStatus ? 0 : 1) : bookmarkStatus ? 1 : 0,
       data?.id,
     );
 
@@ -111,7 +110,7 @@ export default function PostCardActions({
           onClick={handleBookmarkBtnClick}
           disabled={bookmarkingStaus === "bookmarking"}
         >
-          {bookmarkStaus ? (
+          {bookmarkStatus ? (
             <img src={bookmarkedIcon} alt="Bookmarked icon" />
           ) : (
             <img src={bookmarkIcon} alt="Bookmark icon" />

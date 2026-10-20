@@ -16,7 +16,7 @@ export default function PostCard({
   isDraftPage,
 }) {
   const [publishStaus, setPublishStaus] = useState(data?.published);
-  const [bookmarkStaus, setBookmarkStatus] = useState(
+  const [bookmarkStatus, setBookmarkStatus] = useState(
     data?._count?.bookmarks === 1,
   );
 
@@ -147,7 +147,7 @@ export default function PostCard({
           userId={userData?.personalData?.id}
           publishStaus={publishStaus}
           setPublishStaus={setPublishStaus}
-          bookmarkStaus={bookmarkStaus}
+          bookmarkStatus={bookmarkStatus}
           setBookmarkStatus={setBookmarkStatus}
           handleDelete={handleDelete}
           isBookmarkPage={isBookmarkPage}
