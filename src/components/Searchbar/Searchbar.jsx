@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-
 import styles from "./Searchbar.module.css";
+
+// Hooks
+import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router";
 
 // Components
 import InfiniteScrollProvider from "../InfiniteScrollProvider/InfiniteScrollProvider";
@@ -12,9 +14,9 @@ import searchIcon from "../../assets/icons/search.svg";
 import { fetchSearchContent } from "../../api/postsAPI";
 
 export default function Searchbar({ context }) {
-  const { searchPosts, setSearchPosts } = context;
+  const navigate = useNavigate();
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const { searchQuery, setSearchQuery, searchPosts, setSearchPosts } = context;
 
   const searchBoxRef = useRef();
   const searchPreviewRef = useRef();
@@ -88,26 +90,39 @@ export default function Searchbar({ context }) {
       preveiwRef.removeEventListener("mouseleave", handlePreviewMOut);
       preveiwRef.removeEventListener("click", handlePreviewClick);
     };
-  }, []);
+  }, [setSearchQuery]);
+
+  const handleSearchClick = (e) => {
+    e.preventDefault();
+
+    const query = encodeURIComponent(searchQuery);
+    navigate(`/search?searchQuery=${query}`, { replace: true });
+  };
 
   return (
     <div className={styles.searchbar}>
-      <input
-        className={`${styles.searchBox} searchBox`}
-        type="search"
-        placeholder="Search posts by title, description, or author"
-        name="searchQuery"
-        ref={searchBoxRef}
-        aria-label="Search posts by title, description, or author"
-      />
+      <form className={styles.searchBoxForm} onSubmit={handleSearchClick}>
+        <input
+          className={`${styles.searchBox} searchBox`}
+          type="search"
+          placeholder="Search posts by title, description, or author"
+          name="searchQuery"
+          ref={searchBoxRef}
+          aria-label="Search posts by title, description, or author"
+          id="searchBox"
+          defaultValue={searchQuery}
+        />
 
-      <button
-        className={styles.searchButton}
-        type="submit"
-        popoverTarget="searchPreview"
-      >
-        <img src={searchIcon} alt="Search icon" />
-      </button>
+        <button
+          className={styles.searchButton}
+          type="submit"
+          popoverTarget="searchPreview"
+          onClick={handleSearchClick}
+          onSubmit={handleSearchClick}
+        >
+          <img src={searchIcon} alt="Search icon" />
+        </button>
+      </form>
 
       <div
         className={`${styles.searchPreview} searchPreview`}
