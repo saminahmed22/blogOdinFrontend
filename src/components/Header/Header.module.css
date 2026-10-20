@@ -5,8 +5,8 @@
   min-width: 100%;
 
   display: grid;
-  grid-template-columns: 1fr 5.5fr;
-  align-items: center;
+  grid-template-columns: auto 1fr;
+  place-items: center;
 
   background-color: rgb(40, 40, 40);
 }
