@@ -239,6 +239,8 @@
     width: 250px;
     max-width: 250px;
 
+    grid-template-rows: 1fr auto;
+
     position: absolute;
     transform: translateX(100%);
     right: 0;
@@ -255,6 +257,7 @@
   }
 
   .navbar {
+    grid-row: 1;
     padding-top: 0;
   }
 
