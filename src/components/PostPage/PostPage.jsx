@@ -5,6 +5,7 @@ import { useParams, useOutletContext, useNavigate } from "react-router";
 
 // Components
 import CommentSection from "../CommentSection/CommentSection";
+import PostPageActions from "../PostPageActions/PostPageActions";
 
 // API
 import { fetchPost } from "../../api/postsAPI";
@@ -18,7 +19,7 @@ export default function PostPage() {
 
   const { postId } = useParams();
 
-  const { feedPosts, searchPosts } = useOutletContext();
+  const { userData, feedPosts, searchPosts } = useOutletContext();
 
   // States
   const [fetchStatus, setFetchStatus] = useState("fetching");
@@ -199,37 +200,46 @@ export default function PostPage() {
             </p>
           </div>
 
-          <div className={styles.detailsContainer}>
-            <div className={styles.authorDetails}>
-              {getProfilePicture()}
+          <div className={styles.secondary}>
+            <div className={styles.detailsContainer}>
+              <div className={styles.authorDetails}>
+                {getProfilePicture()}
 
-              <div className={styles.authorSubDetails}>
-                <p className={styles.authorName} onClick={handleProfileClick}>
-                  <span className={styles.name}>
-                    <span className={styles.firstName}>
-                      {post?.author?.firstName}
+                <div className={styles.authorSubDetails}>
+                  <p className={styles.authorName} onClick={handleProfileClick}>
+                    <span className={styles.name}>
+                      <span className={styles.firstName}>
+                        {post?.author?.firstName}
+                      </span>
+                      <span className={styles.lastName}>
+                        {post?.author?.lastName}
+                      </span>
                     </span>
-                    <span className={styles.lastName}>
-                      {post?.author?.lastName}
-                    </span>
-                  </span>
+                  </p>
+
+                  <p className={styles.authorMemberDate}>
+                    <span>Member since:</span>{" "}
+                    {getReadableDate(post?.author?.joined_at)}
+                  </p>
+                </div>
+              </div>
+
+              <div className={styles.postDetails}>
+                <p className={styles.postDate}>
+                  <span>Published at:</span>{" "}
+                  {getReadableExtDate(post?.created_at)}
                 </p>
 
-                <p className={styles.authorMemberDate}>
-                  <span>Member since:</span>{" "}
-                  {getReadableDate(post?.author?.joined_at)}
-                </p>
+                {getEditedDate()}
               </div>
             </div>
 
-            <div className={styles.postDetails}>
-              <p className={styles.postDate}>
-                <span>Published at:</span>{" "}
-                {getReadableExtDate(post?.created_at)}
-              </p>
-
-              {getEditedDate()}
-            </div>
+            {userData?.jwt?.token?.length > 1 && (
+              <PostPageActions
+                userId={userData?.personalData?.id}
+                data={post}
+              />
+            )}
           </div>
 
           <article
