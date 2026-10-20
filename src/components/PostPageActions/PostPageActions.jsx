@@ -1,5 +1,11 @@
 import styles from "./PostPageActions.module.css";
 
+// Hook
+import { useState } from "react";
+
+// API
+import { createBookmark, deleteBookmark } from "../../api/postsAPI";
+
 // Icons
 import upVoteIcon from "../../assets/icons/upVote.svg";
 import downVoteIcon from "../../assets/icons/downVote.svg";
@@ -46,7 +52,11 @@ export default function PostPageActions({ userId, data }) {
           title="Bookmark"
           aria-label="Bookmark"
         >
-          <img className="invertImg" src={bookmarkIcon} alt="Bookmark Icon" />
+          {data?._count?.bookmarks === 1 ? (
+            <img src={bookmarkedIcon} alt="Bookmark Icon" />
+          ) : (
+            <img className="invertImg" src={bookmarkIcon} alt="Bookmark Icon" />
+          )}
         </button>
       )}
 
