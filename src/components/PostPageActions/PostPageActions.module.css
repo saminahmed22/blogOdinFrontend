@@ -1,0 +1,86 @@
+.postPageActions {
+  background: red;
+
+  height: 40px;
+  width: fit-content;
+
+  border-radius: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+  background-color: rgba(40, 40, 40, 0.635);
+
+  margin-right: 20px;
+
+  backdrop-filter: blur(10px);
+
+  overflow: hidden;
+}
+
+.voteContainer {
+  height: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pageActBtn {
+  height: 40px;
+  width: 40px;
+
+  border: none;
+
+  background-color: transparent;
+
+  display: grid;
+  place-items: center;
+
+  transition:
+    background-color 0.3s ease,
+    filter 5s ease;
+
+  img {
+    transition: filter 0.3s ease;
+  }
+}
+
+@media (hover: hover) {
+  .pageActBtn:hover {
+    background-color: rgba(0, 0, 0, 0.414);
+  }
+
+  .pageActBtn:hover img {
+    filter: brightness(0) saturate(100%) invert(37%) sepia(80%) saturate(4010%)
+      hue-rotate(0deg) brightness(100%) contrast(108%);
+  }
+
+  .editBtn:hover img {
+    filter: brightness(0) saturate(100%) invert(57%) sepia(94%) saturate(975%)
+      hue-rotate(1deg) brightness(104%) contrast(104%);
+  }
+
+  .deleteBtn:hover img {
+    filter: brightness(0) saturate(100%) invert(17%) sepia(100%) saturate(5476%)
+      hue-rotate(341deg) brightness(89%) contrast(93%);
+  }
+}
+
+.voteCount {
+  min-height: 100%;
+  min-width: 20px;
+
+  width: fit-content;
+
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 800px) {
+  .postPageActions {
+    justify-self: end;
+  }
+}
