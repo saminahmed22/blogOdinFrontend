@@ -46,12 +46,14 @@ export default function CategoryBar() {
       firstButtonRef.current?.scrollIntoView({
         behavior: "smooth",
         inline: "center",
+        block: "nearest",
       });
     }
 
     buttonRef.current?.scrollIntoView({
       behavior: "smooth",
       inline: "center",
+      block: "nearest",
     });
   });
 
@@ -76,7 +78,7 @@ export default function CategoryBar() {
         return (
           <LoadingMessage
             message={"Loading categories"}
-            customStylings={{ "grid-column": "1/4" }}
+            customStylings={{ gridColumn: "1/4" }}
           />
         );
 
