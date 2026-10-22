@@ -19,33 +19,48 @@ export default function PostPage() {
 
   const { postId } = useParams();
 
-  const { userData, feedPosts, searchPosts } = useOutletContext();
+  const { userData, feedPosts, setFeedPosts, searchPosts, setSearchPosts } =
+    useOutletContext();
 
   // States
   const [fetchStatus, setFetchStatus] = useState("fetching");
-  const [post, setPost] = useState();
+  const [post, setPost] = useState({ content: {} });
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [postSource, setPostSource] = useState();
 
   // Refs
   const postPageRef = useRef();
+  const commentSectionRef = useRef();
 
   // Effects
   useEffect(() => {
     const getPost = async () => {
-      let post;
+      let postObj;
 
-      post = feedPosts?.content?.[postId];
-      if (post) {
-        setPost(post);
+      postObj = feedPosts?.content?.[postId];
+      if (postObj) {
+        setPostSource("feedPosts");
+
+        setPost({
+          content: {
+            [postId]: { ...postObj },
+          },
+        });
 
         setFetchStatus("success");
 
         return;
       }
 
-      post = searchPosts?.content?.[postId];
-      if (post) {
-        setPost(post);
+      postObj = searchPosts?.content?.[postId];
+      if (postObj) {
+        setPostSource("searchPosts");
+
+        setPost({
+          content: {
+            [postId]: { ...postObj },
+          },
+        });
 
         setFetchStatus("success");
 
@@ -56,7 +71,13 @@ export default function PostPage() {
 
       if (response.success) {
         if (response?.result?.content) {
-          setPost(response?.result?.content);
+          setPostSource("fetched");
+
+          setPost({
+            content: {
+              [postId]: { ...response?.result?.content },
+            },
+          });
 
           setFetchStatus("success");
 
@@ -109,11 +130,11 @@ export default function PostPage() {
   }, [fetchStatus]);
 
   const getProfilePicture = () => {
-    if (post?.author?.profilePictureLink) {
+    if (post?.content?.[postId]?.author?.profilePictureLink) {
       return (
         <img
           className={styles.profilePicture}
-          src={post?.author?.profilePictureLink}
+          src={post?.content?.[postId]?.author?.profilePictureLink}
           alt="Author profile picture"
           onClick={handleProfileClick}
         />
@@ -122,10 +143,12 @@ export default function PostPage() {
       return (
         <div
           className={styles.altProfilePicture}
-          style={{ backgroundColor: post?.author?.theme_color }}
+          style={{
+            backgroundColor: post?.content?.[postId]?.author?.theme_color,
+          }}
           onClick={handleProfileClick}
         >
-          {`${post?.author?.firstName[0] || ""}${post?.author?.lastName[0] || ""}`}
+          {`${post?.content?.[postId]?.author?.firstName[0] || ""}${post?.content?.[postId]?.author?.lastName[0] || ""}`}
         </div>
       );
     }
@@ -157,13 +180,13 @@ export default function PostPage() {
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/profile/${post?.author?.id}`);
+    navigate(`/profile/${post?.content?.[postId]?.author?.id}`);
   };
 
   const handleCategoryClick = (e) => {
     e.stopPropagation();
 
-    navigate(`/feed/${post?.category?.id}`);
+    navigate(`/feed/${post?.content?.[postId]?.category?.id}`);
   };
 
   const handleScrollTopClick = () => {
@@ -175,10 +198,13 @@ export default function PostPage() {
   };
 
   const getEditedDate = () => {
-    if (post?.created_at !== post?.edited_at) {
+    if (
+      post?.content?.[postId]?.created_at !== post?.content?.[postId]?.edited_at
+    ) {
       return (
-        <p>
-          <span>Updated at:</span> {getReadableExtDate(post?.edited_at)}
+        <p className={styles.postDate}>
+          <span>Updated at:</span>{" "}
+          {getReadableExtDate(post?.content?.[postId]?.edited_at)}
         </p>
       );
     }
@@ -189,14 +215,16 @@ export default function PostPage() {
       <div className={styles.postPage} ref={postPageRef}>
         <div className={styles.postContet}>
           <div className={styles.titleContainer}>
-            <h2 className={styles.title}>{post?.title}</h2>
+            <h2 className={styles.title}>{post?.content?.[postId]?.title}</h2>
 
             <p
               className={styles.category}
               onClick={handleCategoryClick}
-              style={{ backgroundColor: post?.category?.color }}
+              style={{
+                backgroundColor: post?.content?.[postId]?.category?.color,
+              }}
             >
-              {post?.category?.name}
+              {post?.content?.[postId]?.category?.name}
             </p>
           </div>
 
@@ -209,17 +237,19 @@ export default function PostPage() {
                   <p className={styles.authorName} onClick={handleProfileClick}>
                     <span className={styles.name}>
                       <span className={styles.firstName}>
-                        {post?.author?.firstName}
+                        {post?.content?.[postId]?.author?.firstName}
                       </span>
                       <span className={styles.lastName}>
-                        {post?.author?.lastName}
+                        {post?.content?.[postId]?.author?.lastName}
                       </span>
                     </span>
                   </p>
 
                   <p className={styles.authorMemberDate}>
                     <span>Member since:</span>{" "}
-                    {getReadableDate(post?.author?.joined_at)}
+                    {getReadableDate(
+                      post?.content?.[postId]?.author?.joined_at,
+                    )}
                   </p>
                 </div>
               </div>
@@ -227,7 +257,7 @@ export default function PostPage() {
               <div className={styles.postDetails}>
                 <p className={styles.postDate}>
                   <span>Published at:</span>{" "}
-                  {getReadableExtDate(post?.created_at)}
+                  {getReadableExtDate(post?.content?.[postId]?.created_at)}
                 </p>
 
                 {getEditedDate()}
@@ -237,7 +267,23 @@ export default function PostPage() {
             {userData?.jwt?.token?.length > 1 && (
               <PostPageActions
                 userId={userData?.personalData?.id}
-                data={post}
+                data={post?.content?.[postId]}
+                contentState={
+                  postSource === "feedPosts"
+                    ? feedPosts
+                    : postSource === "searchPosts"
+                      ? searchPosts
+                      : post
+                }
+                setContentState={
+                  postSource === "feedPosts"
+                    ? setFeedPosts
+                    : postSource === "searchPosts"
+                      ? setSearchPosts
+                      : setPost
+                }
+                postId={postId}
+                commentSectionRef={commentSectionRef}
               />
             )}
           </div>
@@ -245,14 +291,15 @@ export default function PostPage() {
           <article
             className={styles.description}
             dangerouslySetInnerHTML={{
-              __html: post?.description,
+              __html: post?.content?.[postId]?.description,
             }}
           ></article>
         </div>
 
         <CommentSection
           postPageRef={postPageRef}
-          postAuthorID={post?.author?.id}
+          postAuthorID={post?.content?.[postId]?.author?.id}
+          commentSectionRef={commentSectionRef}
         />
 
         <button
