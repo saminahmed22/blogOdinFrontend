@@ -2,7 +2,7 @@ import styles from "./PostPageActions.module.css";
 
 // Hook
 import { useRef, useState } from "react";
-
+import { useNavigate } from "react-router";
 // API
 import {
   createBookmark,
@@ -10,6 +10,7 @@ import {
   createVote,
   deleteVote,
   togglePostPublishStatus,
+  deletePost,
 } from "../../api/postsAPI";
 
 // Icons
@@ -32,8 +33,9 @@ export default function PostPageActions({
   postId,
   commentSectionRef,
 }) {
-  // States
+  const navigator = useNavigate();
 
+  // States
   const [bookmarkStatus, setBookmarkStatus] = useState(
     contentState?.content[postId]?._count?.bookmarks,
   );
@@ -50,6 +52,7 @@ export default function PostPageActions({
 
   const [publishingStaus, setPublishingStatus] = useState("halt");
 
+  const [deletingStatus, setDeletingStatus] = useState("halt");
   // Refs
   const currentVote = useRef(voteStatus);
   const currentVoteCount = useRef(voteCount);
@@ -98,6 +101,37 @@ export default function PostPageActions({
       behaviour: "smooth",
       block: "center",
     });
+  };
+
+  const handleDelete = (id) => {
+    const { [id]: removedContent, ...restOfTheConent } = contentState.content;
+
+    setContentState((prev) => ({
+      ...prev,
+      config: {
+        ...prev.config,
+
+        totalContentFetched: prev?.config?.totalContentFetched - 1,
+      },
+      content: restOfTheConent,
+    }));
+  };
+
+  const handleDeleteBtnClick = async (e) => {
+    e.stopPropagation();
+
+    setDeletingStatus("deleting");
+
+    const body = JSON.stringify({ postId: data?.id });
+    const response = await deletePost(body);
+
+    if (response.success) {
+      handleDelete(data?.id);
+
+      navigator("/", { replace: true });
+    }
+
+    setDeletingStatus("halt");
   };
 
   const submitVote = async (vote) => {
@@ -310,8 +344,17 @@ export default function PostPageActions({
             className={`${styles.pageActBtn}  ${styles.deleteBtn} `}
             title="Delete"
             aria-label="Delete"
+            onClick={handleDeleteBtnClick}
           >
-            <img className="invertImg" src={deleteIcon} alt="Delete Icon" />
+            {deletingStatus === "deleting" ? (
+              <img
+                className={styles.loadingIcon}
+                src={loadingIcon}
+                alt="Loading icon"
+              />
+            ) : (
+              <img className="invertImg" src={deleteIcon} alt="Delete icon" />
+            )}
           </button>
         </>
       )}

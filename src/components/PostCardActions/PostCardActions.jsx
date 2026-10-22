@@ -8,6 +8,7 @@ import {
   togglePostPublishStatus,
   createBookmark,
   deleteBookmark,
+  deletePost,
 } from "../../api/postsAPI";
 
 // Icons
@@ -32,6 +33,7 @@ export default function PostCardActions({
 }) {
   const [publishingStaus, setPublishingStatus] = useState("halt");
   const [bookmarkingStatus, setBookmarkingStatus] = useState("halt");
+  const [deletingStatus, setDeletingStatus] = useState("halt");
 
   const handlePublishBtnClick = async (e) => {
     e.stopPropagation();
@@ -86,6 +88,21 @@ export default function PostCardActions({
     }
   };
 
+  const handleDeleteBtnClick = async (e) => {
+    e.stopPropagation();
+
+    setDeletingStatus("deleting");
+
+    const body = JSON.stringify({ postId: data?.id });
+    const response = await deletePost(body);
+
+    if (response.success) {
+      handleDelete(data?.id);
+    }
+
+    setDeletingStatus("halt");
+  };
+
   return (
     <div className={styles.postCardActions}>
       {!publishStaus && (
@@ -136,8 +153,13 @@ export default function PostCardActions({
             className={`${styles.postActBtn}  ${styles.deleteBtn}`}
             title="Delete this post"
             aria-label="Delete this post"
+            onClick={handleDeleteBtnClick}
           >
-            <img src={deleteIcon} alt="Delete icon" />
+            {deletingStatus === "deleting" ? (
+              <img src={loadingIcon} alt="Loading icon" />
+            ) : (
+              <img src={deleteIcon} alt="Delete icon" />
+            )}
           </button>
         </>
       )}
