@@ -17,14 +17,16 @@ export default function CategoryBar() {
 
   const { category: categoryParam } = useParams();
 
-  const { categoryState, setCategoryState } = useOutletContext();
+  const { categoryState, setCategoryState, categoryStateRef } =
+    useOutletContext();
 
-  const categoryStateRef = useRef(categoryState);
   useEffect(() => {
-    if (categoryStateRef.current.status === "success") return;
+    if (categoryStateRef.current === "success") return;
 
     const fetchFunc = async () => {
       const response = await fetchCategories();
+
+      categoryStateRef.current = "success";
 
       setCategoryState({
         status: response?.success ? "success" : "error",
@@ -34,7 +36,7 @@ export default function CategoryBar() {
     };
 
     fetchFunc();
-  }, [setCategoryState]);
+  }, [setCategoryState, categoryStateRef]);
 
   const buttonRef = useRef(null);
   const firstButtonRef = useRef(null);

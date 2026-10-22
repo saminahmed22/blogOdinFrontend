@@ -1,5 +1,5 @@
 // Hooks
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Outlet, useSearchParams } from "react-router";
 
 // Components
@@ -65,6 +65,9 @@ export default function App() {
     categories: [],
   });
 
+  // Refs
+  const categoryStateRef = useRef(categoryState.status);
+
   return (
     <>
       <Header
@@ -84,6 +87,7 @@ export default function App() {
             setSearchPosts,
             categoryState,
             setCategoryState,
+            categoryStateRef,
           }}
         />
       </div>
