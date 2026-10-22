@@ -1,0 +1,170 @@
+.postCreatePage {
+  max-height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 0;
+
+  overflow: hidden;
+}
+.postCreatePage > * {
+  flex-grow: 0;
+}
+
+/* Title */
+.title {
+  min-height: 80px;
+  height: fit-content;
+  max-height: 150px;
+
+  min-width: 95%;
+  width: 95%;
+  max-width: 95%;
+
+  color: black;
+  background-color: transparent;
+
+  border: 1px solid #0000003f;
+  border-radius: 12px;
+
+  outline: none;
+
+  field-sizing: content;
+  resize: none;
+
+  overflow: hidden auto;
+
+  font-family: inherit;
+  font-size: 1.5rem;
+  font-weight: 650;
+
+  padding: 0 5px;
+}
+
+.titleLen {
+  align-self: flex-end;
+
+  margin-right: 15px;
+  margin-top: -10px;
+
+  font-size: 0.8rem;
+}
+
+/* Select */
+.categorySelect {
+  align-self: flex-start;
+
+  height: 30px;
+  min-width: 100px;
+
+  appearance: base-select;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(0, 0, 0, 0.119);
+  border-radius: 8px;
+
+  padding: 0 10px;
+
+  margin-left: 20px;
+}
+
+::picker(select) {
+  appearance: base-select;
+
+  height: 500px;
+  max-height: 500px;
+
+  border-radius: 12px;
+
+  background-color: rgba(255, 255, 255, 0.441);
+
+  transition: height 0.3s ease;
+
+  @starting-style {
+    height: 0px;
+  }
+}
+
+.categorySelect::picker-icon {
+  height: 24px;
+  width: 24px;
+
+  align-content: center;
+  text-align: center;
+  line-height: 0;
+
+  transition: 0.3s ease;
+
+  content: "";
+
+  background-image: url(../../assets/icons/rightArrow.svg);
+  background-repeat: no-repeat;
+  background-size: 20px;
+  background-position: center;
+  rotate: 90deg;
+}
+
+.categorySelect:open::picker-icon {
+  rotate: 270deg;
+}
+
+.categoryOption {
+  padding: 0.25em;
+}
+
+.categoryOption::checkmark {
+  content: url("../../assets/icons/check.svg");
+}
+
+/* Desc */
+.desc {
+  flex: 1 0 auto;
+
+  min-width: 95%;
+  width: 95%;
+  max-width: 95%;
+
+  border: 1px solid #0000003f;
+  border-radius: 12px;
+
+  padding: 0 5px;
+}
+
+.title:focus,
+.desc:focus {
+  border: 1px solid #000000be;
+}
+
+/* Submit button styles */
+.submitBtn {
+  align-self: flex-end;
+
+  height: 30px;
+  width: 100px;
+
+  background: transparent;
+
+  border: 1px solid orangered;
+  border-radius: 8px;
+
+  margin-right: 15px;
+
+  transition:
+    color 0.3s ease,
+    background 0.3s ease;
+}
+
+.submitBtn:hover {
+  background: rgba(255, 68, 0, 0.25);
+}
+
+.submitBtn:active {
+  color: white;
+  background: rgba(255, 68, 0, 0.6);
+}
