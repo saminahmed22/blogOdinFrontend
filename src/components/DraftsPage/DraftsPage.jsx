@@ -1,7 +1,7 @@
 import stlyes from "./DraftsPage.module.css";
 
 // Hooks
-import { useState } from "react";
+import { useOutletContext, useLocation } from "react-router";
 
 // Components
 import InfiniteScrollProvider from "../InfiniteScrollProvider/InfiniteScrollProvider";
@@ -11,26 +11,9 @@ import PostCard from "../postCard/PostCard";
 import { fetchUserDraftedPosts } from "../../api/postsAPI";
 
 export default function DraftsPage() {
-  const [draftPosts, setDraftPosts] = useState({
-    status: "fetching",
+  const { feedPosts, setFeedPosts } = useOutletContext();
 
-    currentReInitializeFactorValue: null,
-
-    scrollPosition: 0,
-
-    config: {
-      initial: true,
-
-      quantity: 10,
-
-      totalContentFetched: 0,
-
-      hasMore: false,
-      cursor: undefined,
-    },
-
-    content: {},
-  });
+  const location = useLocation();
 
   return (
     <div className={stlyes.draftsPage} role="main">
@@ -39,8 +22,9 @@ export default function DraftsPage() {
       <InfiniteScrollProvider
         Card={PostCard}
         fetchFunction={fetchUserDraftedPosts}
-        contentState={draftPosts}
-        setContentState={setDraftPosts}
+        contentState={feedPosts}
+        setContentState={setFeedPosts}
+        reInitializeFactor={location}
         CardParams={{ isDraftPage: true }}
         options={{
           scrollTopBtn: false,

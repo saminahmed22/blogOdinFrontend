@@ -1,7 +1,7 @@
 import stlyes from "./BookmarkPage.module.css";
 
 // Hooks
-import { useState } from "react";
+import { useOutletContext, useLocation } from "react-router";
 
 // Components
 import InfiniteScrollProvider from "../InfiniteScrollProvider/InfiniteScrollProvider";
@@ -11,26 +11,9 @@ import PostCard from "../postCard/PostCard";
 import { getBookmark } from "../../api/postsAPI";
 
 export default function BookmarkPage() {
-  const [bookmarkedPosts, setBookmarkedPosts] = useState({
-    status: "fetching",
+  const { feedPosts, setFeedPosts } = useOutletContext();
 
-    currentReInitializeFactorValue: null,
-
-    scrollPosition: 0,
-
-    config: {
-      initial: true,
-
-      quantity: 10,
-
-      totalContentFetched: 0,
-
-      hasMore: false,
-      cursor: undefined,
-    },
-
-    content: {},
-  });
+  const location = useLocation();
 
   return (
     <div className={stlyes.bookmarkPage} role="main">
@@ -39,8 +22,9 @@ export default function BookmarkPage() {
       <InfiniteScrollProvider
         Card={PostCard}
         fetchFunction={getBookmark}
-        contentState={bookmarkedPosts}
-        setContentState={setBookmarkedPosts}
+        contentState={feedPosts}
+        setContentState={setFeedPosts}
+        reInitializeFactor={location}
         CardParams={{ isBookmarkPage: true }}
         options={{
           scrollTopBtn: false,
