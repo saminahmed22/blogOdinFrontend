@@ -78,6 +78,8 @@ export default function ProfileEditModal() {
     localStorage.setItem("userData", JSON.stringify(result.user));
 
     modalRef.current.close();
+
+    setSubmitStatus("halt");
   };
 
   const handleSubmitFail = () => {
