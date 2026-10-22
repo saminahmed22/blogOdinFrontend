@@ -25,6 +25,7 @@ export default function PostCardActions({
   bookmarkStatus,
   setBookmarkStatus,
   handleBookmark,
+  handlePublish,
   handleDelete,
   isBookmarkPage = false,
   isDraftPage = false,
@@ -48,6 +49,8 @@ export default function PostCardActions({
       setPublishStaus(response?.result?.content?.published);
 
       setPublishingStatus("success");
+
+      handlePublish(data?.id);
 
       if (isDraftPage) handleDelete(data?.id);
     } else {
