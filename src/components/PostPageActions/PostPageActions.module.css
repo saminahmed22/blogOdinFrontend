@@ -96,6 +96,10 @@
   }
 }
 
+.loadingIcon {
+  height: 24px;
+}
+
 @media (max-width: 800px) {
   .postPageActions {
     justify-self: end;
