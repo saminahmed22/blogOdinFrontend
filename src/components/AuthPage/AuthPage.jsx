@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 // Components
 import { AuthAction } from "../AuthAction/AuthAction";
 
-export function AuthPage() {
+export default function AuthPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
