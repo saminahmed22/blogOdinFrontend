@@ -194,7 +194,7 @@ export default function InfiniteScrollProvider({
   //#region Effects
 
   // Initial Post fetch
-  const initialEffectRef = useRef(true);
+
   const initialDenyRef = useRef(initialDeny);
   useEffect(() => {
     if (initialDenyRef.current) {
@@ -202,19 +202,20 @@ export default function InfiniteScrollProvider({
       return;
     }
 
-    if (!contentStateRef.current.config.initial) return;
-
-    if (initialEffectRef.current) {
-      initialEffectRef.current = false;
+    if (
+      !contentStateRef.current.config.initial ||
+      contentStateRef.current.currentReInitializeFactorValue ===
+        reInitializeFactor ||
+      reInitializeFactor === ""
+    )
       return;
-    } // Returns on initial run
 
     const fetchFunc = async () => {
       fetchContent();
     };
 
     fetchFunc();
-  }, [fetchContent, initialDeny]);
+  }, [fetchContent, initialDeny, reInitializeFactor]);
 
   // changes on reInitializeFactor will retrigger the initial fetch, which also resets the states
   useEffect(() => {
@@ -279,7 +280,8 @@ export default function InfiniteScrollProvider({
       if (
         percentage >= 70 &&
         contentStateRef.current.config.hasMore &&
-        !fetchingOnReqRef.current
+        !fetchingOnReqRef.current &&
+        !contentStateRef.current.config.initial
       ) {
         fetchingOnReqRef.current = true;
         fetchContent();
@@ -348,6 +350,19 @@ export default function InfiniteScrollProvider({
     }));
   };
 
+  const handlePublish = (id) => {
+    setContentState((prev) => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        [id]: {
+          ...prev.content[id],
+          published: true,
+        },
+      },
+    }));
+  };
+
   //#endregion
 
   //#region Render cards
@@ -370,6 +385,7 @@ export default function InfiniteScrollProvider({
           {...CardParams}
           handleDelete={handleCardDelete}
           handleBookmark={handleBookmark}
+          handlePublish={handlePublish}
           customStyles={
             index === responseLen - 1 && !contentState?.config?.hasMore
               ? options.lastCardStyles
