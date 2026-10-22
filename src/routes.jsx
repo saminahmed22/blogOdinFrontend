@@ -2,18 +2,14 @@ import { redirect } from "react-router";
 
 import App from "./App";
 import ErrorPage from "./ErrorPage";
-
-// Lazy
-import {
-  LandingPage,
-  Feed,
-  PostPage,
-  ProfilePageKeyd,
-  DraftsPage,
-  BookmarkPage,
-  SearchPage,
-  AuthPage,
-} from "./lazyComps";
+import LandingPage from "./components/LandingPage/LandingPage";
+import Feed from "./components/Feed/Feed";
+import SearchPage from "./components/SearchPage/SearchPage";
+import PostPage from "./components/PostPage/PostPage";
+import DraftsPage from "./components/DraftsPage/DraftsPage";
+import BookmarkPage from "./components/BookmarkPage/BookmarkPage";
+import ProfilePageKeyd from "./components/ProfilePage/ProfilePageKeyd";
+import AuthPage from "./components/AuthPage/AuthPage";
 
 function isLoggedIn() {
   const jwt = JSON.parse(localStorage.getItem("jwt"));
