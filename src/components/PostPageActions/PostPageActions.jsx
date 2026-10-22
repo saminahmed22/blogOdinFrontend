@@ -9,6 +9,7 @@ import {
   deleteBookmark,
   createVote,
   deleteVote,
+  togglePostPublishStatus,
 } from "../../api/postsAPI";
 
 // Icons
@@ -21,6 +22,7 @@ import bookmarkIcon from "../../assets/icons/bookmark.svg";
 import bookmarkedIcon from "../../assets/icons/bookmarked.svg";
 import editIcon from "../../assets/icons/edit.svg";
 import deleteIcon from "../../assets/icons/delete.svg";
+import loadingIcon from "../../assets/icons/loading.svg";
 
 export default function PostPageActions({
   userId,
@@ -45,6 +47,8 @@ export default function PostPageActions({
   const [votingStatus, setVotingStatus] = useState("halt");
 
   const [voteCount, setVoteCount] = useState(data?.totalVote || 0);
+
+  const [publishingStaus, setPublishingStatus] = useState("halt");
 
   // Refs
   const currentVote = useRef(voteStatus);
@@ -171,6 +175,40 @@ export default function PostPageActions({
     }));
   };
 
+  const handlePublish = (id) => {
+    setContentState((prev) => ({
+      ...prev,
+      content: {
+        ...prev.content,
+        [id]: {
+          ...prev.content[id],
+          published: true,
+        },
+      },
+    }));
+  };
+
+  const handlePublishBtnClick = async (e) => {
+    e.stopPropagation();
+
+    setPublishingStatus("publishing");
+
+    const body = JSON.stringify({
+      postId: data.id,
+      toggleRequest: !data?.published,
+    });
+
+    const response = await togglePostPublishStatus(body);
+
+    if (response?.success) {
+      setPublishingStatus("success");
+
+      handlePublish(data?.id);
+    } else {
+      setPublishingStatus("error");
+    }
+  };
+
   return (
     <div className={styles.postPageActions}>
       <div className={styles.voteContainer}>
@@ -242,6 +280,24 @@ export default function PostPageActions({
 
       {userId === data?.author?.id && (
         <>
+          {!data?.published && (
+            <button
+              className={`${styles.publishBtn} ${styles.postActBtn}`}
+              title="Publish this post"
+              aria-label="Publish this post"
+              onClick={handlePublishBtnClick}
+              disabled={publishingStaus === "publishing"}
+            >
+              {publishingStaus === "halt" ? (
+                "Publish"
+              ) : publishingStaus === "error" ? (
+                "Error"
+              ) : (
+                <img src={loadingIcon} alt="Loading icon" />
+              )}
+            </button>
+          )}
+
           <button
             className={`${styles.pageActBtn}  ${styles.editBtn} `}
             title="Edit"
