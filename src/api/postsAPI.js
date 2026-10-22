@@ -70,6 +70,27 @@ export async function deleteBookmark(body) {
   return result;
 }
 
+// Vote
+export async function createVote(body) {
+  const result = await callAPI({
+    method: "POST",
+    paths: ["posts", "user", "vote"],
+    body,
+  });
+
+  return result;
+}
+
+export async function deleteVote(body) {
+  const result = await callAPI({
+    method: "DELETE",
+    paths: ["posts", "user", "vote"],
+    body,
+  });
+
+  return result;
+}
+
 export async function fetchSearchContent(params) {
   if (!params?.query?.length) {
     params["query"] = new URLSearchParams(window.location.search).get(
