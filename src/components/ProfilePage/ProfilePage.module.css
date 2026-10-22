@@ -85,18 +85,6 @@
   font-size: 0.8rem;
 }
 
-/* Loading message */
-.loadingMessageContainer {
-  height: 100%;
-  width: 100%;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
 /* Error message */
 
 .errorMessage {
