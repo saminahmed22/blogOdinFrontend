@@ -71,6 +71,8 @@
   color: black;
 
   font-size: 3rem;
+
+  object-fit: cover;
 }
 
 .inputContainer {

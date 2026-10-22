@@ -170,11 +170,11 @@
 
 @media (max-width: 800px) {
   .authAction {
-    grid-row: 2/3;
+    flex: 1 0 auto;
 
-    justify-content: start;
+    justify-content: center;
 
-    min-height: 100%;
+    height: fit-content;
     width: 100%;
     max-width: 100%;
 
