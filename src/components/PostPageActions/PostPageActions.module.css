@@ -79,6 +79,23 @@
   place-items: center;
 }
 
+.publishBtn {
+  height: 50%;
+  width: 60px;
+
+  color: white;
+  background-color: #ff4400;
+
+  border-radius: 12px;
+
+  img {
+    height: 15px;
+
+    filter: brightness(0) saturate(100%) invert(93%) sepia(100%) saturate(27%)
+      hue-rotate(27deg) brightness(106%) contrast(107%);
+  }
+}
+
 @media (max-width: 800px) {
   .postPageActions {
     justify-self: end;
