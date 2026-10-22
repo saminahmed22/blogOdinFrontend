@@ -119,3 +119,13 @@ export async function fetchPost(postId) {
 
   return result;
 }
+
+export async function deletePost(body) {
+  const result = await callAPI({
+    method: "DELETE",
+    paths: ["posts"],
+    body,
+  });
+
+  return result;
+}
