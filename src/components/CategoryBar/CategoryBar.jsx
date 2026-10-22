@@ -73,7 +73,12 @@ export default function CategoryBar() {
   const renderCategories = () => {
     switch (categoryState.status) {
       case "fetching":
-        return <LoadingMessage message={"Loading categories"} />;
+        return (
+          <LoadingMessage
+            message={"Loading categories"}
+            customStylings={{ "grid-column": "1/4" }}
+          />
+        );
 
       case "success":
         return (
