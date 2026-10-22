@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: start;
+  justify-content: center;
   gap: 20px;
 
   background: linear-gradient(
@@ -17,8 +17,6 @@
   );
 
   overflow: hidden;
-
-  padding-top: 200px;
 }
 
 .helloMsg {
@@ -172,7 +170,11 @@
 
 @media (max-width: 800px) {
   .authAction {
-    height: 60%;
+    grid-row: 2/3;
+
+    justify-content: start;
+
+    min-height: 100%;
     width: 100%;
     max-width: 100%;
 
@@ -181,7 +183,5 @@
       rgba(253, 176, 61, 0.15) 0%,
       rgba(255, 255, 255, 1) 100%
     );
-
-    padding-top: 50px;
   }
 }
