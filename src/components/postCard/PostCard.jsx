@@ -114,7 +114,9 @@ export default function PostCard({
       onClick={handlePostCardClick}
       style={{
         ...customStyles,
-        ...(publishStaus ? {} : { backgroundColor: "#ff450029" }),
+        ...(data?.author?.id === userData?.personalData?.id
+          ? { backgroundColor: "#ff44001b" }
+          : {}),
       }}
     >
       <div className={styles.header}>

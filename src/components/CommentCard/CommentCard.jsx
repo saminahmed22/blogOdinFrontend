@@ -343,7 +343,12 @@ export default function CommentCard({
     <div
       className={`${styles.commentCard} ${isProfileCommentCard ? styles.profileCommentCard : ""} `}
       onClick={handleCommentClick}
-      style={customStyles}
+      style={{
+        ...customStyles,
+        ...(data?.author?.id === userData?.personalData?.id
+          ? { backgroundColor: "#ff44001b" }
+          : {}),
+      }}
     >
       <div className={styles.primary}>{getProfilePicture()}</div>
       <div className={styles.secondary}>
