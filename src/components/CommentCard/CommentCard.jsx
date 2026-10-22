@@ -13,10 +13,6 @@ import deleteIcon from "../../assets/icons/delete.svg";
 import checkIcon from "../../assets/icons/check.svg";
 import closeIcon from "../../assets/icons/close.svg";
 import authorIcon from "../../assets/icons/author.svg";
-import upVoteIcon from "../../assets/icons/upVote.svg";
-import downVoteIcon from "../../assets/icons/downVote.svg";
-import upVotedIcon from "../../assets/icons/upVoted.svg";
-import downVotedIcon from "../../assets/icons/downVoted.svg";
 
 export default function CommentCard({
   data,
@@ -272,36 +268,6 @@ export default function CommentCard({
       default:
         return (
           <div className={styles.actions}>
-            <div className={styles.voteContainer}>
-              <button
-                className={`${styles.pageActBtn} ${styles.voteBtn} ${styles.upvoteBtn}`}
-                title="Upvote"
-                aria-label="Upvote"
-              >
-                <img className="invertImg" src={upVoteIcon} alt="Upvote Icon" />
-              </button>
-
-              <p
-                className={styles.voteCount}
-                title="Vote count"
-                aria-label="Vote count"
-              >
-                {data?.totalVote || 0}
-              </p>
-
-              <button
-                className={`${styles.pageActBtn}  ${styles.voteBtn} ${styles.downvoteBtn}`}
-                title="Downvote"
-                aria-label="Downvote"
-              >
-                <img
-                  className="invertImg"
-                  src={downVoteIcon}
-                  alt="Downvote Icon"
-                />
-              </button>
-            </div>
-
             {comment?.author?.id === userData?.personalData?.id && (
               <>
                 <button
