@@ -13,7 +13,11 @@ import CommentCard from "../CommentCard/CommentCard";
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 
-export default function CommentSection({ postPageRef, postAuthorID }) {
+export default function CommentSection({
+  postPageRef,
+  postAuthorID,
+  commentSectionRef,
+}) {
   const { postId } = useParams();
 
   const { userData, setUserData } = useOutletContext();
@@ -176,7 +180,7 @@ export default function CommentSection({ postPageRef, postAuthorID }) {
   };
 
   return (
-    <div className={styles.commentSection}>
+    <div className={styles.commentSection} ref={commentSectionRef}>
       <p className={styles.commentSectionHeader}>Comments</p>
       {getFormContent()}
 
