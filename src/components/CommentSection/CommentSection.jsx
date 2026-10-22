@@ -202,7 +202,7 @@ export default function CommentSection({
             customLoadingMessage: "Loading comments",
             customLoadingMoreMessage: "Loading more comments",
             customNoContentMessage:
-              "No one has made any comments yet.\nMake an comment to spark the conversation!",
+              "No one has made any comments yet.\nMake a comment to spark the conversation!",
             customErrorMessage: "Failed to load comments.",
             customRefetchFailMessage: "Failed to fetch more comments.",
           }}
