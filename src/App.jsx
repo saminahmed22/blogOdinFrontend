@@ -1,11 +1,10 @@
 // Hooks
-import { useState, useRef, Suspense } from "react";
+import { useState, useRef } from "react";
 import { Outlet, useSearchParams } from "react-router";
 
 // Components
 import Header from "./components/Header/Header";
 import Aside from "./components/Aside/Aside";
-import LoadingMessage from "./components/LoadingMessage/LoadingMessage";
 
 export default function App() {
   const [searchParams] = useSearchParams();
@@ -72,27 +71,30 @@ export default function App() {
   return (
     <>
       <Header
-        context={{ searchQuery, setSearchQuery, searchPosts, setSearchPosts }}
+        context={{
+          searchQuery,
+          setSearchQuery,
+          searchPosts,
+          setSearchPosts,
+        }}
       />
       <div className="contentBody">
         <Aside userData={userData} setUserData={setUserData} />
-        <Suspense fallback={<LoadingMessage message={"Loading the page!"} />}>
-          <Outlet
-            context={{
-              userData,
-              setUserData,
-              feedPosts,
-              setFeedPosts,
-              searchQuery,
-              setSearchQuery,
-              searchPosts,
-              setSearchPosts,
-              categoryState,
-              setCategoryState,
-              categoryStateRef,
-            }}
-          />
-        </Suspense>
+        <Outlet
+          context={{
+            userData,
+            setUserData,
+            feedPosts,
+            setFeedPosts,
+            searchQuery,
+            setSearchQuery,
+            searchPosts,
+            setSearchPosts,
+            categoryState,
+            setCategoryState,
+            categoryStateRef,
+          }}
+        />
       </div>
     </>
   );
