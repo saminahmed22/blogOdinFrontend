@@ -11,6 +11,7 @@ export default function PostCard({
   data,
   customStyles = {},
   handleBookmark,
+  handlePublish,
   handleDelete,
   isBookmarkPage,
   isDraftPage,
@@ -152,6 +153,7 @@ export default function PostCard({
           bookmarkStatus={bookmarkStatus}
           setBookmarkStatus={setBookmarkStatus}
           handleDelete={handleDelete}
+          handlePublish={handlePublish}
           isBookmarkPage={isBookmarkPage}
           isDraftPage={isDraftPage}
           handleBookmark={handleBookmark}
