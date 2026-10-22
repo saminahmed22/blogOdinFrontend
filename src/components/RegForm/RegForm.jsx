@@ -4,9 +4,8 @@ import { useState, useRef } from "react";
 import { Link } from "react-router";
 
 import PasswordValidator from "password-validator";
-import { ZxcvbnFactory } from "@zxcvbn-ts/core";
-import * as zxcvbnCommonPackage from "@zxcvbn-ts/language-common";
-import * as zxcvbnEnPackage from "@zxcvbn-ts/language-en";
+
+import { loadZxcvbn } from "./zxcvbn";
 
 // API
 import { fetchRegCredit } from "../../api/userAPI";
@@ -154,14 +153,17 @@ export function RegForm({ moveRegStepTwo }) {
     }
   };
 
-  const validatePassword = (value) => {
+  const validatePassword = async (value) => {
+    const [core, common, en] = await loadZxcvbn();
+    const { ZxcvbnFactory } = core;
+
     const options = {
       dictionary: {
-        ...zxcvbnCommonPackage.dictionary,
-        ...zxcvbnEnPackage.dictionary,
+        ...common.dictionary,
+        ...en.dictionary,
       },
-      graphs: zxcvbnCommonPackage.adjacencyGraphs,
-      translations: zxcvbnEnPackage.translations,
+      graphs: common.adjacencyGraphs,
+      translations: en.translations,
     };
 
     const zxcvbn = new ZxcvbnFactory(options);
