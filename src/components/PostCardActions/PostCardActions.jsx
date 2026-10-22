@@ -30,7 +30,7 @@ export default function PostCardActions({
   isDraftPage = false,
 }) {
   const [publishingStaus, setPublishingStatus] = useState("halt");
-  const [bookmarkingStaus, setBookmarkingStatus] = useState("halt");
+  const [bookmarkingStatus, setBookmarkingStatus] = useState("halt");
 
   const handlePublishBtnClick = async (e) => {
     e.stopPropagation();
@@ -58,6 +58,7 @@ export default function PostCardActions({
   const handleBookmarkBtnClick = async (e) => {
     e.stopPropagation();
 
+    setBookmarkStatus((prev) => !prev);
     setBookmarkingStatus("bookmarking");
 
     const body = JSON.stringify({
@@ -73,7 +74,7 @@ export default function PostCardActions({
       data?.id,
     );
 
-    setBookmarkStatus((prev) => (response?.success ? !prev : prev));
+    setBookmarkStatus((prev) => (!response?.success ? !prev : prev));
 
     setBookmarkingStatus(response?.success ? "success" : "error");
 
@@ -104,11 +105,11 @@ export default function PostCardActions({
 
       {userId && userId !== data?.author?.id && (
         <button
-          className={` ${styles.postActBtn} ${bookmarkingStaus === "bookmarked" ? styles.bookMarkBtnBookmarked : styles.bookMarkBtn}`}
+          className={` ${styles.postActBtn} ${bookmarkingStatus === "bookmarked" ? styles.bookMarkBtnBookmarked : styles.bookMarkBtn}`}
           title="Bookmark this post"
           aria-label="Bookmark this post"
           onClick={handleBookmarkBtnClick}
-          disabled={bookmarkingStaus === "bookmarking"}
+          disabled={bookmarkingStatus === "bookmarking"}
         >
           {bookmarkStatus ? (
             <img src={bookmarkedIcon} alt="Bookmarked icon" />
