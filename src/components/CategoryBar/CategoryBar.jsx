@@ -2,12 +2,13 @@ import styles from "./CategoryBar.module.css";
 
 // Hooks
 import { useEffect, useRef } from "react";
-
 import { useNavigate, useParams, useOutletContext } from "react-router";
+
+// Components
+import LoadingMessage from "../LoadingMessage/LoadingMessage";
 
 // Icons
 import scrollIcon from "../../assets/icons/rightArrow.svg";
-import loadingIcon from "../../assets/icons/loading.svg";
 
 // API
 import { fetchCategories } from "../../api/categoriesAPI";
@@ -72,12 +73,7 @@ export default function CategoryBar() {
   const renderCategories = () => {
     switch (categoryState.status) {
       case "fetching":
-        return (
-          <div className={styles.messageContainer}>
-            <img src={loadingIcon} alt="Loading icon" />
-            <p className={styles.message}>Loading categories</p>
-          </div>
-        );
+        return <LoadingMessage message={"Loading categories"} />;
 
       case "success":
         return (

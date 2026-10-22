@@ -8,12 +8,12 @@ import { useParams, useNavigate, useOutletContext } from "react-router";
 import ProfilePagePosts from "../ProfilePagePosts/ProfilePagePosts";
 import ProfilePageComments from "../ProfilePageComments/ProfilePageComments";
 import ProfileEditModal from "../ProfileEditModal/ProfileEditModal";
+import LoadingMessage from "../LoadingMessage/LoadingMessage";
 
 // API
 import { fetchUserData } from "../../api/userAPI";
 
 // Icons
-import loadingIcon from "../../assets/icons/loading.svg";
 import editIcon from "../../assets/icons/edit.svg";
 
 export default function ProfilePage() {
@@ -232,16 +232,7 @@ export default function ProfilePage() {
       );
 
     case "fetching":
-      return (
-        <div className={styles.loadingMessageContainer}>
-          <img
-            className={styles.loadingIcon}
-            src={loadingIcon}
-            alt="Loading icon"
-          />
-          <p className={styles.loadingMessage}>Loading profile</p>
-        </div>
-      );
+      return <LoadingMessage message={"Loading profile"} />;
 
     case "error":
       return <p className={styles.errorMessage}>An error occured.</p>;

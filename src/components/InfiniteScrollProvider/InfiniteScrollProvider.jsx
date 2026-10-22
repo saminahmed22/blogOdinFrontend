@@ -3,8 +3,10 @@ import styles from "./InfiniteScrollProvider.module.css";
 // Hooks
 import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 
+// Components
+import LoadingMessage from "../LoadingMessage/LoadingMessage";
+
 // Icons
-import loadingIcon from "../../assets/icons/loading.svg";
 import upIcon from "../../assets/icons/up.svg";
 
 // ********************************************************************************************
@@ -383,16 +385,7 @@ export default function InfiniteScrollProvider({
   const getContentElements = () => {
     switch (contentState.status) {
       case "fetching":
-        return (
-          <div className={styles.messageContainer}>
-            <span className={styles.messageSpan}>
-              <img src={loadingIcon} alt="Loading icon" />
-              <p className={styles.message}>
-                {options.customLoadingMessage || "Loading"}
-              </p>
-            </span>
-          </div>
-        );
+        return <LoadingMessage message={options.customLoadingMessage} />;
 
       case "success":
         if (
@@ -412,15 +405,11 @@ export default function InfiniteScrollProvider({
               )}
 
               {contentState.config.hasMore && (
-                <div className={styles.messageContainer}>
-                  <span className={styles.messageSpan}>
-                    <img src={loadingIcon} alt="Loading icon" />
-                    <p className={styles.message}>
-                      {options.customLoadingMoreMessage ||
-                        "Loading more content"}
-                    </p>
-                  </span>
-                </div>
+                <LoadingMessage
+                  message={
+                    options.customLoadingMoreMessage || "Loading more content"
+                  }
+                />
               )}
             </>
           );
