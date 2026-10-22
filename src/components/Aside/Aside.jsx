@@ -156,6 +156,10 @@ export default function Aside({ userData, setUserData }) {
         navigate(`/bookmarks`);
         break;
 
+      case "createPostBtn":
+        navigate(`/create`);
+        break;
+
       default:
         return;
     }
