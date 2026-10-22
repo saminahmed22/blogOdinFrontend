@@ -10,6 +10,7 @@ import DraftsPage from "./components/DraftsPage/DraftsPage";
 import BookmarkPage from "./components/BookmarkPage/BookmarkPage";
 import ProfilePageKeyd from "./components/ProfilePage/ProfilePageKeyd";
 import AuthPage from "./components/AuthPage/AuthPage";
+import PostCreatePage from "./components/PostCreatePage/PostCreatePage";
 
 function isLoggedIn() {
   const jwt = JSON.parse(localStorage.getItem("jwt"));
@@ -56,6 +57,8 @@ export const routes = [
       { path: "bookmarks", element: <BookmarkPage /> },
 
       { path: "search", element: <SearchPage /> },
+
+      { path: "create", element: <PostCreatePage /> },
     ],
   },
 
