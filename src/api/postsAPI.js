@@ -1,5 +1,37 @@
 import callAPI from "./callAPI";
 
+// Post
+export async function createPost(body) {
+  const result = await callAPI({
+    method: "POST",
+    paths: ["posts"],
+    body,
+  });
+
+  return result;
+}
+
+export async function editPost(body) {
+  const result = await callAPI({
+    method: "PUT",
+    paths: ["posts"],
+    body,
+  });
+
+  return result;
+}
+
+export async function deletePost(body) {
+  const result = await callAPI({
+    method: "DELETE",
+    paths: ["posts"],
+    body,
+  });
+
+  return result;
+}
+
+// Feed
 export async function fetchFeedContent(params) {
   const result = await callAPI({
     method: "GET",
@@ -10,6 +42,36 @@ export async function fetchFeedContent(params) {
   return result;
 }
 
+export async function fetchSearchContent(params) {
+  if (!params?.query?.length) {
+    params["query"] = new URLSearchParams(window.location.search).get(
+      "searchQuery",
+    );
+  }
+
+  if (!params?.query?.length) {
+    return;
+  }
+
+  const result = await callAPI({
+    method: "GET",
+    paths: ["posts", "search"],
+    params,
+  });
+
+  return result;
+}
+
+export async function fetchPost(postId) {
+  const result = await callAPI({
+    method: "GET",
+    paths: ["posts", postId],
+  });
+
+  return result;
+}
+
+// User
 export async function fetchUserPosts(params) {
   const result = await callAPI({
     method: "GET",
@@ -30,6 +92,7 @@ export async function fetchUserDraftedPosts(params) {
   return result;
 }
 
+// Draft
 export async function togglePostPublishStatus(body) {
   const result = await callAPI({
     method: "PUT",
@@ -39,6 +102,7 @@ export async function togglePostPublishStatus(body) {
 
   return result;
 }
+
 // Bookmarks
 export async function getBookmark(params) {
   const result = await callAPI({
@@ -85,45 +149,6 @@ export async function deleteVote(body) {
   const result = await callAPI({
     method: "DELETE",
     paths: ["posts", "user", "vote"],
-    body,
-  });
-
-  return result;
-}
-
-export async function fetchSearchContent(params) {
-  if (!params?.query?.length) {
-    params["query"] = new URLSearchParams(window.location.search).get(
-      "searchQuery",
-    );
-  }
-
-  if (!params?.query?.length) {
-    return;
-  }
-
-  const result = await callAPI({
-    method: "GET",
-    paths: ["posts", "search"],
-    params,
-  });
-
-  return result;
-}
-
-export async function fetchPost(postId) {
-  const result = await callAPI({
-    method: "GET",
-    paths: ["posts", postId],
-  });
-
-  return result;
-}
-
-export async function deletePost(body) {
-  const result = await callAPI({
-    method: "DELETE",
-    paths: ["posts"],
     body,
   });
 
