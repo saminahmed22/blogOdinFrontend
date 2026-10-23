@@ -1,10 +1,12 @@
 import styles from "./PostCreatePage.module.css";
+import "quill/dist/quill.snow.css";
 
 // Hooks
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useOutletContext } from "react-router";
 
 // Components
+import Editor from "./Editor";
 
 // API
 import { fetchCategories } from "../../api/categoriesAPI";
@@ -23,6 +25,7 @@ export default function PostCreatePage() {
   );
 
   // Ref
+  const quillRef = useRef();
 
   // Effects
   useEffect(() => {
@@ -66,46 +69,54 @@ export default function PostCreatePage() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
+    const data = new FormData(e.target);
+
+    const dataObj = Object.fromEntries(data);
+
+    console.log(quillRef.current.editor.delta.ops);
   };
 
   return (
-    <form onSubmit={handleFormSubmit} className={styles.postCreatePage}>
-      <textarea
-        className={styles.title}
-        name="title"
-        id="title"
-        aria-label="Give your post a title"
-        title="Give your post a title"
-        placeholder="Give your post a title"
-        onChange={handleTitleInput}
-        maxLength={200}
-      ></textarea>
-      <p className={styles.titleLen}>{titleLen}/200</p>
+    <div className={styles.postCreatePage}>
+      <form onSubmit={handleFormSubmit} className={styles.postForm}>
+        <textarea
+          className={styles.title}
+          name="title"
+          id="title"
+          aria-label="Give your post a title"
+          title="Give your post a title"
+          placeholder="Give your post a title"
+          onChange={handleTitleInput}
+          maxLength={200}
+        ></textarea>
+        <p className={styles.titleLen}>{titleLen}/200</p>
 
-      <select
-        className={styles.categorySelect}
-        name="category"
-        id="categorySelect"
-        onChange={handleSelect}
-        style={{ backgroundColor: selectBGColor }}
-      >
-        {categoryState?.categories?.map((category) => (
-          <option
-            className={styles.categoryOption}
-            style={{ backgroundColor: category.color }}
-            value={category.id}
-            key={`Category_Option_${category.id}}`}
-          >
-            {category.name}
-          </option>
-        ))}
-      </select>
+        <select
+          className={styles.categorySelect}
+          name="category"
+          id="categorySelect"
+          onChange={handleSelect}
+          style={{ backgroundColor: selectBGColor }}
+        >
+          {categoryState?.categories?.map((category) => (
+            <option
+              className={styles.categoryOption}
+              style={{ backgroundColor: category.color }}
+              value={category.id}
+              key={`Category_Option_${category.id}}`}
+            >
+              {category.name}
+            </option>
+          ))}
+        </select>
 
-      <div className={styles.desc}></div>
+        <Editor ref={quillRef} />
 
-      <button className={styles.submitBtn} type="submit">
-        Submit
-      </button>
-    </form>
+        <button className={styles.submitBtn} type="submit">
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }
