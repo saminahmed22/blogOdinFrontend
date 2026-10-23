@@ -1,33 +1,46 @@
 .postCreatePage {
+  min-height: 100%;
+  height: 100%;
   max-height: 100%;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  min-width: 100%;
+  width: 100%;
+  max-width: 100%;
 
-  padding: 10px 0;
+  display: grid;
+  grid-template-rows: auto;
+  justify-items: center;
 
-  overflow: hidden;
-}
-.postCreatePage > * {
-  flex-grow: 0;
+  overflow: hidden auto;
 }
 
-/* Title */
-.title {
-  min-height: 80px;
+.postForm {
+  grid-row: 1/2;
+
+  min-height: 100%;
   height: fit-content;
-  max-height: 150px;
 
   min-width: 95%;
   width: 95%;
   max-width: 95%;
 
+  display: grid;
+  grid-template-rows: auto auto auto 1fr auto;
+
+  overflow: hidden auto;
+}
+
+/* Title */
+.title {
+  grid-row: 1/2;
+
+  min-height: 80px;
+  height: fit-content;
+
   color: black;
   background-color: transparent;
 
-  border: 1px solid #0000003f;
+  border: 1px solid #00000048;
   border-radius: 12px;
 
   outline: none;
@@ -41,24 +54,28 @@
   font-size: 1.5rem;
   font-weight: 650;
 
-  padding: 0 5px;
+  margin: 10px 0 0 0;
+
+  padding: 5px;
 }
 
 .titleLen {
-  align-self: flex-end;
+  grid-row: 2/3;
 
-  margin-right: 15px;
-  margin-top: -10px;
+  justify-self: end;
 
   font-size: 0.8rem;
 }
 
 /* Select */
 .categorySelect {
+  grid-row: 3/4;
+
   align-self: flex-start;
 
   height: 30px;
-  min-width: 100px;
+
+  width: fit-content;
 
   appearance: base-select;
 
@@ -70,8 +87,7 @@
   border-radius: 8px;
 
   padding: 0 10px;
-
-  margin-left: 20px;
+  margin: 10px 0;
 }
 
 ::picker(select) {
@@ -122,20 +138,7 @@
   content: url("../../assets/icons/check.svg");
 }
 
-/* Desc */
-.desc {
-  flex: 1 0 auto;
-
-  min-width: 95%;
-  width: 95%;
-  max-width: 95%;
-
-  border: 1px solid #0000003f;
-  border-radius: 12px;
-
-  padding: 0 5px;
-}
-
+/* Title and desc combined */
 .title:focus,
 .desc:focus {
   border: 1px solid #000000be;
@@ -143,7 +146,9 @@
 
 /* Submit button styles */
 .submitBtn {
-  align-self: flex-end;
+  grid-row: 5/6;
+
+  justify-self: end;
 
   height: 30px;
   width: 100px;
@@ -153,7 +158,7 @@
   border: 1px solid orangered;
   border-radius: 8px;
 
-  margin-right: 15px;
+  margin: 10px 0;
 
   transition:
     color 0.3s ease,
@@ -167,4 +172,28 @@
 .submitBtn:active {
   color: white;
   background: rgba(255, 68, 0, 0.6);
+}
+
+/* Editor */
+
+.editor {
+  grid-row: 4/5;
+
+  min-height: 200px;
+
+  width: 100%;
+
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  border: none;
+}
+
+@media (max-width: 800px) {
+  ::picker(select) {
+    appearance: base-select;
+
+    height: 300px;
+    max-height: 300px;
+  }
 }
