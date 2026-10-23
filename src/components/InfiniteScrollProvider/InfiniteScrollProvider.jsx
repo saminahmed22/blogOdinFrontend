@@ -93,6 +93,8 @@ export default function InfiniteScrollProvider({
         content: { ...contentStateRef.current.content }, // Repopulates the content object with previously fetched content for infinite scroll scenario
       };
 
+      const result = response.result;
+
       // Set fetch initial status
       if (!response.success) {
         buildingObj = contentStateRef.current;
@@ -105,8 +107,6 @@ export default function InfiniteScrollProvider({
 
         return;
       }
-
-      const result = response.result;
 
       buildingObj.status = "success";
 
@@ -198,7 +198,6 @@ export default function InfiniteScrollProvider({
   //#region Effects
 
   // Initial Post fetch
-
   const initialDenyRef = useRef(initialDeny);
   useEffect(() => {
     if (initialDenyRef.current) {
