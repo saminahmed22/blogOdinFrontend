@@ -140,6 +140,7 @@ export default function Searchbar({ context }) {
           options={{
             scrollTopBtn: false,
             cardsSeparator: false,
+            listStyles: { display: "grid", gridTemplateColumns: "1fr" },
             customLoadingMessage: "Loading suggestions",
             customLoadingMoreMessage: "Loading more suggestions",
             customNoContentMessage: "Couldn't find any matching posts.",

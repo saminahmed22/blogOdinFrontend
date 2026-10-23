@@ -67,6 +67,7 @@
   display: none;
   align-items: start;
   justify-content: center;
+  grid-template-columns: 1fr;
 
   color: white;
   background-color: rgba(40, 40, 40, 0.635);
