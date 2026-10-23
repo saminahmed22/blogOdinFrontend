@@ -15,6 +15,7 @@ import { createPost } from "../../api/postsAPI";
 // Icon
 import addDraftIcon from "../../assets/icons/addDraft.svg";
 import addPostIcon from "../../assets/icons/addPost.svg";
+import loadingIcon from "../../assets/icons/loading.svg";
 
 export default function PostCreatePage() {
   // Context
@@ -26,6 +27,8 @@ export default function PostCreatePage() {
   const [selectBGColor, setSelectBGColor] = useState(
     categoryState?.categories?.[0]?.color || null,
   );
+  const [draftingStatus, setDraftingStatus] = useState("halt");
+  const [publishingStatus, setPublishingStatus] = useState("halt");
 
   // Ref
   const quillRef = useRef();
@@ -74,29 +77,43 @@ export default function PostCreatePage() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    const publishBtnClicked = clickedBtnRef.current === "publishBtn";
+
+    publishBtnClicked
+      ? setPublishingStatus("publishing")
+      : setDraftingStatus("drafting");
+
     const data = new FormData(e.target);
 
     const dataObj = Object.fromEntries(data);
 
     dataObj["ops"] = quillRef.current.editor.delta.ops;
     dataObj["plain"] = quillRef.current.getText();
-    dataObj["published"] = clickedBtnRef.current === "publishBtn";
+    dataObj["published"] = publishBtnClicked;
+
+    const formData = JSON.stringify(dataObj);
+
+    const response = await createPost(formData);
 
     console.log(dataObj);
 
-    // const formData = JSON.stringify(dataObj);
-
-    // const response = await createPost(formData);
-
-    // response.success ? handleSuccess(response.result) : handleFail(response);
+    response.success
+      ? handleSuccess(response.result, publishBtnClicked)
+      : handleFail(response, publishBtnClicked);
   };
 
-  const handleSuccess = (result) => {
+  const handleSuccess = (result, publishBtnClicked) => {
+    publishBtnClicked ? setPublishingStatus("halt") : setDraftingStatus("halt");
+
     console.log(result);
   };
 
-  const handleFail = (response) => {
-    console.log(response);
+  const handleFail = (result, publishBtnClicked) => {
+    publishBtnClicked
+      ? setPublishingStatus("error")
+      : setDraftingStatus("error");
+
+    console.log(result);
   };
 
   return (
@@ -116,7 +133,7 @@ export default function PostCreatePage() {
 
         <select
           className={styles.categorySelect}
-          name="category"
+          name="categoryId"
           id="categorySelect"
           onChange={handleSelect}
           style={{ backgroundColor: selectBGColor }}
@@ -154,9 +171,22 @@ export default function PostCreatePage() {
             onClick={() => {
               clickedBtnRef.current = "draftBtn";
             }}
+            disabled={
+              !(draftingStatus === "halt" || publishingStatus === "halt") &&
+              !(draftingStatus === "error" || publishingStatus === "error")
+            }
           >
-            <img src={addDraftIcon} alt="Add draft icon" />
-            Draft
+            {draftingStatus === "halt" || draftingStatus === "error" ? (
+              <>
+                <img src={addDraftIcon} alt="Add draft icon" />
+                {draftingStatus === "error" ? "Error" : "Draft"}
+              </>
+            ) : (
+              <>
+                <img src={loadingIcon} alt="Loading icon" />
+                Drafting
+              </>
+            )}
           </button>
 
           <button
@@ -166,9 +196,22 @@ export default function PostCreatePage() {
             onClick={() => {
               clickedBtnRef.current = "publishBtn";
             }}
+            disabled={
+              !(draftingStatus === "halt" || publishingStatus === "halt") &&
+              !(draftingStatus === "error" || publishingStatus === "error")
+            }
           >
-            <img src={addPostIcon} alt="Add post icon" />
-            Publish
+            {publishingStatus === "halt" || publishingStatus === "error" ? (
+              <>
+                <img src={addPostIcon} alt="Add post icon" />
+                {publishingStatus === "error" ? "Error" : "Publish"}
+              </>
+            ) : (
+              <>
+                <img src={loadingIcon} alt="Loading icon" />
+                Publishing
+              </>
+            )}
           </button>
         </div>
       </form>
