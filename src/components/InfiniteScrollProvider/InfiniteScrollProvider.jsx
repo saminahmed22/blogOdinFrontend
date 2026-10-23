@@ -132,7 +132,7 @@ export default function InfiniteScrollProvider({
         : undefined;
 
       // Update content object
-      if (result.length >= 1) {
+      if (result?.content?.length >= 1) {
         for (const item of result.content) {
           buildingObj.content[item.id] = item;
         }
