@@ -10,6 +10,11 @@
   grid-template-rows: 1fr auto;
 }
 
+.postContent {
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+}
+
 .secondary {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -52,6 +57,24 @@
 
 .postDetails span {
   font-weight: 500;
+}
+
+.category {
+  width: fit-content;
+
+  display: grid;
+  place-items: center;
+
+  background-color: rgba(240, 128, 128, 0.4);
+
+  border-radius: 12px;
+
+  padding: 0px 10px;
+  margin-left: 10px;
+
+  font-size: 0.8rem;
+
+  cursor: pointer;
 }
 
 .profilePicture {
@@ -132,7 +155,7 @@
 }
 
 .title {
-  font-size: 1.6rem;
+  font-size: clamp(1.5rem, 4vw, 1.8rem);
   font-weight: 600;
 
   margin: 10px 15px 5px 10px;
@@ -141,33 +164,12 @@
   hyphens: auto;
 }
 
-.category {
-  width: fit-content;
-
-  display: grid;
-  place-items: center;
-
-  background-color: rgba(240, 128, 128, 0.4);
-
-  border-radius: 12px;
-
-  padding: 0px 10px;
-  margin-left: 10px;
-
-  font-size: 0.8rem;
-
-  cursor: pointer;
-}
-
-.description {
-  min-height: 100px;
-
+.viewer {
+  min-width: 100%;
+  width: 100%;
   max-width: 100%;
-  line-break: loose;
 
-  font-size: 1.2rem;
-
-  margin: 25px 10px 40px 10px;
+  margin-top: 30px;
 }
 
 .scrollTopBtn {
@@ -226,10 +228,6 @@
     width: 50px;
 
     right: 25px;
-  }
-
-  .title {
-    font-size: 1.2rem;
   }
 
   .authorName {
