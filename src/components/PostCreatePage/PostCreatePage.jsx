@@ -10,8 +10,11 @@ import Editor from "./Editor";
 
 // API
 import { fetchCategories } from "../../api/categoriesAPI";
+import { createPost } from "../../api/postsAPI";
 
-// Icons
+// Icon
+import addDraftIcon from "../../assets/icons/addDraft.svg";
+import addPostIcon from "../../assets/icons/addPost.svg";
 
 export default function PostCreatePage() {
   // Context
@@ -21,11 +24,12 @@ export default function PostCreatePage() {
   // States
   const [titleLen, setTitleLen] = useState(0);
   const [selectBGColor, setSelectBGColor] = useState(
-    categoryState?.categories[0]?.color,
+    categoryState?.categories?.[0]?.color || null,
   );
 
   // Ref
   const quillRef = useRef();
+  const clickedBtnRef = useRef();
 
   // Effects
   useEffect(() => {
@@ -43,10 +47,10 @@ export default function PostCreatePage() {
       });
 
       setSelectBGColor(
-        response?.success
-          ? response?.result?.content?.[0]?.color
-          : "transparent",
+        response?.success ? response?.result?.content?.[0]?.color : null,
       );
+
+      categoryStateRef.current = response?.success ? "success" : "error";
     };
 
     fetchFunc();
@@ -67,14 +71,32 @@ export default function PostCreatePage() {
     setSelectBGColor(bgColor || "transparent");
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
 
     const data = new FormData(e.target);
 
     const dataObj = Object.fromEntries(data);
 
-    console.log(quillRef.current.editor.delta.ops);
+    dataObj["ops"] = quillRef.current.editor.delta.ops;
+    dataObj["plain"] = quillRef.current.getText();
+    dataObj["published"] = clickedBtnRef.current === "publishBtn";
+
+    console.log(dataObj);
+
+    // const formData = JSON.stringify(dataObj);
+
+    // const response = await createPost(formData);
+
+    // response.success ? handleSuccess(response.result) : handleFail(response);
+  };
+
+  const handleSuccess = (result) => {
+    console.log(result);
+  };
+
+  const handleFail = (response) => {
+    console.log(response);
   };
 
   return (
@@ -99,23 +121,56 @@ export default function PostCreatePage() {
           onChange={handleSelect}
           style={{ backgroundColor: selectBGColor }}
         >
-          {categoryState?.categories?.map((category) => (
+          {selectBGColor ? (
+            categoryState?.categories?.map((category) => (
+              <option
+                className={styles.categoryOption}
+                style={{ backgroundColor: category.color }}
+                value={category.id}
+                key={`Category_Option_${category.id}`}
+              >
+                {category.name}
+              </option>
+            ))
+          ) : (
             <option
               className={styles.categoryOption}
-              style={{ backgroundColor: category.color }}
-              value={category.id}
-              key={`Category_Option_${category.id}}`}
+              style={{ backgroundColor: "gray" }}
+              value={null}
+              key={`Category_Option_error`}
             >
-              {category.name}
+              Error
             </option>
-          ))}
+          )}
         </select>
 
-        <Editor ref={quillRef} />
+        <Editor ref={quillRef} readOnly={true} />
 
-        <button className={styles.submitBtn} type="submit">
-          Submit
-        </button>
+        <div className={styles.buttonContainer}>
+          <button
+            className={`${styles.draftBtn} ${styles.actBtn}`}
+            type="submit"
+            id="draftBtn"
+            onClick={() => {
+              clickedBtnRef.current = "draftBtn";
+            }}
+          >
+            <img src={addDraftIcon} alt="Add draft icon" />
+            Draft
+          </button>
+
+          <button
+            className={`${styles.submitBtn} ${styles.actBtn}`}
+            type="submit"
+            id="publishBtn"
+            onClick={() => {
+              clickedBtnRef.current = "publishBtn";
+            }}
+          >
+            <img src={addPostIcon} alt="Add post icon" />
+            Publish
+          </button>
+        </div>
       </form>
     </div>
   );
