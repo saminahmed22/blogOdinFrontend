@@ -72,10 +72,8 @@ export default function PostCard({
     }
   };
 
-  const getPostPublishStatusIcon = () => {};
-
   const getShortDesc = () => {
-    let text = data?.description;
+    let text = data?.plain;
 
     if (text?.length >= 500) {
       text = text.substring(0, 500);
@@ -140,8 +138,6 @@ export default function PostCard({
             <p className={styles.postDate} title={getReadableDateLong()}>
               {getReadableDate()}
             </p>
-
-            {getPostPublishStatusIcon()}
           </div>
         </div>
 
