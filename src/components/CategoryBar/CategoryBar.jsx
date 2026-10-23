@@ -133,9 +133,11 @@ export default function CategoryBar() {
 
       case "error":
         return (
-          <div className={styles.messageContainer}>
-            <p className={styles.message}>Failed to fetch categories</p>
-          </div>
+          <LoadingMessage
+            message={"Failed to fetch categories"}
+            customStylings={{ gridColumn: "1/4" }}
+            hideLoaderIcon={true}
+          />
         );
     }
   };
