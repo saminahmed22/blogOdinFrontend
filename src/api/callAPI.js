@@ -5,7 +5,7 @@ export default async function callAPI({
   body,
   authRequired = true,
 }) {
-  const url = new URL("http://192.168.0.150:3000/api");
+  const url = new URL("https://blogodinbackend.onrender.com/api");
 
   //   Appends paths for specific routes at the end
   for (const path of paths) {
