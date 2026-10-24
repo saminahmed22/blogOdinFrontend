@@ -41,6 +41,8 @@
   text-indent: 10px;
 
   anchor-name: --search-box;
+
+  font-family: inherit;
 }
 
 .searchButton {
