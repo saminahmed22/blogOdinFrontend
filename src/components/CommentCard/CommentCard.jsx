@@ -204,7 +204,6 @@ export default function CommentCard({
           <div className={styles.actions}>
             {comment?.author?.id === userData?.personalData?.id && (
               <>
-                {" "}
                 <button
                   className={styles.submitBtn}
                   title="Submit edit comment"
@@ -226,7 +225,7 @@ export default function CommentCard({
                   disabled={submitStatus === "submitting"}
                 >
                   <img src={closeIcon} alt="Cancle edit icon" />
-                </button>{" "}
+                </button>
               </>
             )}
           </div>
