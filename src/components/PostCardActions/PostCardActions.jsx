@@ -115,7 +115,7 @@ export default function PostCardActions({
 
   return (
     <div className={styles.postCardActions}>
-      {!publishStaus && (
+      {!publishStaus && userId === data?.author?.id && (
         <button
           className={`${styles.publishBtn} ${styles.postActBtn}`}
           title="Publish this post"
