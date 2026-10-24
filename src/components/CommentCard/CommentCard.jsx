@@ -6,6 +6,9 @@ import { useNavigate, useOutletContext, useParams } from "react-router";
 // API
 import { editComment, deleteComment } from "../../api/commentsAPI";
 
+// Helpers
+import { getDate } from "../../helpers/getDate";
+
 // Icons
 import loadingIcon from "../../assets/icons/loading.svg";
 import editIcon from "../../assets/icons/edit.svg";
@@ -67,27 +70,6 @@ export default function CommentCard({
         );
       }
     }
-  };
-
-  const getReadableDate = (date) => {
-    const options = { year: "numeric", month: "long", day: "numeric" };
-
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
-
-  const getReadableDateLong = () => {
-    const isoString = comment.edited_at;
-
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-    };
-
-    return new Date(isoString).toLocaleString(undefined, options);
   };
 
   const handleEditBtnClick = (e) => {
@@ -379,8 +361,11 @@ export default function CommentCard({
               )}
             </div>
 
-            <p className={styles.createDate} title={getReadableDateLong()}>
-              {getReadableDate(comment.edited_at)}
+            <p
+              className={styles.createDate}
+              title={getDate({ isoString: comment.edited_at, longDate: true })}
+            >
+              {getDate({ isoString: comment.edited_at })}
               {comment.created_at !== comment.edited_at && " (edited)"}
             </p>
           </div>

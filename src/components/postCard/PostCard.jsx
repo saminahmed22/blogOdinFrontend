@@ -7,6 +7,9 @@ import { useNavigate, useParams, useOutletContext } from "react-router";
 // Components
 import PostCardActions from "../PostCardActions/PostCardActions";
 
+// Helpers
+import { getDate } from "../../helpers/getDate";
+
 export default function PostCard({
   data,
   customStyles = {},
@@ -84,29 +87,6 @@ export default function PostCard({
     return text;
   };
 
-  const getReadableDateLong = () => {
-    const isoString = data?.created_at;
-
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-    };
-
-    return new Date(isoString).toLocaleString(undefined, options);
-  };
-
-  const getReadableDate = () => {
-    const isoString = data?.created_at;
-
-    const options = { year: "numeric", month: "long", day: "numeric" };
-
-    return new Date(isoString).toLocaleDateString(undefined, options);
-  };
-
   return (
     <div
       className={styles.postCard}
@@ -135,8 +115,11 @@ export default function PostCard({
                 </span>
               </span>
             </p>
-            <p className={styles.postDate} title={getReadableDateLong()}>
-              {getReadableDate()}
+            <p
+              className={styles.postDate}
+              title={getDate({ isoString: data?.created_at, longDate: true })}
+            >
+              {getDate({ isoString: data?.created_at })}
             </p>
           </div>
         </div>

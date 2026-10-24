@@ -11,6 +11,9 @@ import Viewer from "./quillViewer";
 // API
 import { fetchPost } from "../../api/postsAPI";
 
+// Helpers
+import { getDate } from "../../helpers/getDate";
+
 // Icons
 import upIcon from "../../assets/icons/up.svg";
 import loadingIcon from "../../assets/icons/loading.svg";
@@ -156,29 +159,6 @@ export default function PostPage() {
     }
   };
 
-  const getReadableDate = (date) => {
-    if (!date) return "";
-
-    const options = { year: "numeric", month: "long", day: "numeric" };
-
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
-
-  const getReadableExtDate = (date) => {
-    if (!date) return "";
-
-    const options = {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      weekday: "long",
-    };
-
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
-
   const handleProfileClick = (e) => {
     e.stopPropagation();
 
@@ -205,8 +185,17 @@ export default function PostPage() {
     ) {
       return (
         <p className={styles.postDate}>
-          <span>Updated at:</span>{" "}
-          {getReadableExtDate(post?.content?.[postId]?.edited_at)}
+          <span
+            title={getDate({
+              isoString: post?.content?.[postId]?.edited_at,
+              longDate: true,
+            })}
+          >
+            Updated at:
+          </span>{" "}
+          {getDate({
+            isoString: post?.content?.[postId]?.edited_at,
+          })}
         </p>
       );
     }
@@ -249,17 +238,24 @@ export default function PostPage() {
 
                   <p className={styles.authorMemberDate}>
                     <span>Member since:</span>{" "}
-                    {getReadableDate(
-                      post?.content?.[postId]?.author?.joined_at,
-                    )}
+                    {getDate({
+                      isoString: post?.content?.[postId]?.author?.joined_at,
+                    })}
                   </p>
                 </div>
               </div>
 
               <div className={styles.postDetails}>
                 <p className={styles.postDate}>
-                  <span>Published at:</span>{" "}
-                  {getReadableExtDate(post?.content?.[postId]?.created_at)}
+                  <span
+                    title={getDate({
+                      isoString: post?.content?.[postId]?.created_at,
+                      longDate: true,
+                    })}
+                  >
+                    Published at:
+                  </span>{" "}
+                  {getDate({ isoString: post?.content?.[postId]?.created_at })}
                 </p>
 
                 {getEditedDate()}

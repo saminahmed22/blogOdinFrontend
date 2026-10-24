@@ -13,6 +13,9 @@ import LoadingMessage from "../LoadingMessage/LoadingMessage";
 // API
 import { fetchUserData } from "../../api/userAPI";
 
+// Helpers
+import { getDate } from "../../helpers/getDate";
+
 // Icons
 import editIcon from "../../assets/icons/edit.svg";
 
@@ -126,13 +129,6 @@ export default function ProfilePage() {
     }
   }
 
-  const getReadableDate = (date) => {
-    if (!date) return "";
-    const options = { year: "numeric", month: "long", day: "numeric" };
-
-    return new Date(date).toLocaleDateString(undefined, options);
-  };
-
   const getHeader = () => {
     return (
       <h2 className={styles.contentBodyHeader}>
@@ -203,7 +199,7 @@ export default function ProfilePage() {
 
             <p className={styles.joined_at}>
               <span style={{ fontWeight: 500 }}>Member since:</span>{" "}
-              {getReadableDate(targetUser?.joined_at)}
+              {getDate({ isoString: targetUser?.joined_at })}
             </p>
           </div>
 
