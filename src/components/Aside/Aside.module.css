@@ -193,7 +193,12 @@
     }
 
     .navBtn {
+      min-width: 100%;
       max-width: 100%;
+
+      display: grid;
+      place-items: center;
+      grid-template-columns: 1fr;
 
       span {
         display: none;
@@ -210,12 +215,25 @@
 
       display: block;
 
-      .loginBtnLink,
+      .loginBtnLink {
+        display: grid;
+        grid-template-columns: 1fr;
+        place-items: center;
+      }
+
+      .profileBtn {
+        grid-column: 1/2;
+
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
       .loginBtn,
       .profileBtn {
         width: 100%;
 
-        display: block;
+        display: grid;
+        place-items: center;
       }
 
       button {
