@@ -1,6 +1,9 @@
 .searchCard {
   height: 50px;
 
+  min-width: 100%;
+  max-width: 100%;
+
   border-bottom: 1px solid #000;
 
   display: flex;
@@ -11,8 +14,6 @@
 
   text-decoration: none;
   color: white;
-
-  padding-left: 10px;
 
   transition: background-color 0.3s ease;
 }
@@ -31,6 +32,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  margin-left: 10px;
 }
 
 .secondary {
@@ -40,9 +43,13 @@
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 5px;
+
+  margin-left: 10px;
 }
 
 .author {
+  grid-column: 1/2;
+
   min-width: fit-content;
 
   white-space: nowrap;
@@ -53,6 +60,8 @@
   font-weight: 550;
 }
 .desc {
+  grid-column: 2/3;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
