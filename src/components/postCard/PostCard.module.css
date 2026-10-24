@@ -159,6 +159,8 @@
   font-size: 0.9rem;
 
   padding: 0 0 10px 5px;
+
+  word-wrap: break-word;
 }
 
 @media (max-width: 800px) {
