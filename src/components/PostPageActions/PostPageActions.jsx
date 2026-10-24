@@ -209,6 +209,12 @@ export default function PostPageActions({
     }));
   };
 
+  const handleEditBtnClick = (e) => {
+    e.stopPropagation();
+
+    navigator(`/edit/${postId}`);
+  };
+
   const handlePublish = (id) => {
     setContentState((prev) => ({
       ...prev,
@@ -336,6 +342,7 @@ export default function PostPageActions({
             className={`${styles.pageActBtn}  ${styles.editBtn} `}
             title="Edit"
             aria-label="Edit"
+            onClick={handleEditBtnClick}
           >
             <img className="invertImg" src={editIcon} alt="Edit Icon" />
           </button>

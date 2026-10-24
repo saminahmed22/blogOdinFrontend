@@ -2,6 +2,7 @@ import styles from "./PostCardActions.module.css";
 
 // Hooks
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 // API
 import {
@@ -31,6 +32,9 @@ export default function PostCardActions({
   isBookmarkPage = false,
   isDraftPage = false,
 }) {
+  const navigator = useNavigate();
+
+  // States
   const [publishingStaus, setPublishingStatus] = useState("halt");
   const [bookmarkingStatus, setBookmarkingStatus] = useState("halt");
   const [deletingStatus, setDeletingStatus] = useState("halt");
@@ -86,6 +90,12 @@ export default function PostCardActions({
     if (isBookmarkPage) {
       handleDelete(data.id);
     }
+  };
+
+  const handleEditBtnClick = (e) => {
+    e.stopPropagation();
+
+    navigator(`/edit/${data?.id}`);
   };
 
   const handleDeleteBtnClick = async (e) => {
@@ -145,6 +155,7 @@ export default function PostCardActions({
             className={`${styles.postActBtn} ${styles.editBtn}`}
             title="Edit this post"
             aria-label="Edit this post"
+            onClick={handleEditBtnClick}
           >
             <img src={editIcon} alt="Edit icon" />
           </button>
