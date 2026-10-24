@@ -201,8 +201,7 @@ export default function PostPage() {
 
   const getEditedDate = () => {
     if (
-      !post?.content?.[postId]?.created_at !==
-      post?.content?.[postId]?.edited_at
+      post?.content?.[postId]?.created_at !== post?.content?.[postId]?.edited_at
     ) {
       return (
         <p className={styles.postDate}>
@@ -290,13 +289,6 @@ export default function PostPage() {
               />
             )}
           </div>
-
-          {/* <article
-            className={styles.description}
-            dangerouslySetInnerHTML={{
-              __html: ,
-            }}
-          ></article> */}
 
           <Viewer
             ref={viewerRef}
