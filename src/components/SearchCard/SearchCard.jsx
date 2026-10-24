@@ -17,7 +17,7 @@ export default function SearchCard({ data }) {
         <p
           className={styles.author}
         >{`${data.author.firstName} ${data.author.lastName}:`}</p>
-        <p className={styles.desc}>{data.description}</p>
+        <p className={styles.desc}>{data.plain}</p>
       </div>
     </div>
   );
