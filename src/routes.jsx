@@ -59,6 +59,8 @@ export const routes = [
       { path: "search", element: <SearchPage /> },
 
       { path: "create", element: <PostCreatePage /> },
+
+      { path: "edit/:postId", element: <PostCreatePage editMode={true} /> },
     ],
   },
 
