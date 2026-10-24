@@ -185,6 +185,16 @@ export default function PostCreatePage({ editMode = false }) {
     dataObj["plain"] = quillRef.current.getText();
     dataObj["published"] = publishBtnClicked;
 
+    const status = validateSubmit(dataObj.title, dataObj.plain);
+
+    if (!status) {
+      publishBtnClicked
+        ? setPublishingStatus("error")
+        : setDraftingStatus("error");
+
+      return;
+    }
+
     if (editMode) {
       dataObj["postId"] = postId;
     }
@@ -251,6 +261,31 @@ export default function PostCreatePage({ editMode = false }) {
     } else {
       setValidationStatus("error");
     }
+  };
+
+  const validateSubmit = (title, desc) => {
+    let status = true;
+    const errObj = { title: true, desc: true };
+
+    if (title?.length < 1) {
+      status = false;
+
+      errObj.title = false;
+    } else if (title?.length > 200) {
+      status = false;
+
+      errObj.title = "len";
+    }
+
+    if (desc === "\n") {
+      status = false;
+
+      errObj.desc = false;
+    }
+
+    setValidationStatus(errObj);
+
+    return status;
   };
 
   const getContent = () => {
