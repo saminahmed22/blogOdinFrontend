@@ -184,15 +184,14 @@ export default function PostPage() {
       post?.content?.[postId]?.created_at !== post?.content?.[postId]?.edited_at
     ) {
       return (
-        <p className={styles.postDate}>
-          <span
-            title={getDate({
-              isoString: post?.content?.[postId]?.edited_at,
-              longDate: true,
-            })}
-          >
-            Updated at:
-          </span>{" "}
+        <p
+          className={styles.postDate}
+          title={getDate({
+            isoString: post?.content?.[postId]?.edited_at,
+            longDate: true,
+          })}
+        >
+          <span>Updated at:</span>{" "}
           {getDate({
             isoString: post?.content?.[postId]?.edited_at,
           })}
@@ -246,15 +245,14 @@ export default function PostPage() {
               </div>
 
               <div className={styles.postDetails}>
-                <p className={styles.postDate}>
-                  <span
-                    title={getDate({
-                      isoString: post?.content?.[postId]?.created_at,
-                      longDate: true,
-                    })}
-                  >
-                    Published at:
-                  </span>{" "}
+                <p
+                  className={styles.postDate}
+                  title={getDate({
+                    isoString: post?.content?.[postId]?.created_at,
+                    longDate: true,
+                  })}
+                >
+                  <span>Published at:</span>{" "}
                   {getDate({ isoString: post?.content?.[postId]?.created_at })}
                 </p>
 
