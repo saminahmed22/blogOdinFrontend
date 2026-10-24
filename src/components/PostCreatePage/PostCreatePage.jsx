@@ -3,24 +3,35 @@ import "quill/dist/quill.snow.css";
 
 // Hooks
 import { useState, useEffect, useRef } from "react";
-import { useOutletContext } from "react-router";
+import { useOutletContext, useNavigate, useParams } from "react-router";
 
 // Components
 import Editor from "./Editor";
 
 // API
 import { fetchCategories } from "../../api/categoriesAPI";
-import { createPost } from "../../api/postsAPI";
+import { createPost, editPost, fetchPost } from "../../api/postsAPI";
 
 // Icon
 import addDraftIcon from "../../assets/icons/addDraft.svg";
 import addPostIcon from "../../assets/icons/addPost.svg";
 import loadingIcon from "../../assets/icons/loading.svg";
+import LoadingMessage from "../LoadingMessage/LoadingMessage";
 
-export default function PostCreatePage() {
+export default function PostCreatePage({ editMode = false }) {
+  const navigator = useNavigate();
+  const { postId } = useParams();
+
   // Context
-  const { categoryState, setCategoryState, categoryStateRef } =
-    useOutletContext();
+  const {
+    userData,
+    categoryState,
+    setCategoryState,
+    categoryStateRef,
+    feedPosts,
+    setFeedPosts,
+    searchPosts,
+  } = useOutletContext();
 
   // States
   const [titleLen, setTitleLen] = useState(0);
@@ -29,6 +40,16 @@ export default function PostCreatePage() {
   );
   const [draftingStatus, setDraftingStatus] = useState("halt");
   const [publishingStatus, setPublishingStatus] = useState("halt");
+  const [validationStatus, setValidationStatus] = useState({
+    title: true,
+    desc: true,
+  });
+
+  const [fetchStatus, setFetchStatus] = useState(
+    editMode ? "fetching" : "success",
+  );
+  const [defaultTitle, setDefaultTitle] = useState(null);
+  const [defaultDesc, setDefaultDesc] = useState(null);
 
   // Ref
   const quillRef = useRef();
@@ -59,6 +80,77 @@ export default function PostCreatePage() {
     fetchFunc();
   }, [setCategoryState, categoryStateRef]);
 
+  // set default values on editMode=true
+  useEffect(() => {
+    if (!editMode || !postId) return;
+
+    const redirect = (postObj) => {
+      if (userData?.personalData?.id !== postObj?.author?.id) {
+        navigator("/");
+      }
+    };
+
+    const getPost = async () => {
+      let postObj;
+
+      postObj = feedPosts?.content?.[postId];
+      if (postObj) {
+        setFetchStatus("success");
+
+        redirect(postObj);
+
+        setDefaultTitle(postObj.title);
+        setDefaultDesc(postObj.ops);
+
+        return;
+      }
+
+      postObj = searchPosts?.content?.[postId];
+      if (postObj) {
+        setFetchStatus("success");
+
+        redirect(postObj);
+
+        setDefaultTitle(postObj.title);
+        setDefaultDesc(postObj.ops);
+
+        return;
+      }
+
+      const response = await fetchPost(postId);
+
+      if (response.success) {
+        if (response?.result?.content) {
+          setFetchStatus("success");
+
+          redirect(response?.result?.content);
+
+          setDefaultTitle(response?.result?.content?.title);
+          setDefaultDesc(response?.result?.content?.ops);
+
+          return;
+        } else {
+          setFetchStatus("noPost");
+
+          return;
+        }
+      } else {
+        setFetchStatus("error");
+
+        return;
+      }
+    };
+
+    getPost();
+  }, [
+    editMode,
+    postId,
+    feedPosts?.content,
+    searchPosts?.content,
+    navigator,
+    userData?.personalData?.id,
+  ]);
+
   // Handler
   const handleTitleInput = (e) => {
     const len = e?.target?.value?.length;
@@ -83,6 +175,8 @@ export default function PostCreatePage() {
       ? setPublishingStatus("publishing")
       : setDraftingStatus("drafting");
 
+    setValidationStatus({ title: true, desc: true });
+
     const data = new FormData(e.target);
 
     const dataObj = Object.fromEntries(data);
@@ -91,11 +185,15 @@ export default function PostCreatePage() {
     dataObj["plain"] = quillRef.current.getText();
     dataObj["published"] = publishBtnClicked;
 
+    if (editMode) {
+      dataObj["postId"] = postId;
+    }
+
     const formData = JSON.stringify(dataObj);
 
-    const response = await createPost(formData);
-
-    console.log(dataObj);
+    const response = editMode
+      ? await editPost(formData)
+      : await createPost(formData);
 
     response.success
       ? handleSuccess(response.result, publishBtnClicked)
@@ -106,6 +204,25 @@ export default function PostCreatePage() {
     publishBtnClicked ? setPublishingStatus("halt") : setDraftingStatus("halt");
 
     console.log(result);
+
+    setFeedPosts((prev) => {
+      const { [result.content.id]: _old, ...others } = prev.content;
+
+      return {
+        ...prev,
+        config: {
+          ...prev.config,
+          totalContentFetched:
+            prev.config.totalContentFetched + (editMode ? 0 : 1),
+        },
+        content: {
+          [result.content.id]: { ...result.content },
+          ...others,
+        },
+      };
+    });
+
+    navigator(`/posts/${result.content.id}`);
   };
 
   const handleFail = (result, publishBtnClicked) => {
@@ -113,108 +230,190 @@ export default function PostCreatePage() {
       ? setPublishingStatus("error")
       : setDraftingStatus("error");
 
-    console.log(result);
+    const errObj = { title: true, desc: true };
+
+    if (result.validationErrors) {
+      result.validationErrors.map((err) => {
+        if (err.path === "title") {
+          if (err.msg === "titleLen") {
+            errObj.title = "len";
+          } else {
+            errObj.title = false;
+          }
+        } else if (err.path === "plain") {
+          errObj.desc = false;
+        }
+      });
+
+      setValidationStatus(errObj);
+    } else if (result?.error === "unauthorize") {
+      setValidationStatus("unauthorize");
+    } else {
+      setValidationStatus("error");
+    }
   };
 
-  return (
-    <div className={styles.postCreatePage}>
-      <form onSubmit={handleFormSubmit} className={styles.postForm}>
-        <textarea
-          className={styles.title}
-          name="title"
-          id="title"
-          aria-label="Give your post a title"
-          title="Give your post a title"
-          placeholder="Give your post a title"
-          onChange={handleTitleInput}
-          maxLength={200}
-        ></textarea>
-        <p className={styles.titleLen}>{titleLen}/200</p>
+  const getContent = () => {
+    switch (fetchStatus) {
+      case "success":
+        return (
+          <form onSubmit={handleFormSubmit} className={styles.postForm}>
+            <textarea
+              className={styles.title}
+              name="title"
+              id="title"
+              aria-label="Give your post a title"
+              title="Give your post a title"
+              placeholder="Give your post a title"
+              onChange={handleTitleInput}
+              maxLength={200}
+              defaultValue={defaultTitle || null}
+            ></textarea>
 
-        <select
-          className={styles.categorySelect}
-          name="categoryId"
-          id="categorySelect"
-          onChange={handleSelect}
-          style={{ backgroundColor: selectBGColor }}
-        >
-          {selectBGColor ? (
-            categoryState?.categories?.map((category) => (
-              <option
-                className={styles.categoryOption}
-                style={{ backgroundColor: category.color }}
-                value={category.id}
-                key={`Category_Option_${category.id}`}
+            <div className={styles.primary}>
+              {(!validationStatus.title ||
+                validationStatus.title === "len" ||
+                validationStatus === "error" ||
+                validationStatus === "unauthorize") && (
+                <div className={styles.messageArea}>
+                  <div className={styles.errorMessageContainer}>
+                    <p className={styles.errorMessage}>
+                      {validationStatus === "error"
+                        ? "An error occured, please try again."
+                        : validationStatus === "unauthorize"
+                          ? "You are not authorized to make this action."
+                          : validationStatus.title === "len"
+                            ? "Maximum title length is 200 characters."
+                            : "Please enter a title."}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              <p className={styles.titleLen}>{titleLen}/200</p>
+            </div>
+
+            <div className={styles.secondary}>
+              <select
+                className={styles.categorySelect}
+                name="categoryId"
+                id="categorySelect"
+                onChange={handleSelect}
+                style={{ backgroundColor: selectBGColor }}
               >
-                {category.name}
-              </option>
-            ))
-          ) : (
-            <option
-              className={styles.categoryOption}
-              style={{ backgroundColor: "gray" }}
-              value={null}
-              key={`Category_Option_error`}
-            >
-              Error
-            </option>
-          )}
-        </select>
+                {selectBGColor ? (
+                  categoryState?.categories?.map((category) => (
+                    <option
+                      className={styles.categoryOption}
+                      style={{ backgroundColor: category.color }}
+                      value={category.id}
+                      key={`Category_Option_${category.id}`}
+                    >
+                      {category.name}
+                    </option>
+                  ))
+                ) : (
+                  <option
+                    className={styles.categoryOption}
+                    style={{ backgroundColor: "gray" }}
+                    value={null}
+                    key={`Category_Option_error`}
+                  >
+                    Error
+                  </option>
+                )}
+              </select>
 
-        <Editor ref={quillRef} readOnly={true} />
+              {(!validationStatus.desc ||
+                validationStatus === "error" ||
+                validationStatus === "unauthorize") && (
+                <div className={styles.messageArea}>
+                  <div className={styles.errorMessageContainer}>
+                    <p className={styles.errorMessage}>
+                      {validationStatus === "error"
+                        ? "An error occured, please try again."
+                        : validationStatus === "unauthorize"
+                          ? "You are not authorized to make this action."
+                          : "Please enter a description."}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
 
-        <div className={styles.buttonContainer}>
-          <button
-            className={`${styles.draftBtn} ${styles.actBtn}`}
-            type="submit"
-            id="draftBtn"
-            onClick={() => {
-              clickedBtnRef.current = "draftBtn";
-            }}
-            disabled={
-              !(draftingStatus === "halt" || publishingStatus === "halt") &&
-              !(draftingStatus === "error" || publishingStatus === "error")
-            }
-          >
-            {draftingStatus === "halt" || draftingStatus === "error" ? (
-              <>
-                <img src={addDraftIcon} alt="Add draft icon" />
-                {draftingStatus === "error" ? "Error" : "Draft"}
-              </>
-            ) : (
-              <>
-                <img src={loadingIcon} alt="Loading icon" />
-                Drafting
-              </>
-            )}
-          </button>
+            <Editor ref={quillRef} defaultValue={defaultDesc || null} />
 
-          <button
-            className={`${styles.submitBtn} ${styles.actBtn}`}
-            type="submit"
-            id="publishBtn"
-            onClick={() => {
-              clickedBtnRef.current = "publishBtn";
-            }}
-            disabled={
-              !(draftingStatus === "halt" || publishingStatus === "halt") &&
-              !(draftingStatus === "error" || publishingStatus === "error")
-            }
-          >
-            {publishingStatus === "halt" || publishingStatus === "error" ? (
-              <>
-                <img src={addPostIcon} alt="Add post icon" />
-                {publishingStatus === "error" ? "Error" : "Publish"}
-              </>
-            ) : (
-              <>
-                <img src={loadingIcon} alt="Loading icon" />
-                Publishing
-              </>
-            )}
-          </button>
-        </div>
-      </form>
-    </div>
-  );
+            <div className={styles.buttonContainer}>
+              <button
+                className={`${styles.draftBtn} ${styles.actBtn}`}
+                type="submit"
+                id="draftBtn"
+                onClick={() => {
+                  clickedBtnRef.current = "draftBtn";
+                }}
+                disabled={
+                  !(draftingStatus === "halt" || publishingStatus === "halt") &&
+                  !(draftingStatus === "error" || publishingStatus === "error")
+                }
+              >
+                {draftingStatus === "halt" || draftingStatus === "error" ? (
+                  <>
+                    <img src={addDraftIcon} alt="Add draft icon" />
+                    {draftingStatus === "error" ? "Error" : "Draft"}
+                  </>
+                ) : (
+                  <>
+                    <img src={loadingIcon} alt="Loading icon" />
+                    Drafting
+                  </>
+                )}
+              </button>
+
+              <button
+                className={`${styles.submitBtn} ${styles.actBtn}`}
+                type="submit"
+                id="publishBtn"
+                onClick={() => {
+                  clickedBtnRef.current = "publishBtn";
+                }}
+                disabled={
+                  !(draftingStatus === "halt" || publishingStatus === "halt") &&
+                  !(draftingStatus === "error" || publishingStatus === "error")
+                }
+              >
+                {publishingStatus === "halt" || publishingStatus === "error" ? (
+                  <>
+                    <img src={addPostIcon} alt="Add post icon" />
+                    {publishingStatus === "error" ? "Error" : "Publish"}
+                  </>
+                ) : (
+                  <>
+                    <img src={loadingIcon} alt="Loading icon" />
+                    Publishing
+                  </>
+                )}
+              </button>
+            </div>
+          </form>
+        );
+
+      case "fetching":
+        return <LoadingMessage message={"Loading your post"} />;
+
+      case "noPost":
+        return (
+          <LoadingMessage
+            hideLoaderIcon={true}
+            message={`No post found with the ID: ${postId}`}
+          />
+        );
+
+      case "error":
+        return (
+          <LoadingMessage hideLoaderIcon={true} message={"An error occured."} />
+        );
+    }
+  };
+
+  return <div className={styles.postCreatePage}>{getContent()}</div>;
 }
