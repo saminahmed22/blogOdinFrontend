@@ -160,7 +160,7 @@
 
   margin: 10px 15px 5px 10px;
 
-  word-break: normal;
+  word-break: break-all;
   hyphens: auto;
 }
 
