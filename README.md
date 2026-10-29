@@ -16,7 +16,7 @@ Couple of options in the sidebar is filler options, hinted by the "Filler option
 To access most of the features above, you'll need to login/register. If you're feeling lazy about it, just use one of the dummy accounts there,
 the username is always the first name in lower case, and the password is "Hello" for every account.
 
-The repo contains a .vscode config for automatically launching the terminal and run build scrips. But to use it you'll need the extension called "Terminal Keeper" by Nguyen Ngoc Long. Alternatively you can simply run,
+To build you can simply run:
 
 ```
 npm run build && npm run dev
