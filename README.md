@@ -1,4 +1,5 @@
-#QuoteFork
+# QuoteFork
+
 A simple blogging site, part of the NodeJS course of The Odin Project's curriculum.
 
 It contains features such as:
