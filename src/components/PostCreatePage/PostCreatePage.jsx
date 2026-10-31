@@ -48,8 +48,8 @@ export default function PostCreatePage({ editMode = false }) {
   const [fetchStatus, setFetchStatus] = useState(
     editMode ? "fetching" : "success",
   );
-  const [defaultTitle, setDefaultTitle] = useState(null);
-  const [defaultDesc, setDefaultDesc] = useState(null);
+
+  const [defaultPost, setDefaultPost] = useState({});
 
   // Ref
   const quillRef = useRef();
@@ -99,8 +99,13 @@ export default function PostCreatePage({ editMode = false }) {
 
         redirect(postObj);
 
-        setDefaultTitle(postObj.title);
-        setDefaultDesc(postObj.ops);
+        setDefaultPost({
+          title: postObj.title,
+          desc: postObj.ops,
+          category: postObj.categoryId,
+        });
+
+        setSelectBGColor(postObj?.category?.color);
 
         return;
       }
@@ -111,8 +116,13 @@ export default function PostCreatePage({ editMode = false }) {
 
         redirect(postObj);
 
-        setDefaultTitle(postObj.title);
-        setDefaultDesc(postObj.ops);
+        setDefaultPost({
+          title: postObj.title,
+          desc: postObj.ops,
+          category: postObj.categoryId,
+        });
+
+        setSelectBGColor(postObj?.category?.color);
 
         return;
       }
@@ -125,8 +135,13 @@ export default function PostCreatePage({ editMode = false }) {
 
           redirect(response?.result?.content);
 
-          setDefaultTitle(response?.result?.content?.title);
-          setDefaultDesc(response?.result?.content?.ops);
+          setDefaultPost({
+            title: response?.result?.content?.title,
+            desc: response?.result?.content?.ops,
+            category: response?.result?.content?.categoryId,
+          });
+
+          setSelectBGColor(postObj?.category?.color);
 
           return;
         } else {
@@ -302,7 +317,7 @@ export default function PostCreatePage({ editMode = false }) {
               placeholder="Give your post a title"
               onChange={handleTitleInput}
               maxLength={200}
-              defaultValue={defaultTitle || null}
+              defaultValue={defaultPost.title || null}
             ></textarea>
 
             <div className={styles.primary}>
@@ -343,6 +358,7 @@ export default function PostCreatePage({ editMode = false }) {
                       style={{ backgroundColor: category.color }}
                       value={category.id}
                       key={`Category_Option_${category.id}`}
+                      selected={category.id === defaultPost.category}
                     >
                       {category.name}
                     </option>
@@ -376,7 +392,7 @@ export default function PostCreatePage({ editMode = false }) {
               )}
             </div>
 
-            <Editor ref={quillRef} defaultValue={defaultDesc || null} />
+            <Editor ref={quillRef} defaultValue={defaultPost.desc || null} />
 
             <div className={styles.buttonContainer}>
               <button
